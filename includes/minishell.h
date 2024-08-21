@@ -1,11 +1,34 @@
 #ifndef MINISHELL_H
-#define MINISHELL_H
+# define MINISHELL_H
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
+# include <stdio.h>
+# include <stdlib.h>
+# include <string.h>
+# include <unistd.h>
 
+
+
+//========================
+//          LEXER       //
+//======================//
+
+# define TOKEN_COMMAND      0
+# define TOKEN_OPTIONS      1
+# define TOKEN_ARGUMENTS    2
+# define TOKEN_OPERATOR     3
+# define MAX_ENTRIES        5
+
+typedef struct s_token
+{
+    int type;               // type de token trouve "COMMAND, OPTION, OPERATOR ou ARGUMENTS" sous forme de int entre 0 et 3
+    char *value;            // ce que contient le token. 
+}              t_token;
+
+
+
+
+
+//=========================
 // main.c
 void    ft_parsing(char *line);
 void    ft_getline(char **line, size_t *len);

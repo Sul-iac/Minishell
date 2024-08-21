@@ -3,5 +3,6 @@
 void    ft_pwd(char *args)
 {
     (void)args;
-    printf("pwd under construction\n");
+    char wd[1000];
+    printf("%s\n", getcwd(wd, sizeof(wd)));
 }

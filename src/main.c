@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
+/*   Updated: 2024/08/21 15:19:50 by qbarron          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/minishell.h"
 
 void    ft_getline(char **line, size_t *len)
@@ -19,7 +31,6 @@ void    ft_parsing(char *line)
     if (command == NULL) {
         return;
     }
-
     if (strcmp(command, "cd") == 0)
         ft_cd(args);
     else if (strcmp(command, "echo") == 0)
