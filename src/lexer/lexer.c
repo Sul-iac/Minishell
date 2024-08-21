@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:38 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/21 17:01:01 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/08/21 22:11:35 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,21 +19,22 @@
 // voici une video qui explique vraiment bien:
 // https://www.youtube.com/watch?v=JPPxV3Hdz_A
 
-t_token *lookup_table[] = {
-    {"cd", 0},
-    {"pwd", 0},
-    {"echo", 0},
-    {"export", 0},
-    {"unset", 0},
-    {"env", 0},
-    {"exit", 0},
-    {"-n", 1},          //-n etant la seule option de commande
-// pour les TOKEN_ARGUMENTS(2):
-// - [ ] cd : on va devoir trouver un moyen de transformer le chemin r/a en token, avec getcwd() ? 
-// - [ ] echo ou tout autre commande necessitant un argument. Comment faire pour tokeniser ca ?
-}
 
-// le but de la fonction est de parcourir la commande jusqu'a un delimiteur donne
+// les arguments 0 et 1 permettent de determiner dans l'ordre, le nbr d'options et le nbr d'arguments
+t_token *lookup_table[] = {
+    {"cd", 0, 1},
+    {"pwd", 0, 0},
+    {"echo", 1, -1},                        // -1 = nombre d'arguments illimites
+// nbr d'options et d'args a definir:
+    {"export", 0, 0},       
+    {"unset", 0, 0},
+    {"env", 0, 0},
+    {"exit", 0, 0},
+// pour les TOKEN_ARGUMENTS(2):
+
+// : faire des if/else, avec le nombre d'arguments a avoir par fonction ? (update: non)
+// : creer une fonction de verification de token? --> yessay
+}
 
 
 
@@ -41,7 +42,7 @@ t_token *lookup_table[] = {
 
 // au debut, je comptais faire le code comme ceci, en cherchant chaque valeur
 // et en updatant la valeur et le type des t_tokens a chaque occurencer d'une 
-// commande, sauf que c;est beaucoup trop long et chiant. Ducoup je suis 
+// commande, sauf que c'est beaucoup trop long et chiant. Ducoup je suis 
 // partit sur l'idee de la lookup table. 
 /*
 t_token *lexer(char *str)

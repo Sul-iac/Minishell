@@ -8,7 +8,7 @@
 
 
 
-//========================
+//======================//
 //          LEXER       //
 //======================//
 
@@ -18,14 +18,12 @@
 # define TOKEN_OPERATOR     3
 # define MAX_ENTRIES        5
 
-typedef struct s_token
+typedef struct  s_token
 {
-    int type;               // type de token trouve "COMMAND, OPTION, OPERATOR ou ARGUMENTS" sous forme de int entre 0 et 3
-    char *value;            // ce que contient le token. 
-}              t_token;
-
-
-
+    char *command;
+    int options_max;
+    int arguments_max 
+}               t_token;
 
 
 //=========================
