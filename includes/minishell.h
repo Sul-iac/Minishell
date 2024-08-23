@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   minishell.h                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/23 14:46:14 by qbarron           #+#    #+#             */
+/*   Updated: 2024/08/23 15:56:51 by qbarron          ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
@@ -6,24 +18,36 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
-
+# include "../src/libft/libft.h"
 //======================//
 //          LEXER       //
 //======================//
 
-# define TOKEN_COMMAND      0
-# define TOKEN_OPTIONS      1
-# define TOKEN_ARGUMENTS    2
-# define TOKEN_OPERATOR     3
-# define MAX_ENTRIES        5
+# define OPTIONS_MAX        1
 
-typedef struct  s_token
+typedef struct  commande_infos
 {
     char *command;
     int options_max;
     int arguments_max;
-    char *valid_options;
+    char *valid_options[OPTIONS_MAX];
+}               commande_infos;
+
+typedef struct s_token
+{
+    char *command;
+    int TOKEN_COMMAND;
+    int TOKEN_ARGUMENTS;
+    int TOKEN_OPERATORS;
+    int TOKEN_OPTIONS;
 }               t_token;
+
+//=========================
+// utils.c
+//=========================
+int ft_strcmp(char *s1, char *s2);
+
+
 
 
 //=========================
@@ -52,4 +76,4 @@ void    ft_export(char *args);
 // unset.c
 void    ft_unset(char *args);
 
-#endif
+# endif
