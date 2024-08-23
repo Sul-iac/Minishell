@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/23 14:46:14 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/23 15:56:51 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/08/23 20:24:40 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
 # include "../src/libft/libft.h"
 //======================//
 //          LEXER       //
@@ -52,7 +55,7 @@ int ft_strcmp(char *s1, char *s2);
 
 //=========================
 // main.c
-void    ft_parsing(char *line);
+void    ft_parsing(char *line, char **env);
 void    ft_getline(char **line, size_t *len);
 
 // exit.c
@@ -65,7 +68,7 @@ void    ft_cd(char *args);
 void    ft_echo(char *args);
 
 // env.c
-void    ft_env(char *args);
+void    ft_env(char **env);
 
 // pwd.c
 void    ft_pwd(char *args);
