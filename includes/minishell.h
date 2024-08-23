@@ -5,8 +5,7 @@
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
-
-
+# include <stdbool.h>
 
 //======================//
 //          LEXER       //
@@ -22,7 +21,8 @@ typedef struct  s_token
 {
     char *command;
     int options_max;
-    int arguments_max 
+    int arguments_max;
+    char *valid_options;
 }               t_token;
 
 
