@@ -1,7 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   env.c                                              :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2024/08/23 11:32:19 by tgerardi          #+#    #+#             */
+/*   Updated: 2024/08/23 11:32:19 by tgerardi         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../includes/minishell.h"
 
-void    ft_env(char *args)
+void    ft_env(char **env)
 {
-    (void)args;
-    printf("env under construction\n");
+	while (*env)
+	{
+		printf("%s\n", *env);
+		env++;
+	}
 }

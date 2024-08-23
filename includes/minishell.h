@@ -6,6 +6,9 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
+#include <readline/readline.h>
+#include <readline/history.h>
+
 
 //======================//
 //          LEXER       //
@@ -28,7 +31,7 @@ typedef struct  s_token
 
 //=========================
 // main.c
-void    ft_parsing(char *line);
+void    ft_parsing(char *line, char **env);
 void    ft_getline(char **line, size_t *len);
 
 // exit.c
@@ -41,7 +44,7 @@ void    ft_cd(char *args);
 void    ft_echo(char *args);
 
 // env.c
-void    ft_env(char *args);
+void    ft_env(char **env);
 
 // pwd.c
 void    ft_pwd(char *args);

@@ -12,16 +12,22 @@
 
 #include "../includes/minishell.h"
 
-void    ft_getline(char **line, size_t *len)
+void ft_readline(char **line)
 {
-    if (getline(line, len, stdin) == -1)
+    *line = readline("\033[32mminishell\033[0m$ ");
+
+    if (*line == NULL)
     {
-        perror("getline");
+        perror("readline");
         exit(EXIT_FAILURE);
+    }
+    if (**line != '\0')
+    {
+        add_history(*line);
     }
 }
 
-void    ft_parsing(char *line)
+void    ft_parsing(char *line, char **env)
 {
     line[strcspn(line, "\n")] = '\0';
 
@@ -36,7 +42,7 @@ void    ft_parsing(char *line)
     else if (strcmp(command, "echo") == 0)
         ft_echo(args);
     else if (strcmp(command, "env") == 0)
-        ft_env(args);
+        ft_env(env);
     else if (strcmp(command, "export") == 0)
         ft_export(args);
     else if (strcmp(command, "pwd") == 0)
@@ -49,18 +55,16 @@ void    ft_parsing(char *line)
         printf("command not found: %s\n", command);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **env)
 {
     char *line = NULL;
-    size_t len = 0;
 
     if (argc > 2 && !*argv)
 		return (0);
     while (1)
     {
-        printf("\033[32mminishell\033[0m$ ");
-        ft_getline(&line, &len);
-        ft_parsing(line);
+        ft_readline(&line);
+        ft_parsing(line, env);
     }
     return 0;
 }
