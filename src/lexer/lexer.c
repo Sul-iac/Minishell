@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:38 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/23 10:28:43 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/08/23 10:42:09 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@
 
 // les arguments 0 et 1 permettent de determiner dans l'ordre, le nbr d'options et le nbr d'arguments
 t_token command_tab[] = {
-    {"cd", 0, 1},
+    {"cd", 0, -1},
     {"pwd", 0, 0},
     {"echo", 1, -1, {"-n"}},                        // -1 = nombre d'arguments illimites
 //  nbr d'options et d'args a definir:
@@ -40,8 +40,7 @@ t_token command_tab[] = {
 t_token *find_command(char *command)
 {
     int i = -1;
-    int len = sizeof(sizeof())
-    while(i < )    
+    int len = sizeof(sizeof())   
 }
 
 // 23-08-2023: au final pourquoi ne pas utiliser des fonctions booleennes au lieu de se faire chier ?
