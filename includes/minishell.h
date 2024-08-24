@@ -63,10 +63,10 @@ void    ft_getline(char **line, size_t *len);
 void    ft_exit(char *line);
 
 // cd.c
-void    ft_cd(char *args);
+void ft_cd(int argc, char **argv, char **envp);
 
 // echo.c
-void    ft_echo(char *args);
+void ft_echo(int argc, char **argv, char **envp);
 
 // env.c
 void    ft_env(char **env);
