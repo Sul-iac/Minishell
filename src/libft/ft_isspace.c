@@ -1,21 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_isspace.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 20:52:45 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/24 15:23:42 by qbarron          ###   ########.fr       */
+/*   Created: 2024/08/24 15:01:15 by qbarron           #+#    #+#             */
+/*   Updated: 2024/08/24 15:14:03 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
+#include "libft.h"
 
-int	ft_isalpha(int c)
+int	ft_isspace(int c)
 {
-	if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
-		return (1);
-	return (0);
+	return(c == ' ' || (c >= 9 && c <= 13));
 }

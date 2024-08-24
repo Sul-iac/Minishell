@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 17:27:06 by qbarron           #+#    #+#             */
-/*   Updated: 2023/10/15 14:03:13 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/08/24 15:51:59 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,8 @@
 
 /////////////////////// INT
 
+// ft_isspace
+int 				ft_isspace(int c);
 // ft_isalnum
 int					ft_isalnum(int c);
 // ft_isalpha
@@ -66,7 +68,8 @@ char				*ft_strjoin(const char *s1, const char *s2);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
 // ft_strmapi
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
-
+// ft_strndup
+char				*ft_strndup(const char *str, int n);
 ////////////////////// SIZE_T
 
 // ft_strlcat

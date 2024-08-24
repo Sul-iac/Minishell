@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/21 20:57:25 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/08/24 14:54:02 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,10 +60,11 @@ int main(int argc, char **argv, char **env)
     char *line = NULL;
 
     if (argc > 2 && !*argv)
-		return (0);
+		return (0); 
     while (1)
     {
         ft_readline(&line);
+        ft_lexer(line);
         ft_parsing(line, env);
     }
     return 0;

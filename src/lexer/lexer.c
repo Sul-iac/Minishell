@@ -6,125 +6,117 @@
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:38 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/23 15:57:07 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/08/24 18:25:43 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-
-// il est preferable de faire, je pense, une lookup table.
-// ca nous permettra de rechercher beaucoup plus facilement les
-// types et valeurs de variables dans un tableau de recherche. 
-// voici une video qui explique vraiment bien:
-// https://www.youtube.com/watch?v=JPPxV3Hdz_A
-
-
-// les arguments 0 et 1 permettent de determiner dans l'ordre, le nbr d'options et le nbr d'arguments
-commande_infos command_tab[] = {
-    {"cd", 0, -1, {NULL}},
-    {"pwd", 0, 0, {NULL}},
-    {"echo", 1, -1, {"-n"}},                        // -1 = nombre d'arguments illimites
-//  nbr d'options et d'args a definir:
-    {"export", 0, 0, {NULL}},       
-    {"unset", 0, 0, {NULL}},
-    {"env", 0, 0, {NULL}},
-    {"exit", 0, 0, {NULL}},
-// pour les TOKEN_ARGUMENTS(2):
-
-// : faire des if/else, avec le nombre d'arguments a avoir par fonction ? (update: non)
-// : creer une fonction de verification de token? --> yessss
-};
-
-//cette fonction va chercher la commande demande:
-commande_infos *find_command(char *command)
+// creer les tokens
+t_token	*create_tokens(t_token_type *type, const char *value)
 {
-    int i = -1;
-    int len = sizeof(sizeof(command_tab) / sizeof(commande_infos));
-    while(i < len)
-    {
-        if(strcmp(command_tab[i].command, command) == 0)
-            return(&command_tab[i]);
-        i++;
-    }
-    return(NULL);
+	t_token *token;
+
+	token = malloc(sizeof(t_token));
+	if(token == NULL)
+		return(NULL);			// envoyer a la fonction d'erreur pour free.
+	token->type = type;
+	token->value = strdup(value);
+	return(token);
 }
 
-int verification_token(t_token *token, int token_count)
+// verifie si l'input est une chaine de charactere
+const char	*tokenize_commands_options(const char *start, const char *end,
+							t_token **tokens, int *count_token)
 {
-    
+	int				length;
+	char			*value;
+	t_token_type	*type;
+	
+	if(isalpha(*start) || *start == '-')
+		{
+			end = start;
+			while(isalnum(*end) || *end == '-' || *end == '/')
+				end++;
+			length = end - start;
+			value = strndup(start, length);
+			type = NULL;
+			if(*start == '-')
+				type = &token_types[1];				// options
+			else
+				type = &token_types[0];				// commandes
+			tokens[(*count_token)++] = create_tokens(type, value);
+			start = end;
+			free(value);
+		}
+		return(start);
 }
 
-int main(int argc, char **argv)
+const char	*tokenize_complex_operators(const char *start, t_token **tokens, int *count_token)
 {
-    char *str = argv[1];
-    int i = 0;
-    int start, end = 0;
-    while(str[i] == ' ' || str[i] == '\t' || str[i] == '\n')
-        i++;
-    char **res = ft_split(str, ' ');
-    while(str[i]){
-        printf("%s", res[i++]);
-    }
+		if(start[0] == '>' && start[1] == '>')
+		{
+			tokens[(*count_token)++] = create_tokens(&token_types[7], ">>");
+			start += 2;
+		}
+		else if(start[0] == '<' && start[1] == '<')
+		{
+			tokens[(*count_token)++] = create_tokens(&token_types[8], "<<");
+			start += 2;
+		}
+		return(start);
 }
 
-// 23-08-2023: au final pourquoi ne pas utiliser des fonctions booleennes au lieu de se faire chier ?
-// ici la source: https://www.geeksforgeeks.org/c-lexical-analyser-lexer/
-
-
-
-
-// bool is_operator(char c)
-// {
-//     return(c == '>' || c == '<' || c == '\'' || c == '\"');
-// }
-
-// char *lexical_analyser(char *input)
-// {
-//     int start, end = 0;
-//     int len = strlen(input);
-//     while(end <= len && start != end)
-//     {
-//         if(is_delimiter(input[end]))
-//             end++;
-//         if(is_delimiter(input[end]) && start == end)
-//         {
-//             if(is_operator(input[end]))
-            
-//         }
-//     }
-// }
-
-// int lexer(char *args)
-// {
-//     lexical_anlyser(args);
-// }
-
-
-
-
-// au debut, je comptais faire le code comme ceci, en cherchant chaque valeur
-// et en updatant la valeur et le type des t_tokens a chaque occurence d'une 
-// commande, sauf que c'est beaucoup trop long. Ducoup je suis 
-// partit sur l'idee de la lookup table. 
-/*
-t_token *lexer(char *str)
+// verifie si l'input est un operateur
+const char	*tokenize_operators(const char *start, t_token **tokens, int *count_token)
 {
-    int i = 0;
-    t_token *token;
-    if(!*str)
-        return(NULL);
-    while(str[i])
-    {
-        if(str[i] == "cd"){
-            token->commands->type = 0;
-            token->commands->value = "cd";
-        }
-        else if(str[i] == "pwd"){
-            token->commands->type = 0;
-            token->commands->value = "pwd"
-        else if
-            //...
-        }
+		if(*start == '|')
+		{
+			tokens[(*count_token)++] =  create_tokens(&token_types[4], "|");
+			start++;
+		}
+		else if(*start == '>')
+		{
+			tokens[(*count_token)++] = create_tokens(&token_types[5], ">");
+			start++;
+		}
+		else if(*start == '<')
+		{
+			tokens[(*count_token)++] = create_tokens(&token_types[6], "<");
+			start++;
+		}
+		return(start);
+}
+
+// main (avec l'aide de chat gpt) pour test. Ce sera la fonction principale du lexer
+int main()
+{
+    int				count_token;
+	t_token			*tokens[100];
+	const char		*start;
+	const char		*end;
+	char			*input;
+
+	count_token = 0;
+	input = "echo -n \"Bonjour\" | grep -i 'hello' > output.txt";
+	start = input;
+	end = NULL;
+	while(*start)
+	{
+		while(isspace(*start))														// on skippe le whitespaces
+			start++;
+		if(*start == '\0')															// verifie si il y a qqchs
+			break ; 
+		start = tokenize_commands_options(start, end, tokens, &count_token);		// tokenise les commandes et options
+		start = tokenize_operators(start, tokens, &count_token);					// tokenise les operateurs communs
+		if((start[0] == '>' && start[1] == '>') || (start[0] == '<' && start[1] == '<'))
+			start = tokenize_complex_operators(start, tokens, count_token);			// tokenise les operateurs complexes
+		start++;
+	}
+	for (int i = 0; i < count_token; i++) {
+        printf("Token type: %s, value: %s\n", tokens[i]->type->name, tokens[i]->value);		// print (pour le test)
+        free(tokens[i]->value);
+        free(tokens[i]);
     }
-}*/
+    return 0;
+}
