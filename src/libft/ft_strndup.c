@@ -1,21 +1,32 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_isalpha.c                                       :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/21 20:52:45 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/24 15:23:42 by qbarron          ###   ########.fr       */
+/*   Created: 2024/08/24 15:36:56 by qbarron           #+#    #+#             */
+/*   Updated: 2024/08/24 15:51:08 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <unistd.h>
+#include "libft.h"
 
-int	ft_isalpha(int c)
+char	*ft_strndup(const char *str, int n)
 {
-	if (('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z'))
-		return (1);
-	return (0);
+	int i = 0;
+	int len = ft_strlen(str);
+	
+	if(n > len)
+		n = len;
+	char *dup = (char *)malloc(sizeof(char) * (n + 1));
+	if(!dup)
+		return(NULL);
+	while(i < n)
+	{
+		dup[i] = str[i];
+		i++;
+	}
+	dup[n] = '\0';
+	return(dup);
 }
