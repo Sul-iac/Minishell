@@ -49,15 +49,12 @@ typedef struct s_token
 //=========================
 // utils.c
 //=========================
-int ft_strcmp(char *s1, char *s2);
-
-
-
+bool is_delimiter(char c);
 
 //=========================
 // main.c
 void    ft_parsing(char *line, char **env);
-void    ft_getline(char **line, size_t *len);
+void ft_readline(char **line);
 
 // exit.c
 void    ft_exit(char *line);
@@ -78,6 +75,9 @@ void    ft_pwd(char *args);
 void    ft_export(char *args);
 
 // unset.c
-void    ft_unset(char *args);
+void ft_unset(int argc, char **argv, char **envp);
+
+//lexer.c
+
 
 # endif
