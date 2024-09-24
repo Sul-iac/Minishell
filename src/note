@@ -1,0 +1,6 @@
+le parsing :
+
+ca vient de readline
+- prendre la string d'entree la transformer en liste chainne dans la structure de la liste chainnee avec dedans la string qui correspond a cette node la (commend redirection etc) avec les type qui sera une enum (command entiere avec ses arg(surement a separer), redir in, redir irdoc, redir out, redir outappened et les pipes)
+
+- 
