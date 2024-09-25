@@ -7,29 +7,30 @@
 # include <unistd.h>
 # include <stdbool.h>
 
-//======================//
-//          LEXER       //
-//======================//
+typedef enum e_token_type {
+	CMD,        // Command and its arguments
+	PIPE,       // Pipe '|'
+	REDIR_IN,   // Redirection input '<'
+	REDIR_HEREDOC, // Heredoc '<<'
+	REDIR_OUT,  // Redirection output '>'
+	REDIR_APPEND // Append output '>>'
+} t_token_type;
 
-# define TOKEN_COMMAND      0
-# define TOKEN_OPTIONS      1
-# define TOKEN_ARGUMENTS    2
-# define TOKEN_OPERATOR     3
-# define MAX_ENTRIES        5
-
-typedef struct  s_token
-{
-    char *command;
-    int options_max;
-    int arguments_max;
-    char *valid_options;
-}               t_token;
-
+typedef struct s_token {
+	char *value;
+	t_token_type type;
+	struct s_token *next;
+} t_token;
 
 //=========================
 // main.c
-void    ft_parsing(char *line);
+void	ft_parsing(char *line);
 void    ft_getline(char **line, size_t *len);
+
+// lexer.c
+t_token	*new_token(char *value, t_token_type type);
+void	add_token(t_token **token_list, char *value, t_token_type type);
+void    lexer(char *input);
 
 // exit.c
 void    ft_exit(char *line);
