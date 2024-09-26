@@ -8,18 +8,18 @@
 # include <stdbool.h>
 
 typedef enum e_token_type {
-	CMD,        // Command and its arguments
-	PIPE,       // Pipe '|'
-	REDIR_IN,   // Redirection input '<'
-	REDIR_HEREDOC, // Heredoc '<<'
-	REDIR_OUT,  // Redirection output '>'
-	REDIR_APPEND // Append output '>>'
+    CMD,            // Commande et ses arguments
+    PIPE,           // Pipe '|'
+    REDIR_IN,       // Redirection input '<'
+    REDIR_HEREDOC,  // Heredoc '<<'
+    REDIR_OUT,      // Redirection output '>'
+    REDIR_APPEND    // Append output '>>'
 } t_token_type;
 
 typedef struct s_token {
-	char *value;
-	t_token_type type;
-	struct s_token *next;
+    char *value;                // Contenu du token (commande, symbole, etc.)
+    t_token_type type;          // Type du token (défini par l'enum)
+    struct s_token *next;       // Pointeur vers le token suivant
 } t_token;
 
 //=========================
