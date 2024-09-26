@@ -16,7 +16,7 @@ t_token *new_token(char *value, t_token_type type)
 {
     t_token *token;
 
-    token = malloc(sizeof(t_token));  // Correction du malloc
+    token = malloc(sizeof(t_token));
     if (!token)
         return NULL;
     token->value = strdup(value);
@@ -29,7 +29,7 @@ void add_token(t_token **token_list, char *value, t_token_type type)
 {
     t_token *new;
 
-    new = new_token(value, type);  // Correction du déférencement
+    new = new_token(value, type);
     if (!new)
         return;
     new->next = *token_list;
@@ -42,12 +42,12 @@ void handle_quotes(char **input, t_token **token_list)
     char quote;
     char *quoted_str;
 
-    start = *input;  // Retrait du pointeur
+    start = *input;
     quote = **input;
     (*input)++;
     while (**input && **input != quote)
         (*input)++;
-    quoted_str = strndup(start + 1, *input - start - 1);  // Correction du déférencement
+    quoted_str = strndup(start + 1, *input - start - 1);
     add_token(token_list, quoted_str, CMD);
     free(quoted_str);
     (*input)++;
@@ -63,7 +63,7 @@ char *replace_env_vars(char *token_str)
     size_t before_dollar_len;
     char *new_result;
 
-    result = strdup(token_str);  // Correction du déférencement
+    result = strdup(token_str);
     dollar = strchr(result, '$');
     while (dollar)
     {
@@ -91,7 +91,7 @@ void handle_redirection(char **input, t_token **token_list)
 {
     char *token_str;
 
-    token_str = *input;  // Retrait du pointeur
+    token_str = *input;
     if (strcmp(token_str, "<") == 0)
     {
         add_token(token_list, token_str, REDIR_IN);
@@ -137,7 +137,7 @@ void lexer(char *input, t_token **token_list)
             char *start = input;
             while (*input && *input != ' ' && *input != '<' && *input != '>' && *input != '\'' && *input != '"')
                 input++;
-            token_str = strndup(start, input - start);  // Correction du déférencement
+            token_str = strndup(start, input - start);
             expanded_str = replace_env_vars(token_str);
             add_token(token_list, expanded_str, CMD);
             free(token_str);
