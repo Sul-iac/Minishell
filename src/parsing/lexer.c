@@ -16,7 +16,7 @@ t_token *new_token(char *value, t_token_type type)
 {
     t_token *token;
 
-    *token = malloc(sizeof(t_token));
+    token = malloc(sizeof(t_token));  // Correction du malloc
     if (!token)
         return NULL;
     token->value = strdup(value);
@@ -29,7 +29,7 @@ void add_token(t_token **token_list, char *value, t_token_type type)
 {
     t_token *new;
 
-    *new = new_token(value, type);
+    new = new_token(value, type);  // Correction du déférencement
     if (!new)
         return;
     new->next = *token_list;
@@ -40,15 +40,14 @@ void handle_quotes(char **input, t_token **token_list)
 {
     char *start;
     char quote;
-    char *quoted_str
     char *quoted_str;
 
-    *start = *input;
+    start = *input;  // Retrait du pointeur
     quote = **input;
     (*input)++;
     while (**input && **input != quote)
         (*input)++;
-    *quoted_str = strndup(start + 1, *input - start - 1);
+    quoted_str = strndup(start + 1, *input - start - 1);  // Correction du déférencement
     add_token(token_list, quoted_str, CMD);
     free(quoted_str);
     (*input)++;
@@ -64,19 +63,19 @@ char *replace_env_vars(char *token_str)
     size_t before_dollar_len;
     char *new_result;
 
-    *result = strdup(token_str);
-    *dollar = strchr(result, '$');
+    result = strdup(token_str);  // Correction du déférencement
+    dollar = strchr(result, '$');
     while (dollar)
     {
-        *var_name = dollar + 1;
-        *end = var_name;
+        var_name = dollar + 1;
+        end = var_name;
         while (*end && (isalnum(*end) || *end == '_'))
             end++;
-        *var_value = getenv(strndup(var_name, end - var_name));
+        var_value = getenv(strndup(var_name, end - var_name));
         if (var_value)
         {
             before_dollar_len = dollar - result;
-            *new_result = malloc(before_dollar_len + strlen(var_value) + strlen(end) + 1);
+            new_result = malloc(before_dollar_len + strlen(var_value) + strlen(end) + 1);
             strncpy(new_result, result, before_dollar_len);
             strcpy(new_result + before_dollar_len, var_value);
             strcat(new_result, end);
@@ -90,8 +89,9 @@ char *replace_env_vars(char *token_str)
 
 void handle_redirection(char **input, t_token **token_list)
 {
-    char *token_str = *input;
-    
+    char *token_str;
+
+    token_str = *input;  // Retrait du pointeur
     if (strcmp(token_str, "<") == 0)
     {
         add_token(token_list, token_str, REDIR_IN);
@@ -137,8 +137,8 @@ void lexer(char *input, t_token **token_list)
             char *start = input;
             while (*input && *input != ' ' && *input != '<' && *input != '>' && *input != '\'' && *input != '"')
                 input++;
-            *token_str = strndup(start, input - start);
-            *expanded_str = replace_env_vars(token_str);
+            token_str = strndup(start, input - start);  // Correction du déférencement
+            expanded_str = replace_env_vars(token_str);
             add_token(token_list, expanded_str, CMD);
             free(token_str);
             free(expanded_str);
