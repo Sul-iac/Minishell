@@ -5,18 +5,15 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/08/23 11:32:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/08/23 11:32:19 by tgerardi         ###   ########.fr       */
+/*   Created: 2024/09/24 23:09:08 by tgerardi          #+#    #+#             */
+/*   Updated: 2024/09/24 23:09:08 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void    ft_env(char **env)
+void    ft_env(char *args)
 {
-	while (*env)
-	{
-		printf("%s\n", *env);
-		env++;
-	}
+    (void)args;
+    printf("env under construction\n");
 }

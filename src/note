@@ -1,0 +1,10 @@
+le parsing :
+
+ca vient de readline
+- prendre la string d'entree la transformer en liste chainne dans la structure de la liste chainnee avec dedans la string qui correspond a cette node la (commend redirection etc) avec les type qui sera une enum (command entiere avec ses arg(surement a separer), redir in, redir irdoc, redir out, redir outappened et les pipes)
+
+cat < file1 file2 = cat file2
+quote double quote etc '$USER'       "$USER"       ' " $USER" '       " ' $USER ' "
+si les types j'en ai assez et si il faut pas casser commande par rapport aux variables d'environnement.
+
+- 
