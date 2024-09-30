@@ -1,8 +1,7 @@
 NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = src/main.c src/builtin/cd.c src/builtin/echo.c src/builtin/env.c \
-src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c
+SRCS = src/parsing/lexer.c
 
 
 OBJS = $(SRCS:.c=.o)

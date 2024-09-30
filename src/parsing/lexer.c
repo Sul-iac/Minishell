@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../../includes/minishell.h"
 
 t_token *new_token(char *value, t_token_type type)
 {
@@ -27,14 +27,21 @@ t_token *new_token(char *value, t_token_type type)
 
 void add_token(t_token **token_list, char *value, t_token_type type)
 {
-    t_token *new;
-
-    new = new_token(value, type);
+    t_token *new = new_token(value, type);
     if (!new)
         return;
-    new->next = *token_list;
-    *token_list = new;
+
+    if (*token_list == NULL) {
+        *token_list = new;
+    } else {
+        t_token *current = *token_list;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = new;
+    }
 }
+
 
 void handle_quotes(char **input, t_token **token_list)
 {
@@ -71,7 +78,9 @@ char *replace_env_vars(char *token_str)
         end = var_name;
         while (*end && (isalnum(*end) || *end == '_'))
             end++;
-        var_value = getenv(strndup(var_name, end - var_name));
+        char *var_name_str = strndup(var_name, end - var_name);
+        var_value = getenv(var_name_str);
+        free(var_name_str);
         if (var_value)
         {
             before_dollar_len = dollar - result;
@@ -87,11 +96,12 @@ char *replace_env_vars(char *token_str)
     return result;
 }
 
+
 void handle_redirection(char **input, t_token **token_list)
 {
     char *token_str;
 
-    token_str = *input;
+    token_str = strndup(*input, 1);
     if (strcmp(token_str, "<") == 0)
     {
         add_token(token_list, token_str, REDIR_IN);
@@ -99,18 +109,18 @@ void handle_redirection(char **input, t_token **token_list)
     else if (strcmp(token_str, ">") == 0)
     {
         add_token(token_list, token_str, REDIR_OUT);
-    } 
-    else if (strcmp(token_str, ">>") == 0)
+    }
+    else if (strncmp(*input, ">>", 2) == 0)
     {
+        free(token_str);
+        token_str = strndup(*input, 2);
         add_token(token_list, token_str, REDIR_APPEND);
+        (*input)++;
     }
     (*input)++;
-    token_str = strtok(NULL, " ");
-    if (token_str)
-    {
-        add_token(token_list, token_str, CMD);
-    }
+    free(token_str);
 }
+
 
 void lexer(char *input, t_token **token_list)
 {
@@ -144,4 +154,53 @@ void lexer(char *input, t_token **token_list)
             free(expanded_str);
         }
     }
+}
+const char *token_type_to_str(t_token_type type) {
+    switch (type) {
+        case CMD: return "CMD";
+        case REDIR_IN: return "REDIR_IN";
+        case REDIR_OUT: return "REDIR_OUT";
+        case REDIR_APPEND: return "REDIR_APPEND";
+        default: return "UNKNOWN";
+    }
+}
+
+void print_token_list(t_token *token_list) {
+    t_token *current = token_list;
+    while (current != NULL) {
+        printf("Token: %s, Type: %s\n", current->value, token_type_to_str(current->type));
+        current = current->next;  // Passer au token suivant
+    }
+}
+
+void free_token_list(t_token *token_list)
+{
+    t_token *current;
+    while (token_list != NULL)
+    {
+        current = token_list;
+        token_list = token_list->next;
+        free(current->value);  // Libérer la valeur du token
+        free(current);  // Libérer le token lui-même
+    }
+}
+
+int main() {
+    char *command = "echo \"Hello, $USER\" > output.txt";
+    t_token *token_list = NULL;  // Liste de tokens, initialement vide
+
+    // Affichage de la commande à tester
+    printf("Commande testée: %s\n", command);
+
+    // Appel du lexer pour analyser la commande
+    lexer(command, &token_list);
+
+    // Affichage de la liste des tokens générés par le lexer
+    printf("\nTokens générés par le lexer:\n");
+    print_token_list(token_list);
+
+    // Libération de la liste de tokens
+    free_token_list(token_list);
+
+    return 0;
 }
