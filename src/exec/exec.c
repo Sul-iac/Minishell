@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/09/30 13:52:02 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/09/30 18:02:40 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,29 @@ typedef struct s_pipe
 	t_pipe *next;
 }				t_pipe;
 
-
-
+int exec_execve(t_cmd *current, char **envp)
+{
+	int pid;
+	pid = fork();
+	
+	if(pid = -1)
+	{
+		printf("Exec_execve error\n");
+		return(1);
+	}
+	else if(pid == 1)
+	{
+		if(execve(current->args[0], current->args, envp) == -1)
+		{
+			printf("Execve error");
+			return(1);
+		}
+	}
+	else
+	{
+		wait(NULL);
+	}
+}
 
 int exec(t_cmd* cmd_list, char **envp)
 {
@@ -34,25 +55,8 @@ int exec(t_cmd* cmd_list, char **envp)
 	int pid;
 	while(current)
 	{
-		if(strcmp(current->args[1], "|"))
-		pid = fork();
-		if(pid == -1)
-		{
-			printf("Fork error");
-			return(1);
-		}
-		else if(pid == 1)
-		{
-			if(execve(current->args[0], current->args, envp) == -1)
-			{
-				printf("Execve error");
-				return(1);
-			}
-		}
-		else
-		{
-			wait(NULL);
-		}
+		if(current->next != NULL)					//indique un pipe ou une redirection
+			exec_execve(current, envp);
 		current->next;
 	}
 }
