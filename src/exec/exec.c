@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/03 14:14:07 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/03 15:47:52 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,6 @@ int exec(t_node *cmd)
 		{
 			if(current->type == CMD)
 			{
-				printf("executing the command:\n");
 				execute_command(cmd);
 			}
 			current = current->next;
