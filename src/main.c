@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/03 11:24:36 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/03 14:32:55 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,12 +55,40 @@ void    ft_parsing(char *line, char **env)
         printf("command not found: %s\n", command);
 }
 
+// malloc l'environnement. 
+char **copy_env(char **original_env)
+{
+	int		len;
+	int		i;
+	char	**dup_env;
+
+	i = 0;
+	len = 0;
+
+	while(original_env)
+		len++;
+	dup_env = malloc(sizeof(char *) * len + 1);
+	if(!dup_env)
+		error();
+	while(original_env[i])
+	{
+		dup_env[i] = strdup(original_env[i]);
+		if(!dup_env[i])
+			error();
+		i++;
+	}
+	dup_env[i] = NULL;
+	return(dup_env);
+}
+
 int main(int argc, char **argv, char **env)
 {
+	t_shell_env context;
     char *line = NULL;
-
+	
     if (argc > 2 && !*argv)
-		return (0); 
+		return (0);
+	context.env = copy_env(env);
     while (1)
     {
         ft_readline(&line);

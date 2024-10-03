@@ -16,8 +16,14 @@ typedef enum e_token_type {
     REDIR_IN,
     REDIR_HEREDOC,
     REDIR_OUT,
-    REDIR_APPEND
+    REDIR_APPEND,
+	EMPTY_CMD
 } t_token_type;
+
+typedef struct s_shell_env
+{
+	char **env;
+}			t_shell_env;
 
 typedef struct s_token {
     char            *value;
@@ -25,11 +31,11 @@ typedef struct s_token {
     struct s_token  *next;
 } t_token;
 
-typedef enum e_node_type {
-    CMD,
-    PIPE,
-    EMPTY_CMD
-} t_node_type;
+// typedef enum e_node_type {
+//     CMD,
+//     PIPE,
+//     EMPTY_CMD
+// } t_node_type;
 
 typedef struct redirection {
     char                *filename;
@@ -38,7 +44,8 @@ typedef struct redirection {
 } t_redirection;
 
 typedef struct s_node {				//from parser/exp. to exec
-    t_node_type     type;
+    //t_node_type     type;
+	t_token_type	type;
     char            *value;
     t_redirection   *inputs; //< et <<
     t_redirection   *outputs; // > et >>
