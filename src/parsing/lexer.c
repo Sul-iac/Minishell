@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:08:52 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/09/24 23:08:52 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/10/03 11:39:56 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -155,6 +155,7 @@ void lexer(char *input, t_token **token_list)
         }
     }
 }
+
 const char *token_type_to_str(t_token_type type) {
     switch (type) {
         case CMD: return "CMD";

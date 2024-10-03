@@ -7,6 +7,8 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <ctype.h>
+# include <sys/wait.h>
+# include <sys/types.h>
 
 typedef enum e_token_type {
     CMD,
@@ -33,16 +35,16 @@ typedef struct redirection {
     char                *filename;
     bool                is_double; //0 <> 1 <<>>
     struct redirection  *next;
-} t_redirection
+} t_redirection;
 
-typedef struct s_node {
+typedef struct s_node {				//from parser/exp. to exec
     t_node_type     type;
     char            *value;
-    struct s_node   *next;
     t_redirection   *inputs; //< et <<
     t_redirection   *outputs; // > et >>
     bool            builtin;
     bool            is_last_cmd;
+    struct s_node   *next;
 } t_node;
 
 //=========================
@@ -57,6 +59,14 @@ void lexer(char *input, t_token **token_list);
 
 // exit.c
 void    ft_exit(char *line);
+
+
+
+
+
+//======================//
+// builtins				//
+//======================//
 
 // cd.c
 void    ft_cd(char *args);
@@ -75,5 +85,21 @@ void    ft_export(char *args);
 
 // unset.c
 void    ft_unset(char *args);
+
+
+//======================//
+// Utils				//
+//======================//
+
+// error.c
+void	error(void);
+
+//======================//
+// Exec					//
+//======================//
+
+int	execute_pipe(t_node *cmd);
+int	execute_command(t_node *cmd);
+int	exec(t_node *cmd);
 
 #endif

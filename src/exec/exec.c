@@ -6,57 +6,56 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/09/30 18:02:40 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/03 12:33:54 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-typedef struct s_cmd
-{
-	char **args;
-	t_cmd *next;
-}				t_cmd;
 
-typedef struct s_pipe
+int execute_command(t_node *cmd)
 {
-	int *front;
-	int *rear;
-	t_pipe *next;
-}				t_pipe;
-
-int exec_execve(t_cmd *current, char **envp)
-{
-	int pid;
-	pid = fork();
-	
-	if(pid = -1)
+	//...
+	if(cmd->builtin == 0)
 	{
-		printf("Exec_execve error\n");
-		return(1);
+		char *command = strdup(cmd->value);
+		printf("%s", command);
 	}
-	else if(pid == 1)
+	if(cmd->next != NULL)
 	{
-		if(execve(current->args[0], current->args, envp) == -1)
-		{
-			printf("Execve error");
-			return(1);
-		}
-	}
-	else
-	{
-		wait(NULL);
+		execute_pipe;
 	}
 }
 
-int exec(t_cmd* cmd_list, char **envp)
+int execute_pipe(t_node *cmd)
 {
-	t_cmd* current = cmd_list;
-	int pid;
-	while(current)
+	int fd[2];
+	
+	pid_t pid;
+	if(pipe(fd) == -1)
+		error();
+	if(pid == 0)
+		child_process(cmd, fd);
+	parent_process(cmd, fd);
+}
+
+int exec(t_node *cmd)
+{
+	t_node *current = cmd;
+	pid_t pid;
+
+	pid = fork();
+	if(pid < 0)
+		error();
+	if(pid == 0)
 	{
-		if(current->next != NULL)					//indique un pipe ou une redirection
-			exec_execve(current, envp);
-		current->next;
+		while(current)
+		{
+			if(current->type == CMD)
+			{
+				exec_command();
+			}
+			current = current->next;
+		}
 	}
 }
