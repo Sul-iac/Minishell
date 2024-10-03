@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   echo.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:09:10 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/09/24 23:09:10 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/10/03 18:09:16 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,5 @@
 
 void    ft_echo(char *args)
 {
-    (void)args;
-    printf("echo under construction\n");
+	if(execve())
 }

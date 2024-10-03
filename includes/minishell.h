@@ -33,23 +33,16 @@ typedef struct s_token {
     struct s_token  *next;
 } t_token;
 
-// typedef enum e_node_type {
-//     CMD,
-//     PIPE,
-//     EMPTY_CMD
-// } t_node_type;
-
 typedef struct redirection {
     char                *filename;
-    bool                is_double; //0 <> 1 <<>>
+    bool                is_double; //0 < > 1 << >>
     struct redirection  *next;
 } t_redirection;
 
 typedef struct s_node {				//from parser/exp. to exec
-    //t_node_type     type;
 	t_token_type	type;
     char            *value;
-    t_redirection   *inputs; //< et <<
+    t_redirection   *inputs; // < et <<
     t_redirection   *outputs; // > et >>
     bool            builtin;
     bool            is_last_cmd;
@@ -87,7 +80,7 @@ void    ft_echo(char *args);
 void    ft_env(char *args);
 
 // pwd.c
-void    ft_pwd(char *args);
+void    ft_pwd(void);
 
 // export.c
 void    ft_export(char *args);
