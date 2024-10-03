@@ -6,21 +6,44 @@
 # include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
+# include <ctype.h>
 
 typedef enum e_token_type {
-    CMD,            // Commande et ses arguments
-    PIPE,           // Pipe '|'
-    REDIR_IN,       // Redirection input '<'
-    REDIR_HEREDOC,  // Heredoc '<<'
-    REDIR_OUT,      // Redirection output '>'
-    REDIR_APPEND    // Append output '>>'
+    CMD,
+    PIPE,
+    REDIR_IN,
+    REDIR_HEREDOC,
+    REDIR_OUT,
+    REDIR_APPEND
 } t_token_type;
 
 typedef struct s_token {
-    char *value;                // Contenu du token (commande, symbole, etc.)
-    t_token_type type;          // Type du token (défini par l'enum)
-    struct s_token *next;       // Pointeur vers le token suivant
+    char            *value;
+    t_token_type    type;
+    struct s_token  *next;
 } t_token;
+
+typedef enum e_node_type {
+    CMD,
+    PIPE,
+    EMPTY_CMD
+} t_node_type;
+
+typedef struct redirection {
+    char                *filename;
+    bool                is_double; //0 <> 1 <<>>
+    struct redirection  *next;
+} t_redirection
+
+typedef struct s_node {
+    t_node_type     type;
+    char            *value;
+    struct s_node   *next;
+    t_redirection   *inputs; //< et <<
+    t_redirection   *outputs; // > et >>
+    bool            builtin;
+    bool            is_last_cmd;
+} t_node;
 
 //=========================
 // main.c
@@ -30,7 +53,7 @@ void    ft_getline(char **line, size_t *len);
 // lexer.c
 t_token	*new_token(char *value, t_token_type type);
 void	add_token(t_token **token_list, char *value, t_token_type type);
-void    lexer(char *input);
+void lexer(char *input, t_token **token_list);
 
 // exit.c
 void    ft_exit(char *line);

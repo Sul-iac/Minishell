@@ -1,27 +1,19 @@
 NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-LDFLAGS = -lreadline
-SRCS = src/main.c src/builtin/cd.c src/builtin/echo.c src/builtin/env.c \
-src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c
+SRCS = src/parsing/lexer.c
 
-LIBFT_PATH = src/libft
-LIBFT_LIB = $(LIBFT_PATH)/libft.a
 
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
 
-
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LDFLAGS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
-
-libft: 
-	$(MAKE) -C $(LIBFT_PATH)
 
 clean:
 	$(RM) $(OBJS)
