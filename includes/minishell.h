@@ -9,6 +9,8 @@
 # include <ctype.h>
 # include <sys/wait.h>
 # include <sys/types.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 
 typedef enum e_token_type {
     CMD,
@@ -23,7 +25,7 @@ typedef enum e_token_type {
 typedef struct s_shell_env
 {
 	char **env;
-}			t_shell_env;
+} t_shell_env;
 
 typedef struct s_token {
     char            *value;

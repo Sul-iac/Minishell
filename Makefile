@@ -1,8 +1,7 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g
-SRCS = src/exec/exec.c src/exec/test.c
-
+CFLAGS = -Wall -Wextra -Werror -g -lreadline
+SRCS =  src/main.c
 
 OBJS = $(SRCS:.c=.o)
 RM = rm -f
