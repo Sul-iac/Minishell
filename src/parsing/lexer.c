@@ -244,6 +244,32 @@ t_token *concat_tokens(t_token *head1, t_token *head2) {
     return head1;
 }
 
+t_token *group_cmd_tokens(t_token *head) {
+    t_token *grouped_head = NULL;
+    t_token *temp = head;
+
+    while (temp) {
+        if (temp->type == CMD) {
+            char *grouped_value = strdup(temp->value);
+            size_t grouped_len = strlen(grouped_value);
+            while (temp->next && temp->next->type == CMD) {
+                temp = temp->next;
+                grouped_len += strlen(temp->value) + 1;
+                grouped_value = (char *)realloc(grouped_value, grouped_len + 1);
+                strcat(grouped_value, " ");
+                strcat(grouped_value, temp->value);
+            }
+            t_token *new_cmd_token = create_token(grouped_value, CMD);
+            append_token(&grouped_head, new_cmd_token);
+            free(grouped_value);
+        } else {
+            append_token(&grouped_head, create_token(temp->value, temp->type));
+        }
+        temp = temp->next;
+    }
+    return grouped_head;
+}
+
 int main() {
     char *input = "test1  > test2 test3 <<         test4 | < test5 \" <      test6 >>test7\" test8 > test9 test10 | test11";
     char **str = split_string(input);
@@ -254,6 +280,7 @@ int main() {
         t_token *tokens = tokenize_string(str[j]);
         if (tokens) {
             tokens = reorganize_tokens(tokens);
+            tokens = group_cmd_tokens(tokens);
             final_tokens = concat_tokens(final_tokens, tokens);
         }
     }
