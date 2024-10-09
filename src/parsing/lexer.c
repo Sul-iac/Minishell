@@ -270,8 +270,7 @@ t_token *group_cmd_tokens(t_token *head) {
     return grouped_head;
 }
 
-int main() {
-    char *input = "test1  > test2 test3 <<         test4 | < test5 \" <      test6 >>test7\" test8 > test9 test10 | test11";
+t_token *lexer(char *input) {
     char **str = split_string(input);
     
     t_token *final_tokens = NULL;
@@ -284,8 +283,6 @@ int main() {
             final_tokens = concat_tokens(final_tokens, tokens);
         }
     }
-    print_tokens(final_tokens);
-    free_tokens(final_tokens);
     free_split_array(str);
-    return 0;
+    return (final_tokens); // ne pas oublier de free final_tokens apres la fonction
 }
