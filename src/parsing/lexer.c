@@ -14,7 +14,7 @@
 
 t_token *create_token(char *value, t_token_type type) {
     t_token *new_token = (t_token *)malloc(sizeof(t_token));
-    if (!new_token) return NULL;  // Check allocation
+    if (!new_token) return NULL;
     new_token->value = strdup(value);
     new_token->type = type;
     new_token->next = NULL;
@@ -103,20 +103,17 @@ t_token *tokenize_string(char *input) {
                 while (*ptr && *ptr != ' ' && *ptr != '\t' && *ptr != '|' && *ptr != '<' && *ptr != '>') {
                     ptr++;
                 }
-
                 size_t len = ptr - start;
                 char *redirection_target = (char *)malloc(len + 1);
                 strncpy(redirection_target, start, len);
                 redirection_target[len] = '\0';
-
                 char *full_token = (char *)malloc(strlen(operator) + strlen(redirection_target) + 1);
                 sprintf(full_token, "%s%s", operator, redirection_target);
-
                 append_token(&head, create_token(full_token, determine_type(operator)));
                 free(redirection_target);
                 free(full_token);
             }
-        } else if (*ptr != '\0') { // Ensure not to process null
+        } else if (*ptr != '\0') {
             char *start = ptr;
             while (*ptr && *ptr != ' ' && *ptr != '\t' && *ptr != '|' && *ptr != '<' && *ptr != '>') {
                 ptr++;
@@ -152,8 +149,8 @@ t_token *reorganize_tokens(t_token *head) {
     t_token *current = head;
 
     while (current) {
-        t_token *next = current->next; // Keep reference to next token
-        current->next = NULL;           // Isolate current token
+        t_token *next = current->next;
+        current->next = NULL;
 
         if (current->type == CMD) {
             if (!cmd_head) {
@@ -172,61 +169,47 @@ t_token *reorganize_tokens(t_token *head) {
                 other_tail = other_tail->next;
             }
         }
-
-        current = next; // Move to next token
+        current = next;
     }
 
     if (cmd_tail) {
-        cmd_tail->next = other_head; // Link CMD tokens to others
+        cmd_tail->next = other_head;
     }
-
-    return cmd_head ? cmd_head : other_head; // Return the new head
+    return cmd_head ? cmd_head : other_head;
 }
 
 char **split_string(const char *input) {
-    // Count the number of substrings
     int num_pipes = 0;
     const char *ptr = input;
     while ((ptr = strchr(ptr, '|')) != NULL) {
         num_pipes++;
         ptr++;
     }
-    
-    // Allocate memory for the array of strings
-    char **str_array = malloc((num_pipes + 2) * sizeof(char *)); // +1 for NULL termination
+    char **str_array = malloc((num_pipes + 2) * sizeof(char *));
     if (str_array == NULL) {
-        return NULL; // Allocation error
+        return NULL;
     }
-
-    // Copy substrings into the array
-    size_t start = 0; // Use size_t for consistency
+    size_t start = 0;
     int index = 0;
     while (index <= num_pipes) {
         const char *pipe_pos = strchr(input + start, '|');
         size_t length = (pipe_pos != NULL) ? 
-            (size_t)(pipe_pos - (input + start)) : strlen(input + start);  // Cast pointer difference to size_t
-        
-        // Allocate memory for the substring
+            (size_t)(pipe_pos - (input + start)) : strlen(input + start);
         str_array[index] = malloc((length + 1) * sizeof(char));
         if (str_array[index] == NULL) {
-            // Free already allocated memory in case of error
             for (int j = 0; j < index; j++) {
                 free(str_array[j]);
             }
             free(str_array);
             return NULL;
         }
-        
-        // Copy the substring
         strncpy(str_array[index], input + start, length);
-        str_array[index][length] = '\0'; // Add null terminator
-        
-        // Update the starting index
-        start += length + 1; // +1 to skip the '|' character
+        str_array[index][length] = '\0';
+        start += length + 1;
         index++;
     }
 
-    str_array[index] = NULL; // NULL terminate the array
+    str_array[index] = NULL;
     return str_array;
 }
 
@@ -234,8 +217,8 @@ void free_tokens(t_token *head) {
     while (head) {
         t_token *temp = head;
         head = head->next;
-        free(temp->value); // Free token value
-        free(temp); // Free token itself
+        free(temp->value);
+        free(temp);
     }
 }
 
@@ -247,47 +230,35 @@ void free_split_array(char **array) {
 }
 
 t_token *concat_tokens(t_token *head1, t_token *head2) {
-    if (!head1) return head2; // Si la première liste est vide
-    if (!head2) return head1; // Si la deuxième liste est vide
+    if (!head1) return head2;
+    if (!head2) return head1;
 
     t_token *current = head1;
-    
-    // Trouver la fin de la première liste
+
     while (current->next) {
         current = current->next;
     }
-
-    // Ajouter un token PIPE
     t_token *pipe_token = create_token("|", PIPE);
     current->next = pipe_token;
-    
-    // Joindre la deuxième liste
     current->next->next = head2;
-
-    return head1; // Retourne la tête de la liste concaténée
+    return head1;
 }
 
 int main() {
     char *input = "test1  > test2 test3 <<         test4 | < test5 \" <      test6 >>test7\" test8 > test9 test10 | test11";
     char **str = split_string(input);
     
-    t_token *final_tokens = NULL; // Liste finale pour les tokens concaténés
+    t_token *final_tokens = NULL;
     
     for (int j = 0; str[j]; j++) {
         t_token *tokens = tokenize_string(str[j]);
         if (tokens) {
-            tokens = reorganize_tokens(tokens); // Réorganiser les tokens
-            
-            // Concaténer la liste de tokens
+            tokens = reorganize_tokens(tokens);
             final_tokens = concat_tokens(final_tokens, tokens);
         }
     }
-    
-    // Affichage de la liste finale
     print_tokens(final_tokens);
-
-    // Libérer la mémoire
-    free_tokens(final_tokens); // Libérer la liste finale
-    free_split_array(str); // Libérer le tableau divisé
+    free_tokens(final_tokens);
+    free_split_array(str);
     return 0;
 }
