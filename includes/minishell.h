@@ -7,6 +7,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <ctype.h>
+#include <stddef.h>
 
 typedef enum e_token_type {
     CMD,
@@ -24,25 +25,25 @@ typedef struct s_token {
 } t_token;
 
 typedef enum e_node_type {
-    CMD,
-    PIPE,
+    CMD_2,
+    PIPE_2,
     EMPTY_CMD
 } t_node_type;
 
 typedef struct redirection {
-    char                *filename;
+    char                *filename; //penser a enlever les < > << >> dans le lexer pour mettre juste le nom
     bool                is_double; //0 <> 1 <<>>
     struct redirection  *next;
-} t_redirection
+} t_redirection;
 
 typedef struct s_node {
-    t_node_type     type;
-    char            *value;
-    struct s_node   *next;
+    t_node_type     type; // CMD ou PIPE par node ou EMPTY_CMD si pas de CMD entre deux pipe
+    char            *value; //token CMD prend la valeur du token
+    struct s_node   *next; 
     t_redirection   *inputs; //< et <<
     t_redirection   *outputs; // > et >>
-    bool            builtin;
-    bool            is_last_cmd;
+    bool            builtin; // mettre a 0/false pour le moment
+    bool            is_last_cmd; // mettre a 0/false pour le moment
 } t_node;
 
 //=========================

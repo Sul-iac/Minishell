@@ -286,3 +286,4 @@ t_token *lexer(char *input) {
     free_split_array(str);
     return (final_tokens); // ne pas oublier de free final_tokens apres la fonction
 }
+
