@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 17:27:06 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/24 15:51:59 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/14 19:09:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,14 +48,14 @@ int					ft_memcmp(const void *s1, const void *s2, size_t n);
 
 ///////////////////// CHAR
 
+// ft_strnstr
+const char				*ft_strnstr(const char *str, const char *to_find, size_t n);
 // ft_strchr
 char				*ft_strchr(const char *str, int c);
 // ft_strrchr
 char				*ft_strrchr(const char *str, int c);
 // ft_strdup
 char				*ft_strdup(const char *str);
-// ft_strnstr
-char				*ft_strnstr(const char *str, const char *to_find, size_t n);
 // ft_itoa
 char				*ft_itoa(int n);
 // ft_strtrim

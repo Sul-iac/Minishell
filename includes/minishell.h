@@ -11,6 +11,9 @@
 # include <sys/types.h>
 # include <readline/readline.h>
 # include <readline/history.h>
+# include "../src/libft/libft.h"
+
+# define MAX_ARGS 10
 
 typedef enum e_token_type {
     CMD,
@@ -21,11 +24,6 @@ typedef enum e_token_type {
     REDIR_APPEND,
 	EMPTY_CMD
 } t_token_type;
-
-typedef struct s_shell_env
-{
-	char **env;
-} t_shell_env;
 
 typedef struct s_token {
     char            *value;
@@ -101,7 +99,12 @@ void	error(void);
 //======================//
 
 int	execute_pipe(t_node *cmd);
-int	execute_command(t_node *cmd);
-int	exec(t_node *cmd);
+int	execute_main(char **env);
+int	exec(t_node *cmd, char **env);
+
+void	exec_test(char **env);
+void	parse_nbuiltin(t_node *cmd, char **env);
+
+char	*get_path(char *cmd, char **env);
 
 #endif

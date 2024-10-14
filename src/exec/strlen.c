@@ -1,33 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_strnstr.c                                       :+:      :+:    :+:   */
+/*   strlen.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/09/22 18:52:44 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/14 12:35:41 by qbarron          ###   ########.fr       */
+/*   Created: 2024/10/12 14:48:48 by qbarron           #+#    #+#             */
+/*   Updated: 2024/10/13 13:43:14 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <unistd.h>
+#include <stdio.h>
 
-const char	*ft_strnstr(const char *str, const char *to_find, size_t n)
+int ft_strlen(char *phrase)
 {
-	unsigned int	i;
-	unsigned int	j;
-
-	i = 0;
-	if (*to_find == '\0')
-		return (str);
-	while (i < n && str[i] != '\0')
+	int i = 0;
+	while (phrase[i]!='\0')
 	{
-		j = 0;
-		while ((i + j) < n && str[i + j] == to_find[j] && to_find[j] != '\0')
-			j++;
-		if (to_find[j] == '\0')
-			return (&str[i]);
 		i++;
 	}
-	return (NULL);
+	return(i);
+}
+
+int main (void)
+{
+	char *phrase = "mon ch`at cestg le plus bo";
+printf("%d\n",ft_strlen(phrase));
 }
