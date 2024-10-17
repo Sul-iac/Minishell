@@ -7,7 +7,13 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <ctype.h>
-#include <stddef.h>
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <readline/readline.h>
+# include <readline/history.h>
+# include "../src/libft/libft.h"
+
+# define MAX_ARGS 10
 
 typedef enum e_token_type {
     CMD,
@@ -15,7 +21,8 @@ typedef enum e_token_type {
     REDIR_IN,
     REDIR_HEREDOC,
     REDIR_OUT,
-    REDIR_APPEND
+    REDIR_APPEND,
+	EMPTY_CMD
 } t_token_type;
 
 typedef struct s_token {
@@ -24,26 +31,20 @@ typedef struct s_token {
     struct s_token  *next;
 } t_token;
 
-typedef enum e_node_type {
-    CMD_2,
-    PIPE_2,
-    EMPTY_CMD
-} t_node_type;
-
 typedef struct redirection {
-    char                *filename; //penser a enlever les < > << >> dans le lexer pour mettre juste le nom
-    bool                is_double; //0 <> 1 <<>>
+    char                *filename;
+    bool                is_double; //0 < > 1 << >>
     struct redirection  *next;
 } t_redirection;
 
-typedef struct s_node {
-    t_node_type     type; // CMD ou PIPE par node ou EMPTY_CMD si pas de CMD entre deux pipe
-    char            *value; //token CMD prend la valeur du token
-    struct s_node   *next; 
-    t_redirection   *inputs; //< et <<
+typedef struct s_node {				//from parser/exp. to exec
+	t_token_type	type;
+    char            *value;
+    t_redirection   *inputs; // < et <<
     t_redirection   *outputs; // > et >>
-    bool            builtin; // mettre a 0/false pour le moment
-    bool            is_last_cmd; // mettre a 0/false pour le moment
+    bool            builtin;
+    bool            is_last_cmd;
+    struct s_node   *next;
 } t_node;
 
 //=========================
@@ -54,10 +55,18 @@ void    ft_getline(char **line, size_t *len);
 // lexer.c
 t_token	*new_token(char *value, t_token_type type);
 void	add_token(t_token **token_list, char *value, t_token_type type);
-void lexer(char *input, t_token **token_list);
+void	lexer(char *input, t_token **token_list);
 
 // exit.c
 void    ft_exit(char *line);
+
+
+
+
+
+//======================//
+// builtins				//
+//======================//
 
 // cd.c
 void    ft_cd(char *args);
@@ -69,7 +78,7 @@ void    ft_echo(char *args);
 void    ft_env(char *args);
 
 // pwd.c
-void    ft_pwd(char *args);
+void    ft_pwd(void);
 
 // export.c
 void    ft_export(char *args);
@@ -77,4 +86,26 @@ void    ft_export(char *args);
 // unset.c
 void    ft_unset(char *args);
 
+
+//======================//
+// Utils				//
+//======================//
+
+// error.c
+void	error(void);
+
+//======================//
+// Exec					//
+//======================//
+
+int	execute_pipe(t_node *cmd);
+int	execute_main(char **env);
+int	exec(t_node *cmd, char **env);
+
+void	exec_test(char **env);
+void	parse_nbuiltin(t_node *cmd, char **env);
+
+char	*get_path(char *cmd, char **env);
+void	nforked_commands(char *cmd);
+void	forked_commands(char *cmd);
 #endif
