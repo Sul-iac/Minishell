@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/14 21:10:03 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/17 15:37:46 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,60 +14,55 @@
 
 void parse_builtin(t_node *cmd)
 {
-	//...
-	// char *commande = strdup(cmd->value);
-	// if(strcmp(commande, "cd") || strcmp(commande, "export") || strcmp(commande, "unset"))
-	// {
-	// 	non_forked_commands(commande);
-	// 	cmd->builtin = 0;
-	// }
-	// if(strcmp(commande, "echo") || strcmp(commande, "env") || strcmp(commande, "exit")
-	// 							|| strcmp(commande, "pwd"))
-	// {
-	// 	forked_commands(commande);
-	// 	cmd->builtin = 0;
-	// }
+	char *commande = strdup(cmd->value);
+	if(strcmp(commande, "cd") || strcmp(commande, "export") || strcmp(commande, "unset"))
+	{
+		nforked_commands(commande);
+		cmd->builtin = 0;
+	}
+	if(strcmp(commande, "echo") || strcmp(commande, "env") || strcmp(commande, "exit")
+								|| strcmp(commande, "pwd"))
+	{
+		forked_commands(commande);
+		cmd->builtin = 0;
+	}
 }
 
-// int execute_pipe(t_node *cmd)
-// {
-// 	int fd[2];
-	
-// 	pid_t pid;
-// 	if(pipe(fd) == -1)
-// 		error();
-// 	if(pid == 0)
-// 		child_process(cmd, fd);
-// 	parent_process(cmd, fd);
-// }
+int execute_pipe(t_node *cmd)
+{
+	int fd[2];
+
+	pid_t pid;
+	if(pipe(fd) == -1)
+		error();
+	if(pid == 0)
+		child_process(cmd, fd);
+	parent_process(cmd, fd);
+}
 
 void parse_nbuiltin(t_node *cmd, char **env)
 {
-	printf("debut ftn nbuiltin\n");
-	int	i;
-	int	len;
+	int i;
+	int len;
 	char *path;
 	char **args;
 	char *full_command;
 
-	path = get_path(cmd->value, env);
-	if(!path)
+	args = ft_split(cmd->value, ' ');
+	path = get_path(args[0], env);
+	if (!path)
 		error();
-	len = strlen(path) + strlen(cmd->value);
-	full_command = malloc(sizeof(char) * (len + 1));
-	if(!full_command)
+	full_command = malloc(sizeof(char) * (strlen(path) + strlen(args[0]) + 1));
+	if (!full_command)
 		error();
 	i = -1;
-	while(path[++i])
-		full_command[i] = path[i];
+	strcpy(full_command, path);
 	full_command[i] = '\0';
 	pid_t pid = fork();
-	if(pid == 0)
-	{
-		if(execve(full_command, args, NULL) == -1)
+	if (pid == 0)
+		if (execve(full_command, args, env) == -1)
 			error();
-	}
-	else if(pid > 0)
+	else if (pid > 0)
 		waitpid(pid, NULL, 0);
 	else
 		error();
@@ -80,26 +75,25 @@ int exec(t_node *cmd, char **env)
 	char *args[MAX_ARGS];
 	pid_t pid;
 
-	if(cmd->builtin)
+	if (cmd->builtin)
 		parse_builtin(current);
 	else
 	{
-		printf("exec nbuiltin\n");
 		pid = fork();
-		if(pid < 0)
+		if (pid < 0)
 			error();
-		if(pid == 0)
+		if (pid == 0)
 			parse_nbuiltin(current, env);
-		else if(pid > 0)
+		else if (pid > 0)
 			waitpid(pid, NULL, 0);
 	}
-	return(0);
+	return (0);
 }
 
 //==================================================================================//
 
-// t_node *create_node(t_token_type type, char *value, 
-// 					t_redirection *inputs, t_redirection *outputs, 
+// t_node *create_node(t_token_type type, char *value,
+// 					t_redirection *inputs, t_redirection *outputs,
 // 					bool builtin, bool is_last_cmd)
 // {
 // 	t_node *node = malloc(sizeof(t_node));
@@ -113,13 +107,14 @@ int exec(t_node *cmd, char **env)
 // 	return(node);
 // }
 
-t_node *create_node(int type, char *value, bool builtin) {
-    t_node *node = malloc(sizeof(t_node));
-    node->type = type;
-    node->value = strdup(value);
-    node->builtin = builtin;
-    node->next = NULL;
-    return node;
+t_node *create_node(int type, char *value, bool builtin)
+{
+	t_node *node = malloc(sizeof(t_node));
+	node->type = type;
+	node->value = strdup(value);
+	node->builtin = builtin;
+	node->next = NULL;
+	return node;
 }
 
 // void print_command_list(t_node *cmd)
@@ -137,15 +132,16 @@ t_node *create_node(int type, char *value, bool builtin) {
 //         if (current->outputs)
 //             printf("Redirection de sortie\n");
 
-//         printf("\n"); 
+//         printf("\n");
 //         current = current->next;
 //     }
 // }
+
 void exec_test(char **env)
 {
-	//t_node *cmd1 = create_node(CMD, "echo Bonjour ca va", NULL, NULL, false, false);
-	//t_node *cmd1 = create_node(CMD, "grep Bonjour", NULL, NULL, false, true);
-	t_node *cmd1 = create_node(CMD, "grep", false);
+	// t_node *cmd1 = create_node(CMD, "echo Bonjour ca va", NULL, NULL, false, false);
+	// t_node *cmd1 = create_node(CMD, "grep Bonjour", NULL, NULL, false, true);
+	t_node *cmd1 = create_node(CMD, "ls -l", false);
 	cmd1->next = NULL;
 	// print_command_list(cmd1);
 	exec(cmd1, env);
@@ -154,5 +150,5 @@ void exec_test(char **env)
 int execute_main(char **env)
 {
 	exec_test(env);
-	return(0);
+	return (0);
 }

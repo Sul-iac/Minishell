@@ -55,7 +55,7 @@ void    ft_getline(char **line, size_t *len);
 // lexer.c
 t_token	*new_token(char *value, t_token_type type);
 void	add_token(t_token **token_list, char *value, t_token_type type);
-void lexer(char *input, t_token **token_list);
+void	lexer(char *input, t_token **token_list);
 
 // exit.c
 void    ft_exit(char *line);
@@ -106,5 +106,6 @@ void	exec_test(char **env);
 void	parse_nbuiltin(t_node *cmd, char **env);
 
 char	*get_path(char *cmd, char **env);
-
+void	nforked_commands(char *cmd);
+void	forked_commands(char *cmd);
 #endif
