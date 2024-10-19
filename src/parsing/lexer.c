@@ -287,3 +287,203 @@ t_token *lexer(char *input) {
     return (final_tokens); // ne pas oublier de free final_tokens apres la fonction
 }
 
+t_node *create_node(t_node_type type, char *value) {
+    t_node *new_node = (t_node *)malloc(sizeof(t_node));
+    if (!new_node) return NULL;
+
+    new_node->type = type;
+    new_node->value = strdup(value);
+    new_node->next = NULL;
+    new_node->inputs = NULL;
+    new_node->outputs = NULL;
+    new_node->builtin = false;
+    new_node->is_last_cmd = false;
+
+    return new_node;
+}
+
+t_redirection *create_redirection(char *filename, bool is_double) {
+    t_redirection *new_redir = (t_redirection *)malloc(sizeof(t_redirection));
+    if (!new_redir) return NULL;
+
+    new_redir->filename = strdup(filename);
+    new_redir->is_double = is_double;
+    new_redir->next = NULL;
+
+    return new_redir;
+}
+
+void append_redirection(t_redirection **head, t_redirection *new_redir) {
+    if (*head == NULL) {
+        *head = new_redir;
+    } else {
+        t_redirection *temp = *head;
+        while (temp->next) {
+            temp = temp->next;
+        }
+        temp->next = new_redir;
+    }
+}
+
+t_node *create_node_from_tokens(t_token *tokens) {
+    t_node *node = NULL;
+    t_redirection *inputs = NULL;
+    t_redirection *outputs = NULL;
+    char *cmd_value = NULL;
+    
+    while (tokens) {
+        if (tokens->type == CMD) {
+            if (!cmd_value) {
+                cmd_value = strdup(tokens->value);
+            } else {
+                size_t new_len = strlen(cmd_value) + strlen(tokens->value) + 2;
+                cmd_value = (char *)realloc(cmd_value, new_len);
+                strcat(cmd_value, " ");
+                strcat(cmd_value, tokens->value);
+            }
+        } else if (tokens->type == REDIR_IN || tokens->type == REDIR_HEREDOC) {
+            append_redirection(&inputs, create_redirection(tokens->value + 1, tokens->type == REDIR_HEREDOC));
+        } else if (tokens->type == REDIR_OUT || tokens->type == REDIR_APPEND) {
+            append_redirection(&outputs, create_redirection(tokens->value + 1, tokens->type == REDIR_APPEND));
+        }
+
+        tokens = tokens->next;
+    }
+
+    if (cmd_value) {
+        node = create_node(CMD_2, cmd_value);
+        node->inputs = inputs;
+        node->outputs = outputs;
+        free(cmd_value);
+    } else {
+        node = create_node(EMPTY_CMD, NULL);
+    }
+
+    return node;
+}
+
+t_node *convert_tokens_to_nodes(t_token *tokens) {
+    t_node *node_head = NULL;
+    t_node *node_tail = NULL;
+
+    t_token *current_token = tokens;
+    t_token *cmd_tokens = NULL;
+
+    while (current_token) {
+        if (current_token->type == PIPE) {
+            if (cmd_tokens) {
+                t_node *cmd_node = create_node_from_tokens(cmd_tokens);
+                if (!node_head) {
+                    node_head = cmd_node;
+                    node_tail = cmd_node;
+                } else {
+                    node_tail->next = cmd_node;
+                    node_tail = node_tail->next;
+                }
+                free_tokens(cmd_tokens);
+                cmd_tokens = NULL;
+            }
+
+            t_node *pipe_node = create_node(PIPE_2, "|");
+            node_tail->next = pipe_node;
+            node_tail = pipe_node;
+        } else {
+            append_token(&cmd_tokens, create_token(current_token->value, current_token->type));
+        }
+
+        current_token = current_token->next;
+    }
+
+    if (cmd_tokens) {
+        t_node *cmd_node = create_node_from_tokens(cmd_tokens);
+        if (!node_head) {
+            node_head = cmd_node;
+            node_tail = cmd_node;
+        } else {
+            node_tail->next = cmd_node;
+        }
+        free_tokens(cmd_tokens);
+    }
+
+    return node_head;
+}
+
+void free_nodes(t_node *head) {
+    while (head) {
+        t_node *temp = head;
+        head = head->next;
+        
+        if (temp->value) {
+            free(temp->value);
+        }
+        
+        t_redirection *input = temp->inputs;
+        while (input) {
+            t_redirection *temp_input = input;
+            input = input->next;
+            free(temp_input->filename);
+            free(temp_input);
+        }
+
+        t_redirection *output = temp->outputs;
+        while (output) {
+            t_redirection *temp_output = output;
+            output = output->next;
+            free(temp_output->filename);
+            free(temp_output);
+        }
+
+        free(temp);
+    }
+}
+
+void print_nodes(t_node *head) {
+    while (head) {
+        if (head->type == CMD_2) {
+            printf("Node Type: CMD_2, Command: %s\n", head->value);
+        } else if (head->type == PIPE_2) {
+            printf("Node Type: PIPE_2, Operator: %s\n", head->value);
+        } else if (head->type == EMPTY_CMD) {
+            printf("Node Type: EMPTY_CMD\n");
+        }
+
+        if (head->inputs) {
+            t_redirection *input = head->inputs;
+            while (input) {
+                printf("  Input Redirection: %s, Type: %s\n",
+                       input->filename, input->is_double ? "HEREDOC (<<)" : "INPUT (<)");
+                input = input->next;
+            }
+        }
+
+        if (head->outputs) {
+            t_redirection *output = head->outputs;
+            while (output) {
+                printf("  Output Redirection: %s, Type: %s\n",
+                       output->filename, output->is_double ? "APPEND (>>)" : "OUTPUT (>)");
+                output = output->next;
+            }
+        }
+
+        head = head->next;
+    }
+}
+
+int main() {
+    char *input = "cat file.txt | grep \"hello\" > output.txt | wc -l";
+
+    t_token *tokens = lexer(input);
+
+    printf("Tokens générés par le lexer :\n");
+    print_tokens(tokens);
+
+    t_node *nodes = convert_tokens_to_nodes(tokens);
+
+    printf("\nNœuds générés :\n");
+    print_nodes(nodes);
+
+    free_tokens(tokens);
+    free_nodes(nodes);
+
+    return 0;
+}
