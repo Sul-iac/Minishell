@@ -6,13 +6,13 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/17 15:37:46 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/22 10:33:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void parse_builtin(t_node *cmd)
+void	parse_builtin(t_node *cmd, char **env)
 {
 	char *commande = strdup(cmd->value);
 	if(strcmp(commande, "cd") || strcmp(commande, "export") || strcmp(commande, "unset"))
@@ -28,19 +28,52 @@ void parse_builtin(t_node *cmd)
 	}
 }
 
-int execute_pipe(t_node *cmd)
+int	execute_pipes(t_node *cmd, char **env)
 {
-	int fd[2];
-
 	pid_t pid;
-	if(pipe(fd) == -1)
-		error();
-	if(pid == 0)
-		child_process(cmd, fd);
-	parent_process(cmd, fd);
+	int fd[2];
+	int in_fd = 0;
+
+	while(cmd)
+	{
+		if(cmd->next != NULL)
+			if(pipe(fd) == -1)
+				error();
+		if((pid = fork()) == -1)
+			error();
+		else if(pid == 0)
+		{
+			if(in_fd != 0)
+			{
+				dup2(in_fd, 0);
+				close(in_fd);
+			}
+			if(cmd->next != NULL)
+			{
+				dup2(fd[1], 1);
+				close(fd[1]);
+			}
+			parse_nbuiltin(cmd, env);
+			exit(0);
+		}
+		else
+		{
+			waitpid(pid, NULL, 0);
+			if(in_fd != 0)
+				close(in_fd);
+			if(cmd->next != NULL)
+			{
+				close(fd[1]);
+				in_fd = fd[0];
+			}
+		}
+		cmd = cmd->next;
+	}
+	if(in_fd != 0)
+		close(in_fd);
 }
 
-void parse_nbuiltin(t_node *cmd, char **env)
+void	parse_nbuiltin(t_node *cmd, char **env)
 {
 	int i;
 	int len;
@@ -55,7 +88,7 @@ void parse_nbuiltin(t_node *cmd, char **env)
 	full_command = malloc(sizeof(char) * (strlen(path) + strlen(args[0]) + 1));
 	if (!full_command)
 		error();
-	i = -1;
+	i = 0;
 	strcpy(full_command, path);
 	full_command[i] = '\0';
 	pid_t pid = fork();
@@ -72,21 +105,25 @@ void parse_nbuiltin(t_node *cmd, char **env)
 int exec(t_node *cmd, char **env)
 {
 	t_node *current = cmd;
-	char *args[MAX_ARGS];
 	pid_t pid;
 
-	if (cmd->builtin)
-		parse_builtin(current);
-	else
+	if(cmd->next == NULL)
 	{
-		pid = fork();
-		if (pid < 0)
-			error();
-		if (pid == 0)
-			parse_nbuiltin(current, env);
-		else if (pid > 0)
-			waitpid(pid, NULL, 0);
+		if (cmd->builtin)
+			parse_builtin(current, env);
+		else
+		{
+			pid = fork();
+			if (pid < 0)
+				error();
+			if (pid == 0)
+				parse_nbuiltin(current, env);
+			else if (pid > 0)
+				waitpid(pid, NULL, 0);
+		}
 	}
+	else
+		execute_pipe(cmd, env);
 	return (0);
 }
 
@@ -107,7 +144,7 @@ int exec(t_node *cmd, char **env)
 // 	return(node);
 // }
 
-t_node *create_node(int type, char *value, bool builtin)
+t_node	*create_node(int type, char *value, bool builtin)
 {
 	t_node *node = malloc(sizeof(t_node));
 	node->type = type;
@@ -137,7 +174,7 @@ t_node *create_node(int type, char *value, bool builtin)
 //     }
 // }
 
-void exec_test(char **env)
+void	exec_test(char **env)
 {
 	// t_node *cmd1 = create_node(CMD, "echo Bonjour ca va", NULL, NULL, false, false);
 	// t_node *cmd1 = create_node(CMD, "grep Bonjour", NULL, NULL, false, true);
@@ -147,7 +184,7 @@ void exec_test(char **env)
 	exec(cmd1, env);
 }
 
-int execute_main(char **env)
+int	execute_main(char **env)
 {
 	exec_test(env);
 	return (0);

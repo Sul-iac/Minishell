@@ -98,12 +98,13 @@ void	error(void);
 // Exec					//
 //======================//
 
-int	execute_pipe(t_node *cmd);
+int	execute_pipes(t_node *cmd, char **env);
 int	execute_main(char **env);
 int	exec(t_node *cmd, char **env);
 
 void	exec_test(char **env);
 void	parse_nbuiltin(t_node *cmd, char **env);
+void	parse_builtin(char *cmd, char **env);
 
 char	*get_path(char *cmd, char **env);
 void	nforked_commands(char *cmd);
