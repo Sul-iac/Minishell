@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/24 21:23:38 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/24 21:33:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ void	child_process(t_node *cmd, char **env, int in_fd, int *fd)
 		dup2(fd[1], 1);
 		close(fd[1]);
 	}
-	parse_nbuiltin(cmd, env);
+	is_builtin(cmd->value);
 	exit(0);
 }
 

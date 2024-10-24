@@ -71,7 +71,7 @@ void    ft_exit(char *line);
 //======================//
 
 // cd.c
-int		ft_cd(char **cmd);
+int		ft_cd(char *cmd);
 
 // echo.c
 void    ft_echo(char *args);
