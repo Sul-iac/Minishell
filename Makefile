@@ -11,9 +11,10 @@ BUILTINS_DIR =	$(SRC_DIR)builtin/cd.c \
 				$(SRC_DIR)builtin/pwd.c \
 				$(SRC_DIR)builtin/unset.c
 
-EXEC_DIR = 	$(SRC_DIR)exec/exec.c \
-			$(SRC_DIR)exec/pipes.c \
-			$(SRC_DIR)exec/utils.c
+EXEC_DIR = 		$(SRC_DIR)exec/exec.c \
+				$(SRC_DIR)exec/pipes.c \
+				$(SRC_DIR)exec/utils.c \
+				$(SRC_DIR)main.c
 
 LIB_DIR = $(SRC_DIR)libft
 
