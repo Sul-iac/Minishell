@@ -1,7 +1,8 @@
 NAME = minishell
 CC = gcc
 CFLAGS = -g -I includes -lreadline 
-SRCS = src/exec/exec.c src/utils/utils.c src/main.c
+SRCS = src/exec/exec.c src/utils/utils.c src/main.c src/exec/utils.c \
+src/builtin/*
 LIB_DIR = src/libft 
 INCLUDE = -I includes  
 OBJS = $(SRCS:.c=.o)

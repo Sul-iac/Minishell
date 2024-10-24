@@ -6,143 +6,85 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/22 10:33:22 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/24 20:10:01 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	parse_builtin(t_node *cmd, char **env)
+static int execute_builtin(t_node *cmd, char **env)
 {
-	char *commande = strdup(cmd->value);
-	if(strcmp(commande, "cd") || strcmp(commande, "export") || strcmp(commande, "unset"))
-	{
-		nforked_commands(commande);
-		cmd->builtin = 0;
-	}
-	if(strcmp(commande, "echo") || strcmp(commande, "env") || strcmp(commande, "exit")
-								|| strcmp(commande, "pwd"))
-	{
-		forked_commands(commande);
-		cmd->builtin = 0;
-	}
+    char *command;
+
+	command = cmd->value;
+    if (!strcmp(command, "cd") || !strcmp(command, "export") || !strcmp(command, "unset"))
+         nforked_commands(command, env);
+    
+    if (!strcmp(command, "echo") || !strcmp(command, "env") || 
+        !strcmp(command, "exit") || !strcmp(command, "pwd"))
+        	forked_commands(command, env);
+    return (1);
 }
 
-int	execute_pipes(t_node *cmd, char **env)
+static int execute_command(t_node *cmd, char **env)
 {
-	pid_t pid;
-	int fd[2];
-	int in_fd = 0;
+    char    **args;
+    char    *path;
+    char    *full_command;
+    int     len;
 
-	while(cmd)
-	{
-		if(cmd->next != NULL)
-			if(pipe(fd) == -1)
-				error();
-		if((pid = fork()) == -1)
-			error();
-		else if(pid == 0)
-		{
-			if(in_fd != 0)
-			{
-				dup2(in_fd, 0);
-				close(in_fd);
-			}
-			if(cmd->next != NULL)
-			{
-				dup2(fd[1], 1);
-				close(fd[1]);
-			}
-			parse_nbuiltin(cmd, env);
-			exit(0);
-		}
-		else
-		{
-			waitpid(pid, NULL, 0);
-			if(in_fd != 0)
-				close(in_fd);
-			if(cmd->next != NULL)
-			{
-				close(fd[1]);
-				in_fd = fd[0];
-			}
-		}
-		cmd = cmd->next;
-	}
-	if(in_fd != 0)
-		close(in_fd);
+    args = ft_split(cmd->value, ' ');
+    if (!args)
+        error();
+    path = get_path(args[0], env);
+    if (!path)
+		error();
+    len = strlen(path) + strlen(args[0]);
+    full_command = malloc(sizeof(char) * (len + 1));
+    if (!full_command)
+		error();
+    strcpy(full_command, path);
+    full_command[len] = '\0';
+    if (execve(full_command, args, env) == -1)
+		error();
+    return (0);
 }
 
-void	parse_nbuiltin(t_node *cmd, char **env)
+static int execute_simple_command(t_node *cmd, char **env)
 {
-	int i;
-	int len;
-	char *path;
-	char **args;
-	char *full_command;
+    pid_t   pid;
+    int     status;
 
-	args = ft_split(cmd->value, ' ');
-	path = get_path(args[0], env);
-	if (!path)
+    if (cmd->builtin)
+        return (execute_builtin(cmd, env));
+
+    pid = fork();
+    if (pid < 0)
 		error();
-	full_command = malloc(sizeof(char) * (strlen(path) + strlen(args[0]) + 1));
-	if (!full_command)
-		error();
-	i = 0;
-	strcpy(full_command, path);
-	full_command[i] = '\0';
-	pid_t pid = fork();
-	if (pid == 0)
-		if (execve(full_command, args, env) == -1)
-			error();
-	else if (pid > 0)
-		waitpid(pid, NULL, 0);
-	else
-		error();
-	free(full_command);
+    if (pid == 0)
+    {
+        execute_command(cmd, env);
+        exit(EXIT_FAILURE);
+    }
+    else
+        waitpid(pid, &status, 0);
+    return (WEXITSTATUS(status));
 }
 
 int exec(t_node *cmd, char **env)
 {
-	t_node *current = cmd;
-	pid_t pid;
+    char *first_word;
+	first_word  = get_first_word(cmd->value);
+    cmd->builtin = is_builtin(first_word);
+    free(first_word);
 
-	if(cmd->next == NULL)
-	{
-		if (cmd->builtin)
-			parse_builtin(current, env);
-		else
-		{
-			pid = fork();
-			if (pid < 0)
-				error();
-			if (pid == 0)
-				parse_nbuiltin(current, env);
-			else if (pid > 0)
-				waitpid(pid, NULL, 0);
-		}
-	}
-	else
-		execute_pipe(cmd, env);
-	return (0);
+    if (cmd->next == NULL)
+        return (execute_simple_command(cmd, env));
+    else
+        return (execute_pipes(cmd, env));
 }
 
 //==================================================================================//
-
-// t_node *create_node(t_token_type type, char *value,
-// 					t_redirection *inputs, t_redirection *outputs,
-// 					bool builtin, bool is_last_cmd)
-// {
-// 	t_node *node = malloc(sizeof(t_node));
-// 	node->type = type;
-// 	node->value = strdup(value);
-// 	node->inputs = NULL;
-// 	node->outputs = NULL;
-// 	node->builtin = builtin;
-// 	node->is_last_cmd = is_last_cmd;
-// 	node->next = NULL;
-// 	return(node);
-// }
 
 t_node	*create_node(int type, char *value, bool builtin)
 {
@@ -154,38 +96,99 @@ t_node	*create_node(int type, char *value, bool builtin)
 	return node;
 }
 
-// void print_command_list(t_node *cmd)
-// {
-//     t_node *current = cmd;
-
-//     while (current != NULL)
-//     {
-//         printf("Commande: %s\n", current->value);
-//         printf("Builtin: %s\n", current->builtin ? "Oui" : "Non");
-//         printf("Derniere commande: %s\n", current->is_last_cmd ? "Oui" : "Non");
-
-//         if (current->inputs)
-//             printf("Redirection d'entree\n");
-//         if (current->outputs)
-//             printf("Redirection de sortie\n");
-
-//         printf("\n");
-//         current = current->next;
-//     }
-// }
-
-void	exec_test(char **env)
+t_redirections *create_redirection(char *filename, int type)
 {
-	// t_node *cmd1 = create_node(CMD, "echo Bonjour ca va", NULL, NULL, false, false);
-	// t_node *cmd1 = create_node(CMD, "grep Bonjour", NULL, NULL, false, true);
-	t_node *cmd1 = create_node(CMD, "ls -l", false);
-	cmd1->next = NULL;
-	// print_command_list(cmd1);
-	exec(cmd1, env);
+    t_redirections *redir = malloc(sizeof(t_redirections));
+    if (!redir)
+        return NULL;
+    redir->filename = strdup(filename);
+    redir->type = type;
+    redir->next = NULL;
+    return redir;
 }
 
-int	execute_main(char **env)
+t_node *create_test_node(char *value, bool is_last)
 {
-	exec_test(env);
-	return (0);
+    t_node *node = malloc(sizeof(t_node));
+    if (!node)
+        return NULL;
+
+    node->type = CMD;  
+    node->value = strdup(value);
+    node->inputs = NULL;
+    node->outputs = NULL;
+    node->builtin = false;
+    node->is_last_cmd = is_last;
+    node->next = NULL;
+
+    return node;
+}
+
+void free_redirections(t_redirection *redir)
+{
+    t_redirection *current;
+    while (redir)
+    {
+        current = redir;
+        redir = redir->next;
+        free(current->filename);
+        free(current);
+    }
+}
+
+void free_command_list(t_node *cmd)
+{
+    t_node *current;
+    while (cmd)
+    {
+        current = cmd;
+        cmd = cmd->next;
+        free(current->value);
+        free_redirections(current->inputs);
+        free_redirections(current->outputs);
+        free(current);
+    }
+}
+
+void test_execution(char **env)
+{
+    t_node *cmd;
+    
+    // printf("\n=== Test 1: Commande simple (ls -l) ===\n");
+    // cmd = create_test_node("ls -l", true);
+    // exec(cmd, env);
+    // free_command_list(cmd);
+
+    // printf("\n=== Test 2: Builtin (echo hello) ===\n");
+    // cmd = create_test_node("echo hello", true);
+    // exec(cmd, env);
+    // free_command_list(cmd);
+
+    // printf("\n=== Test 3: Pipeline (ls | grep a) ===\n");
+    // cmd = create_test_node("ls", false);
+    // cmd->next = create_test_node("grep a", true);
+    // exec(cmd, env);
+    // free_command_list(cmd);
+
+    // printf("\n=== Test 4: Builtin avec redirection (echo hello > test.txt) ===\n");
+    // cmd = create_test_node("echo hello", true);
+    // cmd->outputs = create_redirection("test.txt", REDIR_OUT);  // Supposons que REDIR_OUT est défini
+    // exec(cmd, env);
+    // free_command_list(cmd);
+
+    printf("\n=== Test 5: Pipeline complexe (ls -l | grep a | wc -l) ===\n");
+    cmd = create_test_node("ls -l", false);
+    cmd->next = create_test_node("grep a", false);
+    cmd->next->next = create_test_node("wc -l", true);
+    exec(cmd, env);
+    free_command_list(cmd);
+}
+
+int execute_main(char **env)
+{
+    printf("=== Début des tests de minishell ===\n");
+    test_execution(env);
+    printf("\n=== Fin des tests ===\n");
+
+    return 0;
 }
