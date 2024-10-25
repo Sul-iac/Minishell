@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/24 23:24:47 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:01:09 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,10 @@ int	execute_pipes(t_node *cmd, char **env)
 		else
 			parent_process(cmd, pid, in_fd, fd);
 		cmd = cmd->next;
-		printf("Test pipes\n");
 	}
 	if (in_fd != 0)
 		close(in_fd);
 	return (0);
-	
 }
 
 char *get_path(char *cmd, char **env)
@@ -79,16 +77,17 @@ char *get_path(char *cmd, char **env)
 	while(env[i] && ft_strnstr(env[i], "PATH=", 5) == 0)
 		i++;
 	paths = ft_split(env[i] + 5, ':');
-	i = 0;
-	while(paths[i])
+	if(!paths)
+		error();
+	i = -1;
+	while(paths[++i])
 	{
 		part_path = ft_strjoin(paths[i], "/");
-		path = ft_strjoin(paths[i], cmd);
+		path = ft_strjoin(part_path, cmd);
 		free(part_path);
-		if(access(path, F_OK) == 0)
+		if(access(path, X_OK) == 0)
 			return(path);
 		free(path);
-		i++;
 	}
 	i = -1;
 	while(paths[++i])

@@ -45,13 +45,6 @@ typedef struct s_node {				//from parser/exp. to exec
     struct s_node   *next;
 } t_node;
 
-typedef struct s_env_var
-{
-	char *name;
-	char *value;
-	int *g_env_count;
-}t_env_var;
-
 //=========================
 // main.c
 void	ft_parsing(char *line);

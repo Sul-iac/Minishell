@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/24 23:25:08 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:07:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ static int execute_simple_command(t_node *cmd, char **env)
 
     if (cmd->builtin)
         return (execute_builtin(cmd, env));
-
     pid = fork();
     if (pid < 0)
 		error();
@@ -77,7 +76,6 @@ int exec(t_node *cmd, char **env)
 	first_word  = get_first_word(cmd->value);
     cmd->builtin = is_builtin(first_word);
     free(first_word);
-
     if (cmd->next == NULL)
         return (execute_simple_command(cmd, env));
     else
@@ -159,10 +157,10 @@ void test_execution(char **env)
     exec(cmd, env);
     free_command_list(cmd);
 
-    // printf("\n=== Test 2: Builtin (echo hello) ===\n");
-    // cmd = create_test_node("echo hello", true);
-    // exec(cmd, env);
-    // free_command_list(cmd);
+    printf("\n=== Test 2: Builtin (echo hello) ===\n");
+    cmd = create_test_node("echo hello", true);
+    exec(cmd, env);
+    free_command_list(cmd);
 
     printf("\n=== Test 3: Pipeline (ls | grep a) ===\n");
     cmd = create_test_node("ls", false);
