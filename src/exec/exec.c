@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 22:20:48 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 22:38:34 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,7 +163,7 @@ void test_execution(char **env)
     t_node *cmd;
 
     printf("\n=== Test 1: Commande simple (ls -l) ===\n");
-    cmd = create_test_node("echo -n bonjour", true);
+    cmd = create_test_node("ls -l", true);
     exec(cmd, env);
     free_command_list(cmd);
 

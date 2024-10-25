@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 22:09:46 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 22:19:30 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 22:40:38 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ static bool check_n_flag(const char *str, int *i)
     return (false);
 }
 
-static void print_char(char c, char next_c)
+static void	print_char(char c, char next_c)
 {
     if (c == '\\' && next_c)
     {
@@ -45,6 +45,26 @@ static void print_char(char c, char next_c)
     }
     else if (c != '\\' || !next_c)
         write(1, &c, 1);
+}
+
+static void	pre_print(const char *str, int *i)
+{
+	while (str[*i])
+    {
+        if (str[*i] == '\\')
+        {
+            print_char(str[*i], str[*i + 1]);
+            if (str[*i + 1])
+                *i += 2;
+            else
+                (*i)++;
+        }
+        else
+        {
+            print_char(str[*i], '\0');
+            (*i)++;
+        }
+    }
 }
 
 int ft_echo(char *str)
@@ -71,21 +91,6 @@ int ft_echo(char *str)
         while (str[i] == ' ')
             i++;
     }
-    while (str[i])
-    {
-        if (str[i] == '\\')
-        {
-            print_char(str[i], str[i + 1]);
-            if (str[i + 1])
-                i += 2;
-            else
-                i++;
-        }
-        else
-        {
-            print_char(str[i], '\0');
-            i++;
-        }
-    }
+	pre_print(str, &i);
     return (0);
 }
