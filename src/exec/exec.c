@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 18:07:22 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 21:19:15 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,27 @@
 
 static int execute_builtin(t_node *cmd, char **env)
 {
-    char *command;
+    char **args;
 
-	command = cmd->value;
-    if (!strcmp(command, "cd") || !strcmp(command, "export") || !strcmp(command, "unset"))
-         nforked_commands(command, env);
+	args = ft_split(cmd->value, ' ');
+    if (!strcmp(args[0], "cd") || !strcmp(args[0], "export") || !strcmp(args[0], "unset"))
+         nforked_commands(args[0], env);
     
-    if (!strcmp(command, "echo") || !strcmp(command, "env") || 
-        !strcmp(command, "exit") || !strcmp(command, "pwd"))
-        	forked_commands(command, env);
+    if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
+        !strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
+		{
+			printf("execute_builtin forked_command\n");			
+        	forked_commands(args[0], env);
+		}
     return (1);
 }
 
 static int execute_command(t_node *cmd, char **env)
 {
+    int     len;
     char    **args;
     char    *path;
     char    *full_command;
-    int     len;
 
     args = ft_split(cmd->value, ' ');
     if (!args)
@@ -45,6 +48,7 @@ static int execute_command(t_node *cmd, char **env)
 		error();
     strcpy(full_command, path);
     full_command[len] = '\0';
+	printf("%s\n", full_command);
     if (execve(full_command, args, env) == -1)
 		error();
     return (0);
@@ -54,9 +58,16 @@ static int execute_simple_command(t_node *cmd, char **env)
 {
     pid_t   pid;
     int     status;
+	char	**args;
 
+	printf("%d\n", cmd->builtin);
     if (cmd->builtin)
-        return (execute_builtin(cmd, env));
+	{
+		args = ft_split(cmd->value, ' ');
+		if(!args)
+			error();
+		execute_builtin(cmd, env);
+	}
     pid = fork();
     if (pid < 0)
 		error();
@@ -73,9 +84,13 @@ static int execute_simple_command(t_node *cmd, char **env)
 int exec(t_node *cmd, char **env)
 {
     char *first_word;
-	first_word  = get_first_word(cmd->value);
-    cmd->builtin = is_builtin(first_word);
-    free(first_word);
+	char **args;
+
+	args = ft_split(cmd->value, ' ');
+	if(!args)
+		error();
+    cmd->builtin = is_builtin(args[0]);
+    free(args);
     if (cmd->next == NULL)
         return (execute_simple_command(cmd, env));
     else
@@ -153,7 +168,7 @@ void test_execution(char **env)
     t_node *cmd;
 
     printf("\n=== Test 1: Commande simple (ls -l) ===\n");
-    cmd = create_test_node("ls -l", true);
+    cmd = create_test_node("touch input", true);
     exec(cmd, env);
     free_command_list(cmd);
 

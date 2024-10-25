@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 20:46:44 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/24 21:39:01 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 18:37:59 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int    ft_cd(char *args)
 	}
 	if(chdir(args) == -1)
 	{
-		printf("cd: %s: No such file or directory\n");
+		printf("%s: No such file or directory\n");
 		return(1);
 	}
 }
