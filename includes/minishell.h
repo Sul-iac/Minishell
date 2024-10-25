@@ -60,37 +60,39 @@ void    ft_exit(char *line);
 
 
 //======================//
-// builtins				//
+// 		builtins		//
 //======================//
 
 // cd.c
-int		ft_cd(char *cmd);
+int				ft_cd(char *cmd);
 
 // echo.c
-void    ft_echo(char *args);
+int 			ft_echo(char *args);
+static void		print_arg(const char *arg);
+static bool 	is_n_flag(const char *str);
 
 // env.c
-void    ft_env(char **envp);
+void    		ft_env(char **envp);
 
 // pwd.c
-void    ft_pwd(void);
+void			ft_pwd(void);
 
 // export.c
-void    ft_export(char *args, char **env);
+void			ft_export(char *args, char **env);
 
 // unset.c
-void    ft_unset(char *args);
+void			ft_unset(char *args);
 
 
 //======================//
-// Utils				//
+// 		Utils			//
 //======================//
 
 // error.c
-void	error(void);
+void			error(void);
 
 //======================//
-// Exec					//
+// 		Exec			//
 //======================//
 
 int				execute_pipes(t_node *cmd, char **env);

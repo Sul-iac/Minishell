@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 21:19:15 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 22:20:48 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,10 +22,7 @@ static int execute_builtin(t_node *cmd, char **env)
     
     if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
         !strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
-		{
-			printf("execute_builtin forked_command\n");			
         	forked_commands(args[0], env);
-		}
     return (1);
 }
 
@@ -48,7 +45,6 @@ static int execute_command(t_node *cmd, char **env)
 		error();
     strcpy(full_command, path);
     full_command[len] = '\0';
-	printf("%s\n", full_command);
     if (execve(full_command, args, env) == -1)
 		error();
     return (0);
@@ -60,7 +56,6 @@ static int execute_simple_command(t_node *cmd, char **env)
     int     status;
 	char	**args;
 
-	printf("%d\n", cmd->builtin);
     if (cmd->builtin)
 	{
 		args = ft_split(cmd->value, ' ');
@@ -168,20 +163,20 @@ void test_execution(char **env)
     t_node *cmd;
 
     printf("\n=== Test 1: Commande simple (ls -l) ===\n");
-    cmd = create_test_node("touch input", true);
+    cmd = create_test_node("echo -n bonjour", true);
     exec(cmd, env);
     free_command_list(cmd);
 
     printf("\n=== Test 2: Builtin (echo hello) ===\n");
-    cmd = create_test_node("echo hello", true);
+    cmd = create_test_node("echo bonjour comment ca va???", true);
     exec(cmd, env);
     free_command_list(cmd);
 
-    printf("\n=== Test 3: Pipeline (ls | grep a) ===\n");
-    cmd = create_test_node("ls", false);
-    cmd->next = create_test_node("grep a", true);
-    exec(cmd, env);
-    free_command_list(cmd);
+    // printf("\n=== Test 3: Pipeline (ls | grep a) ===\n");
+    // cmd = create_test_node("ls", false);
+    // cmd->next = create_test_node("grep a", true);
+    // exec(cmd, env);
+    // free_command_list(cmd);
 
     // printf("\n=== Test 4: Builtin avec redirection (echo hello > test.txt) ===\n");
     // cmd = create_test_node("echo hello", true);

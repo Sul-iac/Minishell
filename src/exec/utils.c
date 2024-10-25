@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 19:34:27 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 21:32:01 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,7 @@ char	*get_first_word(const char *str)
         str++;
     i = 0;
     while (str[i] && str[i] != ' ' && str[i] != '\t')
-	{
         i++;
-	}
     word = malloc(sizeof(char) * (i + 1));
     if (!word)
         return (NULL);
@@ -34,7 +32,6 @@ char	*get_first_word(const char *str)
 
 bool	is_builtin(const char *cmd)
 {
-	printf("is_builtin\n");
     return (!strcmp(cmd, "cd") || !strcmp(cmd, "export") || !strcmp(cmd, "unset") ||
             !strcmp(cmd, "echo") || !strcmp(cmd, "env") || !strcmp(cmd, "exit") ||
             !strcmp(cmd, "pwd"));
@@ -47,14 +44,10 @@ void	forked_commands(char *cmd, char **env)
 	pid = fork();
 	if(pid == -1)
 		error();
-	printf("Forked_command\n");
 	if(pid == 0)
 	{
 		if(strcmp(cmd, "echo") == 0)
-		{
-			printf("forked_command: %s\n", cmd);
 			ft_echo(cmd);
-		}
 		if(strcmp(cmd, "env") == 0)
 			ft_env(env);
 		if(strcmp(cmd, "exit") == 0)
