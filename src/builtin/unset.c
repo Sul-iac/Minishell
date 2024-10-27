@@ -6,13 +6,13 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:08:57 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/24 21:40:47 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:40:13 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void    ft_unset(char *args)
+void    ft_unset(char *args, char **env)
 {
     //...
 }

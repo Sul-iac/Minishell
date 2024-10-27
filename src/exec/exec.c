@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/27 11:55:55 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 14:16:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@ static int execute_builtin(t_node *cmd, char **env)
 
 	args = ft_split(cmd->value, ' ');
     if (!strcmp(args[0], "export") || !strcmp(args[0], "unset"))
-         nforked_commands(args[0], env);
-	if(!strcmp(args[0], "cd"))
-		nforked_commands(cmd->value, env);
+         nforked_commands(cmd->value, env);
     if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
         !strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
         	forked_commands(args[0], env);
@@ -166,8 +164,8 @@ void test_execution(char **env)
 {
     t_node *cmd;
 
-    printf("\n=== Test 1: Commande simple (ls -l) ===\n");
-    cmd = create_test_node("cd src", true);
+    printf("\n=== Test 1: Commande simple (export) ===\n");
+    cmd = create_test_node("export", true);
     exec(cmd, env);
     free_command_list(cmd);
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:09:05 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/09/24 23:09:05 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/10/27 12:48:31 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,6 @@
 
 void    ft_exit(char *line)
 {
-    if (strcmp(line, "exit\n") == 0)
-    {
-        free(line);
-        exit(EXIT_SUCCESS);
-    }
+	free(line);
+	exit(EXIT_SUCCESS);
 }

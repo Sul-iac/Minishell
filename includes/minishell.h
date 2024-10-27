@@ -58,9 +58,6 @@ t_token						*new_token(char *value, t_token_type type);
 void						add_token(t_token **token_list, char *value, t_token_type type);
 void						lexer(char *input, t_token **token_list);
 
-// exit.c
-void						ft_exit(char *line);
-
 
 //======================//
 // 		builtins		//
@@ -83,9 +80,13 @@ void						ft_pwd(void);
 
 // export.c			
 void						ft_export(char *args, char **env);
+char						*no_args(char **str);
 
 // unset.c			
-void						ft_unset(char *args);
+void						ft_unset(char *args, char **env);
+
+// exit.c
+void						ft_exit(char *line);
 
 
 //======================//

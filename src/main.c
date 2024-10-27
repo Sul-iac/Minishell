@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/27 12:34:40 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 13:48:25 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ char **copy_env(char **original_env)
 		i++;
 	}
 	dup_env[i] = NULL;
-	int j = -1;
 	return(dup_env);
 }
 
