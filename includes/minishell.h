@@ -36,6 +36,12 @@ typedef struct redirection {
     struct redirection  *next;
 } t_redirection;
 
+typedef enum e_node_type {
+    CMD_2,
+    PIPE_2,
+    // EMPTY_CMD // a voir pour si y'a juste une redir donc pas de value de node
+} t_node_type;
+
 typedef struct s_node {				//from parser/exp. to exec
 	t_token_type	type;
     char            *value;
@@ -123,7 +129,7 @@ typedef struct s_redirections
     struct s_redirection *next;
 } t_redirections;
 
-int							execute_main(char **env);
+int							execute_exec(char **env);
 static int					execute_simple_command(t_node *cmd, char **env);
 void						test_execution(char **env);
 void						free_command_list(t_node *cmd);

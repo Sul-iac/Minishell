@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:08:52 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/27 16:33:46 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 16:39:17 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -336,7 +336,7 @@ t_node *create_node(t_node_type type, char *value)
     if (!new_node) return NULL;
 
     new_node->type = type;
-p
+
     if (value) {
         new_node->value = strdup(value);
         if (!new_node->value) {
@@ -626,6 +626,7 @@ void free_nodes(t_node *head)
         free(temp);
     }
 }
+
 void ft_expenser(t_node *head)
 {
     mark_builtins(head);
@@ -659,7 +660,7 @@ void print_node(t_node *node) {
     }
 }
 
-int main() {
+int exec_lexer() {
     char *input = "echohello $USER | grep h";
 
     t_token *tokens = lexer(input);
