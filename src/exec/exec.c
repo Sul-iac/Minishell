@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 22:38:34 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 11:55:55 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@ static int execute_builtin(t_node *cmd, char **env)
     char **args;
 
 	args = ft_split(cmd->value, ' ');
-    if (!strcmp(args[0], "cd") || !strcmp(args[0], "export") || !strcmp(args[0], "unset"))
+    if (!strcmp(args[0], "export") || !strcmp(args[0], "unset"))
          nforked_commands(args[0], env);
-    
+	if(!strcmp(args[0], "cd"))
+		nforked_commands(cmd->value, env);
     if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
         !strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
         	forked_commands(args[0], env);
@@ -61,6 +62,9 @@ static int execute_simple_command(t_node *cmd, char **env)
 		args = ft_split(cmd->value, ' ');
 		if(!args)
 			error();
+		int i = -1;
+		while(args[++i])
+		printf("execute_scommand: %s\n", args[i]);
 		execute_builtin(cmd, env);
 	}
     pid = fork();
@@ -163,12 +167,12 @@ void test_execution(char **env)
     t_node *cmd;
 
     printf("\n=== Test 1: Commande simple (ls -l) ===\n");
-    cmd = create_test_node("ls -l", true);
+    cmd = create_test_node("cd src", true);
     exec(cmd, env);
     free_command_list(cmd);
 
     printf("\n=== Test 2: Builtin (echo hello) ===\n");
-    cmd = create_test_node("echo bonjour comment ca va???", true);
+    cmd = create_test_node("pwd", true);
     exec(cmd, env);
     free_command_list(cmd);
 

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/14 10:41:41 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:34:40 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void init_shell(char *line, char **envp)
 {
 	char **env;
 	env = copy_env(envp);
-	//ft_readline(&line);
+	// ft_readline(&line);
 	execute_main(env);
 	//ft_lexer
 	//ft_parser
@@ -75,7 +75,7 @@ int main(int argc, char **argv, char **envp)
 	init_shell(line, envp);
     // while (1)
     // {
-	// 	init_shell(line, env);
+	// 	init_shell(line, envp);
     // }
     return 0;
 }

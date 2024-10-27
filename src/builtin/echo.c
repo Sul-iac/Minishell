@@ -6,12 +6,13 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 22:09:46 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 22:40:38 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:39:29 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
+// check si il y a -n
 static bool check_n_flag(const char *str, int *i)
 {
     if (str[*i] != '-')
@@ -27,6 +28,7 @@ static bool check_n_flag(const char *str, int *i)
     return (false);
 }
 
+// print
 static void	print_char(char c, char next_c)
 {
     if (c == '\\' && next_c)
@@ -47,6 +49,7 @@ static void	print_char(char c, char next_c)
         write(1, &c, 1);
 }
 
+// juste une fonction utils
 static void	pre_print(const char *str, int *i)
 {
 	while (str[*i])

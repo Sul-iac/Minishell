@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 21:32:01 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 12:26:24 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ bool	is_builtin(const char *cmd)
 void	forked_commands(char *cmd, char **env)
 {
 	pid_t pid;
-
+	printf("forked_command: %s\n", cmd);
 	pid = fork();
 	if(pid == -1)
 		error();
@@ -64,8 +64,11 @@ void	forked_commands(char *cmd, char **env)
 
 void	nforked_commands(char *cmd, char **env)
 {
-	if(strcmp(cmd, "cd") == 0)
-		ft_cd(cmd);
+	char **args;
+	
+	args = ft_split(cmd, ' ');
+	if(strcmp(args[0], "cd") == 0)
+		ft_cd(args[1]);
 	if(strcmp(cmd, "export") == 0)
 		ft_export(cmd, env);
 	if(strcmp(cmd, "unset") == 0)
@@ -74,6 +77,6 @@ void	nforked_commands(char *cmd, char **env)
 
 void error(void)
 {
-	perror("An error has occured\n");
+	perror("Error");
 	exit(EXIT_FAILURE);
 }

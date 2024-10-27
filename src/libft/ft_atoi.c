@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 22:13:24 by qbarron           #+#    #+#             */
-/*   Updated: 2023/10/14 12:20:10 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/25 23:09:28 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,3 +39,5 @@ int	ft_atoi(const char *str)
 	}
 	return (sign * res);
 }
+
+//apagnan

@@ -2,15 +2,16 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <errno.h>
+# include <ctype.h>
 # include <stdlib.h>
 # include <string.h>
 # include <unistd.h>
 # include <stdbool.h>
-# include <ctype.h>
 # include <sys/wait.h>
 # include <sys/types.h>
-# include <readline/readline.h>
 # include <readline/history.h>
+# include <readline/readline.h>
 # include "../src/libft/libft.h"
 
 typedef enum e_token_type {
@@ -66,7 +67,8 @@ void						ft_exit(char *line);
 //======================//
 
 // cd.c			
-int							ft_cd(char *cmd);
+int							ft_cd(char *path);
+
 // echo.c			
 int 						ft_echo(char *args);
 static void					print_arg(const char *arg);

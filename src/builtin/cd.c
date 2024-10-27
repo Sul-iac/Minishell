@@ -5,30 +5,38 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/24 20:46:44 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/25 18:37:59 by qbarron          ###   ########.fr       */
+/*   Created: 2024/10/27 11:47:56 by qbarron           #+#    #+#             */
+/*   Updated: 2024/10/27 12:38:37 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int    ft_cd(char *args)
+// implementer le changement de wd ou pas ?
+int	ft_cd(char *path)
 {
-	char *path;
-	
-	if(!args[1])
+	if (!path)
 	{
-		path = getenv("HOME");
-		if(!path)
+		char *home;
+		
+		home = getenv("HOME");
+		if (!home)
 		{
 			printf("cd: HOME not set\n");
-			return(1);
+			return (1);
 		}
+		if (chdir(home) == -1)
+		{
+			error();
+			return (1);
+		}
+		return (0);
 	}
-	if(chdir(args) == -1)
+	if (chdir(path) == -1)
 	{
-		printf("%s: No such file or directory\n");
-		return(1);
+		error();
+		return (1);
 	}
+	return (0);
 }
 
