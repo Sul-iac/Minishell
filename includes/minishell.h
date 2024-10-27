@@ -27,7 +27,7 @@ typedef struct s_token {
 typedef enum e_node_type {
     CMD_2,
     PIPE_2,
-    EMPTY_CMD
+    EMPTY_CMD // a voir pour si y'a juste une redir donc pas de value de node
 } t_node_type;
 
 typedef struct redirection {
@@ -38,13 +38,15 @@ typedef struct redirection {
 
 typedef struct s_node {
     t_node_type     type; // CMD ou PIPE par node ou EMPTY_CMD si pas de CMD entre deux pipe
-    char            *value; //token CMD prend la valeur du token
+    char            *value; //token CMD prend la valeur du token //attention si pas de cmd mais jsute redir //si pas de value alors CMD_2 to EMPTY_CMD
     struct s_node   *next; 
     t_redirection   *inputs; //< et <<
     t_redirection   *outputs; // > et >>
-    bool            builtin; // mettre a 0/false pour le moment
-    bool            is_last_cmd; // mettre a 0/false pour le moment
+    bool            builtin; // mettre a 0/false pour le moment //expenser faire des strcmp faire attention a tous les cas de quote possible
+    bool            is_last_cmd; // mettre a 0/false pour le moment //expenser juste a mettre sur la derniere commande
 } t_node;
+
+// expenser les variable d'environnement
 
 //=========================
 // main.c
