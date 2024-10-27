@@ -6,18 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:09:03 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/27 14:21:20 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 15:08:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-
-char *no_args(char **str)
-{
-	//...
-}
-
 
 // export seul display les variables d'env dans l'ordre alphabetique
 // export avec args set une nouvelle variable dans l'env
@@ -26,10 +19,9 @@ void    ft_export(char *args, char **env)
 	int	i;
 	int len;
     char **new_env;
-
+	char **new_var;
 	len = -1;
 	i = -1;	
-	printf("export: %s\n", args);
 	while(env[++len]);
 	new_env = malloc(sizeof(char *) * (len + 2));
 	if(!new_env)
@@ -50,6 +42,16 @@ void    ft_export(char *args, char **env)
 	}
 	else
 	{
-		error();
+		i = -1;
+		new_var = ft_split(args, ' ');
+		while(args[++i])
+		{
+			if(strchr(new_var[i], "=") == 0)
+			{
+				
+			}
+			else
+				error();
+		}
 	}
 }

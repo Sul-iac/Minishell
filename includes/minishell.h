@@ -80,7 +80,6 @@ void						ft_pwd(void);
 
 // export.c			
 void						ft_export(char *args, char **env);
-char						*no_args(char **str);
 
 // unset.c			
 void						ft_unset(char *args, char **env);
