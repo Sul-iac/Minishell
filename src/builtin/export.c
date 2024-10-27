@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:09:03 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/27 15:34:16 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 16:09:31 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,6 @@
 
 // export seul display les variables d'env dans l'ordre alphabetique
 // export avec args set une nouvelle variable dans l'env
-
-static int check_errors(char **new_env)
-{
-	
-}
 
 void    ft_export(char *args, char **env)
 {
@@ -55,12 +50,7 @@ void    ft_export(char *args, char **env)
 		new_var = ft_split(args, ' ');
 		while(new_var[++i])
 		{
-			if(check_errors(new_var) == 0) // test=bonjour
-			{
-				
-			}
-			else
-				error();
+			
 		}
 		i = -1;
 		while(new_env[++i])
