@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-t_node	*create_node(t_node_type type, char *value)
+t_node	*create_node_parsing(t_node_type type, char *value)
 {
 	t_node	*new_node;
 
@@ -41,7 +41,7 @@ t_node	*create_node(t_node_type type, char *value)
 	return (new_node);
 }
 
-t_redirection	*create_redirection(char *filename, bool is_double)
+t_redirection	*create_redirection_parsing(char *filename, bool is_double)
 {
 	t_redirection	*new_redir;
 
@@ -103,26 +103,26 @@ t_node	*create_node_from_tokens(t_token *tokens)
 		}
 		else if (tokens->type == REDIR_IN || tokens->type == REDIR_HEREDOC)
 		{
-			append_redirection(&inputs, create_redirection(tokens->value,
+			append_redirection(&inputs, create_redirection_parsing(tokens->value,
 					tokens->type == REDIR_HEREDOC));
 		}
 		else if (tokens->type == REDIR_OUT || tokens->type == REDIR_APPEND)
 		{
-			append_redirection(&outputs, create_redirection(tokens->value,
+			append_redirection(&outputs, create_redirection_parsing(tokens->value,
 					tokens->type == REDIR_APPEND));
 		}
 		tokens = tokens->next;
 	}
 	if (cmd_value)
 	{
-		node = create_node(CMD_2, cmd_value);
+		node = create_node_parsing(CMD_2, cmd_value);
 		node->inputs = inputs;
 		node->outputs = outputs;
 		free(cmd_value);
 	}
 	else
 	{
-		node = create_node(EMPTY_CMD, NULL);
+		node = create_node_parsing(EMPTY_CMD, NULL);
 		node->inputs = inputs;
 		node->outputs = outputs;
 	}
@@ -163,7 +163,7 @@ t_node	*convert_tokens_to_nodes(t_token *tokens)
 				free_tokens(cmd_tokens);
 				cmd_tokens = NULL;
 			}
-			pipe_node = create_node(PIPE_2, "|");
+			pipe_node = create_node_parsing(PIPE_2, "|");
 			node_tail->next = pipe_node;
 			node_tail = pipe_node;
 		}

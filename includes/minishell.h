@@ -7,7 +7,7 @@
 # include <unistd.h>
 # include <stdbool.h>
 # include <ctype.h>
-#include <stddef.h>
+# include <stddef.h>
 
 typedef enum e_token_type {
     CMD,
@@ -48,6 +48,13 @@ typedef struct s_node {
 
 // expenser les variable d'environnement
 
+typedef struct s_redirections
+{
+    char *filename;
+    int type;
+    struct s_redirection *next;
+} t_redirections;
+
 //=========================
 // main.c
 void ft_readline(char **line);
@@ -69,8 +76,8 @@ t_token *concat_tokens(t_token *head1, t_token *head2);
 t_token *group_cmd_tokens(t_token *head);
 t_token *lexer(char *input);
 
-t_node *create_node(t_node_type type, char *value);
-t_redirection *create_redirection(char *filename, bool is_double);
+t_node *create_node_parsing(t_node_type type, char *value);
+t_redirection *create_redirection_parsing(char *filename, bool is_double);
 void append_redirection(t_redirection **head, t_redirection *new_redir);
 t_node *create_node_from_tokens(t_token *tokens);
 t_node *convert_tokens_to_nodes(t_token *tokens);
@@ -98,21 +105,21 @@ void test_execution(char **env);
 int execute_main(char **env);
 
 // builtins
-void    ft_exit(char *line);
+void        ft_exit(char *line);
 
-void    ft_cd(char *args);
+int         ft_cd(char *path);
 
-void    ft_echo(char *args);
+int        ft_echo(char *args);
 static bool check_n_flag(const char *str, int *i);
 static void	print_char(char c, char next_c);
 static void	pre_print(const char *str, int *i);
 
-void    ft_env(char **envp);
+void        ft_env(char **envp);
 
-void    ft_pwd(void);
+void        ft_pwd(void);
 
-void    ft_export(char *args, char **env);
+void        ft_export(char *args, char **env);
 
-void    ft_unset(char *args, char **env);
+void        ft_unset(char *args, char **env);
 
 #endif
