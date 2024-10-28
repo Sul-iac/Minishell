@@ -14,8 +14,8 @@
 
 bool	ft_is_builtin(char *command)
 {
-	const char		*builtins[] = {"echo ", "cd ", "pwd ", "export ", "unset ",
-				"env ", "exit "};
+	const char		*builtins[] = {"echo ", "cd ", "pwd ", "export ",
+		"unset ", "env ", "exit "};
 	unsigned long	i;
 
 	i = 0;
@@ -55,11 +55,11 @@ void	ft_is_last_cmd(t_node *head)
 {
 	t_node	*current;
 
+	current = head;
 	if (head == NULL)
 	{
 		return ;
 	}
-	current = head;
 	while (current != NULL)
 	{
 		if (current->next == NULL)
@@ -87,19 +87,19 @@ char	*expand_env_variables(const char *input)
 
 	result_size = 1024;
 	result = (char *)malloc(result_size);
-	if (!result)
-		return (NULL);
 	i = 0;
 	j = 0;
+	if (!result)
+		return (NULL);
 	while (input[i] != '\0')
 	{
-		if (input[i] == '$' && (input[i + 1] != ' ' && input[i + 1] != '\t'
-				&& input[i + 1] != '\0'))
+		if (input[i] == '$' && (input[i + 1] != ' '
+				&& input[i + 1] != '\t' && input[i + 1] != '\0'))
 		{
 			i++;
 			var_len = 0;
-			while (input[i + var_len] && (input[i + var_len] != ' ' && input[i
-					+ var_len] != '\t' && input[i + var_len] != '$'))
+			while (input[i + var_len] && (input[i + var_len] != ' '
+					&& input[i + var_len] != '\t' && input[i + var_len] != '$'))
 			{
 				var_len++;
 			}
@@ -158,11 +158,11 @@ void	expand_node_values(t_node *head)
 
 void	free_nodes(t_node *head)
 {
+	t_redirection	*temp_output;
 	t_node			*temp;
 	t_redirection	*input;
 	t_redirection	*temp_input;
 	t_redirection	*output;
-	t_redirection	*temp_output;
 
 	while (head)
 	{

@@ -39,7 +39,7 @@ void print_node(t_node *node) {
 }
 
 int main() {
-    char *input = "echo hello $USER | grep h";
+    char *input = " echo Makefile | $USER > output.tkt grep pr | >> output.txt head -n 5 | hello (NA) # check status code";
 
     t_token *tokens = lexer(input);
     if (!tokens) {

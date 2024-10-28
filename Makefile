@@ -1,7 +1,7 @@
 NAME = minishell
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
-SRCS = src/parsing/lexer.c src/parsing/expenseur.c src/parsing/parser.c src/parsing/testeur_parsing.c
+SRCS = src/parsing/lexer.c src/parsing/expenser.c src/parsing/parser.c src/parsing/testeur_parsing.c
 
 
 OBJS = $(SRCS:.c=.o)
