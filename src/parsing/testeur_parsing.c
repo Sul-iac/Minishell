@@ -10,7 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-/*void print_token(t_token *token) {
+#include "../../includes/minishell.h"
+
+void print_token(t_token *token) {
     while (token) {
         printf("Token Value: '%s', Type: %d\n", token->value, token->type);
         token = token->next;
@@ -37,7 +39,7 @@ void print_node(t_node *node) {
 }
 
 int main() {
-    char *input = "echohello $USER | grep h";
+    char *input = "echo hello $USER | grep h";
 
     t_token *tokens = lexer(input);
     if (!tokens) {
@@ -64,4 +66,4 @@ int main() {
     free_nodes(head);
 
     return 0;
-}*/
+}

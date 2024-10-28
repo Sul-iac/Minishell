@@ -16,6 +16,10 @@ EXEC_DIR = 		$(SRC_DIR)exec/exec.c \
 				$(SRC_DIR)exec/utils.c \
 				$(SRC_DIR)main.c
 
+PARSING_DIR =	$(SRC_DIR)paring/expenser.c \
+				$(SRC_DIR)paring/lexer.c \
+				$(SRC_DIR)paring/parser.c
+
 LIB_DIR = $(SRC_DIR)libft
 
 SRCS = $(BUILTINS_DIR) $(EXEC_DIR)
