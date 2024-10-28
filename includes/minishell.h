@@ -50,30 +50,69 @@ typedef struct s_node {
 
 //=========================
 // main.c
-void	ft_parsing(char *line);
-void    ft_getline(char **line, size_t *len);
+void ft_readline(char **line);
+char **copy_env(char **original_env);
+void init_shell(char *line, char **envp);
 
 // lexer.c
+t_token *create_token(char *value, t_token_type type);
+void append_token(t_token **head, t_token *new_token);
+t_token_type determine_type(char *token);
+void skip_spaces(char **input);
+char *extract_quoted_string(char **input);
+t_token *tokenize_string(char *input);
+t_token *reorganize_tokens(t_token *head);
+char **split_string(const char *input);
+void free_tokens(t_token *head);
+void free_split_array(char **array);
+t_token *concat_tokens(t_token *head1, t_token *head2);
+t_token *group_cmd_tokens(t_token *head);
+t_token *lexer(char *input);
 
-// exit.c
+t_node *create_node(t_node_type type, char *value);
+t_redirection *create_redirection(char *filename, bool is_double);
+void append_redirection(t_redirection **head, t_redirection *new_redir);
+t_node *create_node_from_tokens(t_token *tokens);
+t_node *convert_tokens_to_nodes(t_token *tokens);
+t_node *parser(t_token *tokens);
+
+bool ft_is_builtin(char *command);
+void mark_builtins(t_node *head);
+void ft_is_last_cmd(t_node *head);
+char *expand_env_variables(const char *input);
+void expand_node_values(t_node *head);
+void free_nodes(t_node *head);
+void ft_expenser(t_node *head);
+
+// exec
+static int execute_builtin(t_node *cmd, char **env);
+static int execute_command(t_node *cmd, char **env);
+static int execute_simple_command(t_node *cmd, char **env);
+int exec(t_node *cmd, char **env);
+t_node	*create_node(int type, char *value, bool builtin);
+t_redirections *create_redirection(char *filename, int type);
+t_node *create_test_node(char *value, bool is_last);
+void free_redirections(t_redirection *redir);
+void free_command_list(t_node *cmd);
+void test_execution(char **env);
+int execute_main(char **env);
+
+// builtins
 void    ft_exit(char *line);
 
-// cd.c
 void    ft_cd(char *args);
 
-// echo.c
 void    ft_echo(char *args);
+static bool check_n_flag(const char *str, int *i);
+static void	print_char(char c, char next_c);
+static void	pre_print(const char *str, int *i);
 
-// env.c
-void    ft_env(char *args);
+void    ft_env(char **envp);
 
-// pwd.c
-void    ft_pwd(char *args);
+void    ft_pwd(void);
 
-// export.c
-void    ft_export(char *args);
+void    ft_export(char *args, char **env);
 
-// unset.c
-void    ft_unset(char *args);
+void    ft_unset(char *args, char **env);
 
 #endif
