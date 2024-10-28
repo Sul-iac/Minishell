@@ -105,11 +105,8 @@ t_token	*tokenize_string(char *input)
 	char	*quoted_token;
 	char	operator[3] = {0};
 	size_t	len;
-	char	*start;
-	size_t	len;
 	char	*redirection_target;
 	char	*start;
-	size_t	len;
 	char	*cmd_token;
 
 	head = NULL;

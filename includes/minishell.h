@@ -56,10 +56,6 @@ typedef struct s_redirections
 } t_redirections;
 
 //=========================
-// main.c
-void ft_readline(char **line);
-char **copy_env(char **original_env);
-void init_shell(char *line, char **envp);
 
 // lexer.c
 t_token *create_token(char *value, t_token_type type);
@@ -90,36 +86,5 @@ char *expand_env_variables(const char *input);
 void expand_node_values(t_node *head);
 void free_nodes(t_node *head);
 void ft_expenser(t_node *head);
-
-// exec
-static int execute_builtin(t_node *cmd, char **env);
-static int execute_command(t_node *cmd, char **env);
-static int execute_simple_command(t_node *cmd, char **env);
-int exec(t_node *cmd, char **env);
-t_node	*create_node(int type, char *value, bool builtin);
-t_redirections *create_redirection(char *filename, int type);
-t_node *create_test_node(char *value, bool is_last);
-void free_redirections(t_redirection *redir);
-void free_command_list(t_node *cmd);
-void test_execution(char **env);
-int execute_main(char **env);
-
-// builtins
-void        ft_exit(char *line);
-
-int         ft_cd(char *path);
-
-int        ft_echo(char *args);
-static bool check_n_flag(const char *str, int *i);
-static void	print_char(char c, char next_c);
-static void	pre_print(const char *str, int *i);
-
-void        ft_env(char **envp);
-
-void        ft_pwd(void);
-
-void        ft_export(char *args, char **env);
-
-void        ft_unset(char *args, char **env);
 
 #endif
