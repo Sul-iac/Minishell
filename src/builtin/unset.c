@@ -3,17 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   unset.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:08:57 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/09/24 23:08:57 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/10/27 13:40:13 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void    ft_unset(char *args)
+void    ft_unset(char *args, char **env)
 {
-    (void)args;
-    printf("unset under construction\n");
+    //...
 }

@@ -3,18 +3,17 @@
 /*                                                        :::      ::::::::   */
 /*   pwd.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:08:59 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/09/24 23:08:59 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/10/27 11:30:47 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void    ft_pwd(char *args)
+void    ft_pwd(void)
 {
-    (void)args;
     char wd[1000];
     printf("%s\n", getcwd(wd, sizeof(wd)));
 }

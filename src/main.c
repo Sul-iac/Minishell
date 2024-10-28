@@ -3,64 +3,78 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42.fr>            +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/08/21 20:57:25 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/27 16:42:35 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-void    ft_getline(char **line, size_t *len)
+void ft_readline(char **line)
 {
-    if (getline(line, len, stdin) == -1)
+    *line = readline("\033[32mminishell\033[0m$ ");
+
+    if (*line == NULL)
     {
-        perror("getline");
+        perror("readline");
         exit(EXIT_FAILURE);
     }
-}
-
-void    ft_parsing(char *line)
-{
-    line[strcspn(line, "\n")] = '\0';
-
-    char *command = strtok(line, " ");
-    char *args = strtok(NULL, "");
-
-    if (command == NULL) {
-        return;
+    if (**line != '\0')
+    {
+        add_history(*line);
     }
-    if (strcmp(command, "cd") == 0)
-        ft_cd(args);
-    else if (strcmp(command, "echo") == 0)
-        ft_echo(args);
-    else if (strcmp(command, "env") == 0)
-        ft_env(args);
-    else if (strcmp(command, "export") == 0)
-        ft_export(args);
-    else if (strcmp(command, "pwd") == 0)
-        ft_pwd(args);
-    else if (strcmp(command, "unset") == 0)
-        ft_unset(args);
-    else if (strcmp(command, "exit") == 0)
-        ft_exit(line);
-    else
-        printf("command not found: %s\n", command);
 }
 
-int main(int argc, char **argv)
+// malloc l'environnement 
+char **copy_env(char **original_env)
 {
-    char *line = NULL;
-    size_t len = 0;
+	int		len;
+	int		i;
+	char	**dup_env;
 
+	i = 0;
+	len = 0;
+
+	while(original_env[len])
+		len++;
+	dup_env = malloc(sizeof(char *) * len + 1);
+	if(!dup_env)
+		error();
+	while(original_env[i])
+	{
+		dup_env[i] = strdup(original_env[i]);
+		if(!dup_env[i])
+			error();
+		i++;
+	}
+	dup_env[i] = NULL;
+	return(dup_env);
+}
+
+void init_shell(char *line, char **envp)
+{
+	char **env;
+	env = copy_env(envp);
+	ft_readline(&line);
+	execute_lexer(line);
+	execute_exec(env);
+	//ft_lexer
+	//ft_parser
+	//ft_expanser
+	//ft_exec
+}
+
+int main(int argc, char **argv, char **envp)
+{
+	char *line = NULL;
+	
     if (argc > 2 && !*argv)
 		return (0);
     while (1)
     {
-        printf("\033[32mminishell\033[0m$ ");
-        ft_getline(&line, &len);
-        ft_parsing(line);
+		init_shell(line, envp);
     }
     return 0;
 }
