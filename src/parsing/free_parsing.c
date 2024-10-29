@@ -53,3 +53,16 @@ void	free_tokens(t_token *head)
 		free(temp);
 	}
 }
+
+void	free_redirections(t_redirection *redir)
+{
+	t_redirection	*temp;
+
+	while (redir)
+	{
+		temp = redir;
+		redir = redir->next;
+		free(temp->filename);
+		free(temp);
+	}
+}

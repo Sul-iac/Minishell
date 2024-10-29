@@ -74,7 +74,7 @@ void	ft_is_last_cmd(t_node *head)
 	}
 }
 
-static char	*get_env_variable_value(const char *input, size_t *i)
+char	*get_env_variable_value(const char *input, size_t *i)
 {
 	size_t	var_len;
 	char	*var_name;
@@ -95,7 +95,7 @@ static char	*get_env_variable_value(const char *input, size_t *i)
 	return (var_value);
 }
 
-static char	*resize_result_if_needed(char *result,
+char	*resize_result_if_needed(char *result,
 	size_t *result_size, size_t required_size)
 {
 	if (required_size >= *result_size)

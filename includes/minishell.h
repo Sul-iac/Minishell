@@ -61,17 +61,72 @@ typedef struct s_redirections
 bool	ft_is_builtin(char *command);
 void	mark_builtins(t_node *head);
 void	ft_is_last_cmd(t_node *head);
-static char	*get_env_variable_value(const char *input, size_t *i);
-static char	*resize_result_if_needed(char *result, size_t *result_size, size_t required_size);
+char	*get_env_variable_value(const char *input, size_t *i);
+char	*resize_result_if_needed(char *result, size_t *result_size, size_t required_size);
 
 // expenser_2.c
 char *process_input(const char *input, size_t *i, size_t *j, char *result, size_t *result_size);
 char	*expand_env_variables(const char *input);
 void	expand_node_values(t_node *head);
-void	free_redirections(t_redirection *redir);
 void	ft_expenser(t_node *head);
 
 // free_nodes.c
 void	free_nodes(t_node *head);
+void	free_split_array(char **array);
+void	free_tokens(t_token *head);
+void	free_redirections(t_redirection *redir);
+
+//lexer_2.c
+t_token	*create_token(char *value, t_token_type type);
+void	append_token(t_token **head, t_token *new_token);
+t_token_type	determine_type(char *token);
+void	skip_spaces(char **input);
+char	*extract_quoted_string(char **input);
+
+//lexer_3.c
+t_token	*tokenize_string(char *input);
+t_token	*process_quoted_token(char **ptr, t_token **head);
+t_token	*process_operator_token(char **ptr, t_token **head);
+t_token	*process_redirection_target(char **ptr, t_token **head, char operator[3]);
+
+//lexer_4.c
+t_token	*process_command_token(char **ptr, t_token **head);
+t_token	*add_token_to_list(t_token **head, t_token **tail, t_token *token);
+void	separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail);
+t_token	*reorganize_tokens(t_token *head);
+
+//lexer_5.c
+int	count_pipes(const char *input);
+char	*allocate_and_copy(const char *start, size_t length);
+char	**split_into_array(const char *input, int num_pipes);
+char	**split_string(const char *input);
+t_token	*concat_tokens(t_token *head1, t_token *head2);
+
+//lexer.c
+char	*group_consecutive_cmd_tokens(t_token **temp, size_t *grouped_len);
+t_token	*group_cmd_tokens(t_token *head);
+t_token	*lexer(char *input);
+
+//parser_2.c
+t_node	*create_node_from_tokens(t_token *tokens);
+char	*build_command_value(t_token *tokens);
+void	gather_redirections(t_token *tokens, t_redirection **inputs, t_redirection **outputs);
+
+//parser_3.c
+t_node	*convert_tokens_to_nodes(t_token *tokens);
+t_node	*process_command_tokens(t_node **node_head, t_node *node_tail, t_token *cmd_tokens);
+t_node	*append_pipe_node(t_node *node_tail);
+
+//parser.c
+t_node	*create_node(t_node_type type, char *value);
+t_redirection	*create_redirection(char *filename, bool is_double);
+void	append_redirection(t_redirection **head, t_redirection *new_redir);
+t_node	*parser(t_token *tokens);
+
+
+//testeur_parsing.c
+void print_token(t_token *token);
+void print_redirection(t_redirection *redir);
+void print_node(t_node *node);
 
 #endif

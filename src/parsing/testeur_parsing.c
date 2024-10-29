@@ -12,21 +12,24 @@
 
 #include "../../includes/minishell.h"
 
-void print_token(t_token *token) {
+void print_token(t_token *token)
+{
     while (token) {
         printf("Token Value: '%s', Type: %d\n", token->value, token->type);
         token = token->next;
     }
 }
 
-void print_redirection(t_redirection *redir) {
+void print_redirection(t_redirection *redir)
+{
     while (redir) {
         printf("\tRedirection Filename: '%s', Is Double: %d\n", redir->filename, redir->is_double);
         redir = redir->next;
     }
 }
 
-void print_node(t_node *node) {
+void print_node(t_node *node)
+{
     while (node) {
         printf("Node Type: %d, Value: '%s'\n", node->type, node->value ? node->value : "NULL");
         printf("Inputs:\n");
@@ -38,7 +41,8 @@ void print_node(t_node *node) {
     }
 }
 
-int main() {
+int main()
+{
     char *input = " echo Makefile | $USER > output.tkt grep pr | >> output.txt head -n 5 | hello (NA) # check status code";
 
     t_token *tokens = lexer(input);

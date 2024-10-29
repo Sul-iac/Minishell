@@ -84,19 +84,6 @@ void	expand_node_values(t_node *head)
 	}
 }
 
-void	free_redirections(t_redirection *redir)
-{
-	t_redirection	*temp;
-
-	while (redir)
-	{
-		temp = redir;
-		redir = redir->next;
-		free(temp->filename);
-		free(temp);
-	}
-}
-
 void	ft_expenser(t_node *head)
 {
 	mark_builtins(head);
