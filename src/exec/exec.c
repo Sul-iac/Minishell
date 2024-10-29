@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 09:29:01 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 14:51:30 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,8 +169,8 @@ void test_execution(char **env)
     exec(cmd, env);
     free_command_list(cmd);
 
-    printf("\n=== Test 2: Builtin (echo hello) ===\n");
-    cmd = create_test_node("pwd", true);
+    printf("\n=== Test 2: Builtin (unset) ===\n");
+    cmd = create_test_node("unset", true);
     exec(cmd, env);
     free_command_list(cmd);
 

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:17:25 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 09:31:45 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 15:49:55 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,7 @@ static void display_sorted_env(char **env)
         len++;
     env_copy = malloc(sizeof(char *) * (len + 1));
     if (!env_copy)
-        return error();
+        return (error());
     i = -1;
     while (env[++i])
     {
@@ -107,7 +107,7 @@ static void display_sorted_env(char **env)
         if (!env_copy[i])
         {
             // ft_free_array(env_copy);
-        	return (error());
+        	error();
         }
     }
     env_copy[i] = NULL;
@@ -118,7 +118,8 @@ static void display_sorted_env(char **env)
     // ft_free_array(env_copy);
 }
 
-void    ft_export(char *args, char **env)
+// Dans export.c
+char **ft_export(char *args, char **env)
 {
     int     i;
     int     env_size;
@@ -126,63 +127,62 @@ void    ft_export(char *args, char **env)
     char    **new_vars;
     char    *var_name;
     int     var_pos;
+
     if (!args)
-    {
         display_sorted_env(env);
-        return;
-    }
+
     env_size = 0;
     while (env[env_size])
         env_size++;
+
     new_vars = ft_split(args, ' ');
     if (!new_vars)
-        return (error());
+        error();
+
     i = 0;
     while (new_vars[i])
         i++;
+
     new_env = malloc(sizeof(char *) * (env_size + i + 1));
     if (!new_env)
     {
-        // ft_free_array(new_vars);
-        return (error());
+        ft_free_array(new_vars);
+        error();
     }
+
     i = -1;
     while (env[++i])
     {
         new_env[i] = strdup(env[i]);
         if (!new_env[i])
         {
-            // ft_free_array(new_vars);
-            // ft_free_array(new_env);
-            return (error());
+            ft_free_array(new_vars);
+            ft_free_array(new_env);
+            error();
         }
     }
+
     i = -1;
     while (new_vars[++i])
     {
         if (!is_valid_identifier(new_vars[i]))
             continue;
-    	var_name = get_var_name(new_vars[i]);
-        var_pos = var_exists(new_env, var_name);
+        var_name = get_var_name(new_vars[i]);
+        var_pos = var_exists(env, var_name);
         if (var_pos != -1)
         {
-
- 			free(new_env[var_pos]);
-			new_env[var_pos] = strdup(new_vars[i]);
+            free(env[var_pos]);
+            env[var_pos] = strdup(new_vars[i]);
         }
         else
         {
-			new_env[env_size] = strdup(new_vars[i]);
-			new_env[env_size + 1] = NULL;
-			env_size++;
+            env[env_size] = strdup(new_vars[i]);
+            env[env_size + 1] = NULL;
+            env_size++;
         }
         free(var_name);
     }
-    i = -1;
-    display_sorted_env(new_env);
-    while (env[++i])
-	{
-        free(env[i]);
-    // ft_free_array(new_vars);
-	}
+
+    ft_free_array(new_vars);
+    return env;
 }

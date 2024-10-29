@@ -74,17 +74,12 @@ int							ft_cd(char *path);
 
 // echo.c			
 int 						ft_echo(char *args);
-static void					print_arg(const char *arg);
-static bool 				is_n_flag(const char *str);
-static void					pre_print(const char *str, int *i);
-
-
 
 // export.c
-void						ft_export(char *args, char **env);
+char						**ft_export(char *args, char **env);
 
 // unset.c
-void						ft_unset(char *args, char **env);
+char						**ft_unset(char *args, char **env);
 
 
 
@@ -99,17 +94,13 @@ void						ft_exit(char *line);
 
 // error.c
 void						error(void);
-
+void						ft_free_array(char **array);
 //======================//
 // 		Exec			//
 //======================//
 
 int							execute_pipes(t_node *cmd, char **env);
 int							exec(t_node *cmd, char **env);
-
-static int 					execute_simple_command(t_node *cmd, char **env);
-static int					execute_command(t_node *cmd, char **env);
-static int					execute_builtin(t_node *cmd, char **env);
 
 char						*get_path(char *cmd, char **env);
 char						*get_first_word(const char *str);
@@ -119,7 +110,7 @@ void						forked_commands(char *cmd, char **env);
 
 bool						is_builtin(const char *cmd);
 
-//test exec
+//test exec ================================================================
 
 typedef struct s_redirections
 {
@@ -129,7 +120,6 @@ typedef struct s_redirections
 } t_redirections;
 
 int							execute_main(char **env);
-static int					execute_simple_command(t_node *cmd, char **env);
 void						test_execution(char **env);
 void						free_command_list(t_node *cmd);
 void						free_redirections(t_redirection *redir);
