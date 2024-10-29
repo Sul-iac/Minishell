@@ -99,15 +99,15 @@ void						ft_free_array(char **array);
 // 		Exec			//
 //======================//
 
-int							execute_pipes(t_node *cmd, char **env);
 int							exec(t_node *cmd, char **env);
+int							execute_pipes(t_node *cmd, char **env);
+int							execute_simple_command(t_node *cmd, char **env);
 
 char						*get_path(char *cmd, char **env);
 char						*get_first_word(const char *str);
 char						**nforked_commands(char *cmd, char **env);
 
 
-void						exec_simple_command(char *cmd, char **env);
 void						forked_commands(char *cmd, char **env);
 
 bool						is_builtin(const char *cmd);

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 17:48:38 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:37:34 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ static int execute_command(t_node *cmd, char **env)
     return (0);
 }
 
-static int execute_simple_command(t_node *cmd, char **env)
+int execute_simple_command(t_node *cmd, char **env)
 {
     pid_t   pid;
     int     status;
@@ -61,8 +61,8 @@ static int execute_simple_command(t_node *cmd, char **env)
 		if(!args)
 			error();
 		int i = -1;
-		while(args[++i])
-			printf("execute_scommand: %s\n", args[i]);
+		// while(args[++i])
+		// 	printf("execute_scommand: %s\n", args[i]);
 		execute_builtin(cmd, env);
 	}
     pid = fork();
@@ -86,11 +86,15 @@ int exec(t_node *cmd, char **env)
     args = ft_split(cmd->value, ' ');
     if (!args)
         return (1);
-
-    if (is_builtin(args[0]))
-        env = nforked_commands(cmd->value, env);
-    else
-        execute_simple_command(cmd, env);
+	if(cmd->next != NULL)
+		execute_pipes(cmd, env);
+	else
+	{
+    	if (is_builtin(args[0]))
+    	    env = nforked_commands(cmd->value, env);
+    	else
+		    execute_simple_command(cmd, env);
+	}
 	free(args);
     return (0);
 }
@@ -166,31 +170,37 @@ void test_execution(char **env)
 {
     t_node *cmd;
 
-    printf("\n=== Test 1: Builtin (export) ===\n");
-    cmd = create_test_node("export TEST=test", true);
-    exec(cmd, env);
-    free_command_list(cmd);
+    // printf("\n=== Test 1: Builtin (export) ===\n");
+    // cmd = create_test_node("export TEST=test", true);
+    // exec(cmd, env);
+	// printf("done\n");
+    // free_command_list(cmd);
 
-    printf("\n=== Test 2: Builtin (unset) ===\n");
-    cmd = create_test_node("unset TEST", true);
-    exec(cmd, env);
-    free_command_list(cmd);
+    // printf("\n=== Test 2: Builtin (unset) ===\n");
+    // cmd = create_test_node("unset TEST", true);
+    // exec(cmd, env);
+	// printf("done\n");
+    // free_command_list(cmd);
 
-	printf("\n=== Test 2.5: Builtin (ls -l) ===\n");
-    cmd = create_test_node("ls -l", true);
-    exec(cmd, env);
-    free_command_list(cmd);
+	// printf("\n=== Test 2.5: Builtin (ls -l) ===\n");
+    // cmd = create_test_node("ls -l", true);
+    // exec(cmd, env);
+	// printf("done\n");
+    // free_command_list(cmd);
 
     // printf("\n=== Test 3: Pipeline (ls | grep a) ===\n");
     // cmd = create_test_node("ls", false);
     // cmd->next = create_test_node("grep a", true);
     // exec(cmd, env);
+	// printf("done\n");
     // free_command_list(cmd);
 
     // printf("\n=== Test 4: Builtin avec redirection (echo hello > test.txt) ===\n");
     // cmd = create_test_node("echo hello", true);
     // cmd->outputs = create_redirection("test.txt", REDIR_OUT);
     // exec(cmd, env);
+	// printf("done\n");
+
     // free_command_list(cmd);
 
     // printf("\n=== Test 5: Pipeline complexe (ls -l | grep a | wc -l) ===\n");
@@ -198,6 +208,7 @@ void test_execution(char **env)
     // cmd->next = create_test_node("grep a", false);
     // cmd->next->next = create_test_node("wc -l", true);
     // exec(cmd, env);
+	// printf("done\n");
     // free_command_list(cmd);
 }
 
