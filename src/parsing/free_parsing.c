@@ -40,3 +40,16 @@ void	free_split_array(char **array)
 	}
 	free(array);
 }
+
+void	free_tokens(t_token *head)
+{
+	t_token	*temp;
+
+	while (head)
+	{
+		temp = head;
+		head = head->next;
+		free(temp->value);
+		free(temp);
+	}
+}

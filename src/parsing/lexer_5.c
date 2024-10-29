@@ -12,46 +12,55 @@
 
 #include "../../includes/minishell.h"
 
-char	**split_string(const char *input)
+int	count_pipes(const char *input)
 {
 	int			num_pipes;
-	const char	*ptr;
-	int			j;
+	const char	*ptr = input;
+
+	num_pipes = 0;
+	while (*ptr != '\0')
+	{
+		if (*ptr == '|')
+			num_pipes++;
+		ptr++;
+	}
+	return (num_pipes);
+}
+
+char	*allocate_and_copy(const char *start, size_t length)
+{
+	char	*new_str;
+
+	new_str = malloc((length + 1) * sizeof(char));
+	if (new_str == NULL)
+		return (NULL);
+	strncpy(new_str, start, length);
+	new_str[length] = '\0';
+	return (new_str);
+}
+
+char	**split_into_array(const char *input, int num_pipes)
+{
 	char		**str_array;
 	size_t		start;
 	int			index;
 	const char	*pipe_pos;
 	size_t		length;
+	int			j;
 
-	ptr = input;
-	num_pipes = 0;
-	while (*ptr != '\0')
-	{
-		if (*ptr == '|')
-		{
-			num_pipes++;
-		}
-		ptr++;
-	}
+	index = 0;
+	start = 0;
 	str_array = malloc((num_pipes + 2) * sizeof(char *));
 	if (str_array == NULL)
-	{
 		return (NULL);
-	}
-	start = 0;
-	index = 0;
 	while (index <= num_pipes)
 	{
 		pipe_pos = strchr(input + start, '|');
 		if (pipe_pos != NULL)
-		{
 			length = (size_t)(pipe_pos - (input + start));
-		}
 		else
-		{
 			length = strlen(input + start);
-		}
-		str_array[index] = malloc((length + 1) * sizeof(char));
+		str_array[index] = allocate_and_copy(input + start, length);
 		if (str_array[index] == NULL)
 		{
 			j = 0;
@@ -63,8 +72,6 @@ char	**split_string(const char *input)
 			free(str_array);
 			return (NULL);
 		}
-		strncpy(str_array[index], input + start, length);
-		str_array[index][length] = '\0';
 		start += length + 1;
 		index++;
 	}
@@ -72,17 +79,12 @@ char	**split_string(const char *input)
 	return (str_array);
 }
 
-void	free_tokens(t_token *head)
+char	**split_string(const char *input)
 {
-	t_token	*temp;
+	int	num_pipes;
 
-	while (head)
-	{
-		temp = head;
-		head = head->next;
-		free(temp->value);
-		free(temp);
-	}
+	num_pipes = count_pipes(input);
+	return (split_into_array(input, num_pipes));
 }
 
 t_token	*concat_tokens(t_token *head1, t_token *head2)
@@ -96,9 +98,7 @@ t_token	*concat_tokens(t_token *head1, t_token *head2)
 		return (head1);
 	current = head1;
 	while (current->next)
-	{
 		current = current->next;
-	}
 	pipe_token = create_token("|", PIPE);
 	current->next = pipe_token;
 	current->next->next = head2;

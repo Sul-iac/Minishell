@@ -12,20 +12,56 @@
 
 #include "../../includes/minishell.h"
 
-t_token *process_command_token(char **ptr, t_token **head)
+t_token	*process_command_token(char **ptr, t_token **head)
 {
-    char *debut = *ptr;
-    while (**ptr && **ptr != ' ' && **ptr != '\t' && **ptr != '|' && **ptr != '<' && **ptr != '>')
-    {
-        (*ptr)++;
-    }
-    size_t lenlen = *ptr - debut;
-    char *cmd_token = (char *)malloc(lenlen + 1);
-    strncpy(cmd_token, debut, lenlen);
-    cmd_token[lenlen] = '\0';
-    append_token(head, create_token(cmd_token, CMD));
-    free(cmd_token);
-    return *head;
+	char	*debut;
+	size_t	lenlen;
+	char	*cmd_token;
+
+	debut = *ptr;
+	while (**ptr && **ptr != ' ' && **ptr != '\t' && **ptr != '|'
+		&& **ptr != '<' && **ptr != '>')
+	{
+		(*ptr)++;
+	}
+	lenlen = *ptr - debut;
+	cmd_token = (char *)malloc(lenlen + 1);
+	strncpy(cmd_token, debut, lenlen);
+	cmd_token[lenlen] = '\0';
+	append_token(head, create_token(cmd_token, CMD));
+	free(cmd_token);
+	return (*head);
+}
+
+t_token	*add_token_to_list(t_token **head, t_token **tail, t_token *token)
+{
+	if (!*head)
+	{
+		*head = token;
+		*tail = token;
+	}
+	else
+	{
+		(*tail)->next = token;
+		*tail = token;
+	}
+	return (token);
+}
+
+void	separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail)
+{
+	t_token	*next;
+
+	while (current)
+	{
+		next = current->next;
+		current->next = NULL;
+		if (current->type == CMD)
+			add_token_to_list(cmd_head, cmd_tail, current);
+		else
+			add_token_to_list(other_head, other_tail, current);
+		current = next;
+	}
 }
 
 t_token	*reorganize_tokens(t_token *head)
@@ -34,46 +70,12 @@ t_token	*reorganize_tokens(t_token *head)
 	t_token	*cmd_tail;
 	t_token	*other_head;
 	t_token	*other_tail;
-	t_token	*next;
-	t_token	*current;
 
 	cmd_head = NULL;
 	cmd_tail = NULL;
 	other_head = NULL;
 	other_tail = NULL;
-	current = head;
-	while (current)
-	{
-		next = current->next;
-		current->next = NULL;
-		if (current->type == CMD)
-		{
-			if (!cmd_head)
-			{
-				cmd_head = current;
-				cmd_tail = current;
-			}
-			else
-			{
-				cmd_tail->next = current;
-				cmd_tail = cmd_tail->next;
-			}
-		}
-		else
-		{
-			if (!other_head)
-			{
-				other_head = current;
-				other_tail = current;
-			}
-			else
-			{
-				other_tail->next = current;
-				other_tail = other_tail->next;
-			}
-		}
-		current = next;
-	}
+	separate_tokens(head, &cmd_head, &cmd_tail, &other_head, &other_tail);
 	if (cmd_tail)
 		cmd_tail->next = other_head;
 	if (cmd_head)

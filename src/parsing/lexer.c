@@ -12,6 +12,23 @@
 
 #include "../../includes/minishell.h"
 
+char	*group_consecutive_cmd_tokens(t_token **temp, size_t *grouped_len)
+{
+	char	*grouped_value;
+
+	grouped_value = strdup((*temp)->value);
+	*grouped_len = strlen(grouped_value);
+	while ((*temp)->next && (*temp)->next->type == CMD)
+	{
+		*temp = (*temp)->next;
+		*grouped_len += strlen((*temp)->value) + 1;
+		grouped_value = (char *)realloc(grouped_value, *grouped_len + 1);
+		strcat(grouped_value, " ");
+		strcat(grouped_value, (*temp)->value);
+	}
+	return (grouped_value);
+}
+
 t_token	*group_cmd_tokens(t_token *head)
 {
 	t_token	*grouped_head;
@@ -26,16 +43,7 @@ t_token	*group_cmd_tokens(t_token *head)
 	{
 		if (temp->type == CMD)
 		{
-			grouped_value = strdup(temp->value);
-			grouped_len = strlen(grouped_value);
-			while (temp->next && temp->next->type == CMD)
-			{
-				temp = temp->next;
-				grouped_len += strlen(temp->value) + 1;
-				grouped_value = (char *)realloc(grouped_value, grouped_len + 1);
-				strcat(grouped_value, " ");
-				strcat(grouped_value, temp->value);
-			}
+			grouped_value = group_consecutive_cmd_tokens(&temp, &grouped_len);
 			new_cmd_token = create_token(grouped_value, CMD);
 			append_token(&grouped_head, new_cmd_token);
 			free(grouped_value);
