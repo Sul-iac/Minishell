@@ -2,6 +2,7 @@
 # define MINISHELL_H
 
 # include <stdio.h>
+# include <fcntl.h>
 # include <errno.h>
 # include <ctype.h>
 # include <stdlib.h>
@@ -107,6 +108,7 @@ char						*get_path(char *cmd, char **env);
 char						*get_first_word(const char *str);
 char						**nforked_commands(char *cmd, char **env);
 
+void						handle_redirection(t_redirection *redirections, bool is_input);
 
 void						forked_commands(char *cmd, char **env);
 
@@ -127,7 +129,7 @@ void						free_command_list(t_node *cmd);
 void						free_redirections(t_redirection *redir);
 t_node						*create_test_node(char *value, bool is_last);
 t_node						*create_node(int type, char *value, bool builtin);
-t_redirections				*create_redirection(char *filename, int type);
+t_redirection				*create_redirection(char *filename, bool is_double);
 
 
 

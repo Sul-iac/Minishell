@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 18:33:48 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 18:42:48 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,9 +78,8 @@ char *get_path(char *cmd, char **env)
 	char		**paths;
 	char		*part_path;
 
-	i = 0;
-	while(env[i] && ft_strnstr(env[i], "PATH=", 5) == 0)
-		i++;
+	i = -1;
+	while(env[++i] && ft_strnstr(env[i], "PATH=", 5) == 0); // rajouter i++ si ca marche plus
 	paths = ft_split(env[i] + 5, ':');
 	if(!paths)
 		error();

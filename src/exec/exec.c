@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 18:37:34 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 19:25:48 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,13 +112,13 @@ t_node	*create_node(int type, char *value, bool builtin)
 	return node;
 }
 
-t_redirections *create_redirection(char *filename, int type)
+t_redirection *create_redirection(char *filename, bool is_double)
 {
-    t_redirections *redir = malloc(sizeof(t_redirections));
+    t_redirection *redir = malloc(sizeof(t_redirection));
     if (!redir)
         return NULL;
     redir->filename = strdup(filename);
-    redir->type = type;
+    redir->is_double = false;
     redir->next = NULL;
     return redir;
 }
@@ -195,13 +195,13 @@ void test_execution(char **env)
 	// printf("done\n");
     // free_command_list(cmd);
 
-    // printf("\n=== Test 4: Builtin avec redirection (echo hello > test.txt) ===\n");
-    // cmd = create_test_node("echo hello", true);
-    // cmd->outputs = create_redirection("test.txt", REDIR_OUT);
-    // exec(cmd, env);
-	// printf("done\n");
+    printf("\n=== Test 4: Builtin avec redirection (echo hello > test.txt) ===\n");
+    cmd = create_test_node("echo hello", true);
+    cmd->outputs = create_redirection("test.txt", REDIR_OUT);
+    exec(cmd, env);
+	printf("done\n");
 
-    // free_command_list(cmd);
+    free_command_list(cmd);
 
     // printf("\n=== Test 5: Pipeline complexe (ls -l | grep a | wc -l) ===\n");
     // cmd = create_test_node("ls -l", false);
