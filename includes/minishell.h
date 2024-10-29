@@ -57,34 +57,21 @@ typedef struct s_redirections
 
 //=========================
 
-// lexer.c
-t_token *create_token(char *value, t_token_type type);
-void append_token(t_token **head, t_token *new_token);
-t_token_type determine_type(char *token);
-void skip_spaces(char **input);
-char *extract_quoted_string(char **input);
-t_token *tokenize_string(char *input);
-t_token *reorganize_tokens(t_token *head);
-char **split_string(const char *input);
-void free_tokens(t_token *head);
-void free_split_array(char **array);
-t_token *concat_tokens(t_token *head1, t_token *head2);
-t_token *group_cmd_tokens(t_token *head);
-t_token *lexer(char *input);
+// expenser.c
+bool	ft_is_builtin(char *command);
+void	mark_builtins(t_node *head);
+void	ft_is_last_cmd(t_node *head);
+static char	*get_env_variable_value(const char *input, size_t *i);
+static char	*resize_result_if_needed(char *result, size_t *result_size, size_t required_size);
 
-t_node *create_node_parsing(t_node_type type, char *value);
-t_redirection *create_redirection_parsing(char *filename, bool is_double);
-void append_redirection(t_redirection **head, t_redirection *new_redir);
-t_node *create_node_from_tokens(t_token *tokens);
-t_node *convert_tokens_to_nodes(t_token *tokens);
-t_node *parser(t_token *tokens);
+// expenser_2.c
+char *process_input(const char *input, size_t *i, size_t *j, char *result, size_t *result_size);
+char	*expand_env_variables(const char *input);
+void	expand_node_values(t_node *head);
+void	free_redirections(t_redirection *redir);
+void	ft_expenser(t_node *head);
 
-bool ft_is_builtin(char *command);
-void mark_builtins(t_node *head);
-void ft_is_last_cmd(t_node *head);
-char *expand_env_variables(const char *input);
-void expand_node_values(t_node *head);
-void free_nodes(t_node *head);
-void ft_expenser(t_node *head);
+// free_nodes.c
+void	free_nodes(t_node *head);
 
 #endif
