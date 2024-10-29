@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 17:05:57 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 17:48:38 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,49 +49,52 @@ static int execute_command(t_node *cmd, char **env)
     return (0);
 }
 
-void exec_simple_command(char *cmd, char **env)
+static int execute_simple_command(t_node *cmd, char **env)
 {
-    char **args = ft_split(cmd, ' ');
-    if (is_builtin(args[0]))
+    pid_t   pid;
+    int     status;
+	char	**args;
+
+    if (cmd->builtin)
+	{
+		args = ft_split(cmd->value, ' ');
+		if(!args)
+			error();
+		int i = -1;
+		while(args[++i])
+			printf("execute_scommand: %s\n", args[i]);
+		execute_builtin(cmd, env);
+	}
+    pid = fork();
+    if (pid < 0)
+		error();
+    if (pid == 0)
     {
-        env = nforked_commands(cmd, env);
+        execute_command(cmd, env);
+        exit(EXIT_FAILURE);
     }
     else
-    {
-        pid_t pid = fork();
-        if (pid == -1)
-            error();
-        if (pid == 0)
-        {
-            if (execvp(args[0], args) == -1)
-                error();
-        }
-        else if (pid > 0)
-        {
-            int status;
-            waitpid(pid, &status, 0);
-            if (WIFEXITED(status))
-                exit(WEXITSTATUS(status));
-        }
-    }
-    ft_free_array(args);
+        waitpid(pid, &status, 0);
+    return (WEXITSTATUS(status));
 }
 
 int exec(t_node *cmd, char **env)
 {
-    char	*first_word;
-	char	**args;
+    char **args;
+    int i;
 
-	args = ft_split(cmd->value, ' ');
-	if(!args)
-		error();
-    cmd->builtin = is_builtin(args[0]);
-    free(args);
-    if (cmd->next == NULL)
-        exec_simple_command(cmd->value, env);
+    args = ft_split(cmd->value, ' ');
+    if (!args)
+        return (1);
+
+    if (is_builtin(args[0]))
+        env = nforked_commands(cmd->value, env);
     else
-        execute_pipes(cmd, env);
+        execute_simple_command(cmd, env);
+	free(args);
+    return (0);
 }
+
 
 //==================================================================================//
 
@@ -163,13 +166,18 @@ void test_execution(char **env)
 {
     t_node *cmd;
 
-    printf("\n=== Test 1: Commande simple (export) ===\n");
+    printf("\n=== Test 1: Builtin (export) ===\n");
     cmd = create_test_node("export TEST=test", true);
     exec(cmd, env);
     free_command_list(cmd);
 
     printf("\n=== Test 2: Builtin (unset) ===\n");
     cmd = create_test_node("unset TEST", true);
+    exec(cmd, env);
+    free_command_list(cmd);
+
+	printf("\n=== Test 2.5: Builtin (ls -l) ===\n");
+    cmd = create_test_node("ls -l", true);
     exec(cmd, env);
     free_command_list(cmd);
 
