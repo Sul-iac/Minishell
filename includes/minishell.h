@@ -78,19 +78,18 @@ static void					print_arg(const char *arg);
 static bool 				is_n_flag(const char *str);
 static void					pre_print(const char *str, int *i);
 
-// env.c			
-void    					ft_env(char **envp);
 
-// pwd.c			
-void						ft_pwd(void);
 
-// export.c			
+// export.c
 void						ft_export(char *args, char **env);
 
-// unset.c			
+// unset.c
 void						ft_unset(char *args, char **env);
 
-// exit.c
+
+
+void						ft_pwd(void);
+void    					ft_env(char **envp);
 void						ft_exit(char *line);
 
 
@@ -129,7 +128,7 @@ typedef struct s_redirections
     struct s_redirection *next;
 } t_redirections;
 
-int							execute_exec(char **env);
+int							execute_main(char **env);
 static int					execute_simple_command(t_node *cmd, char **env);
 void						test_execution(char **env);
 void						free_command_list(t_node *cmd);

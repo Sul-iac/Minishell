@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/27 15:28:02 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 09:29:01 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,8 +80,8 @@ static int execute_simple_command(t_node *cmd, char **env)
 
 int exec(t_node *cmd, char **env)
 {
-    char *first_word;
-	char **args;
+    char	*first_word;
+	char	**args;
 
 	args = ft_split(cmd->value, ' ');
 	if(!args)
@@ -165,7 +165,7 @@ void test_execution(char **env)
     t_node *cmd;
 
     printf("\n=== Test 1: Commande simple (export) ===\n");
-    cmd = create_test_node("export", true);
+    cmd = create_test_node("export TEST=test", true);
     exec(cmd, env);
     free_command_list(cmd);
 

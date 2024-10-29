@@ -5,55 +5,184 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 23:09:03 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/27 16:09:31 by qbarron          ###   ########.fr       */
+/*   Created: 2024/10/29 09:17:25 by qbarron           #+#    #+#             */
+/*   Updated: 2024/10/29 09:31:45 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// export seul display les variables d'env dans l'ordre alphabetique
-// export avec args set une nouvelle variable dans l'env
+static int is_valid_identifier(char *var)
+{
+    int i;
+
+    if (!var || (!ft_isalpha(var[0]) && var[0] != '_'))
+        return (0);
+    i = 1;
+    while (var[i] && var[i] != '=')
+    {
+        if (!ft_isalnum(var[i]) && var[i] != '_')
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
+static char *get_var_name(char *var)
+{
+    int i;
+    char *name;
+
+    i = 0;
+    while (var[i] && var[i] != '=')
+        i++;
+    name = ft_substr(var, 0, i);
+    return (name);
+}
+
+static int var_exists(char **env, char *var_name)
+{
+    int i;
+    char *name;
+
+    i = 0;
+    while (env[i])
+    {
+        name = get_var_name(env[i]);
+        if (ft_strcmp(name, var_name) == 0)
+        {
+            free(name);
+            return (i);
+        }
+        free(name);
+        i++;
+    }
+    return (-1);
+}
+
+static void sort_env(char **env)
+{
+    int     i;
+    int     j;
+    char    *temp;
+    int     len;
+
+    len = 0;
+    while (env[len])
+        len++;
+    i = 0;
+    while (i < len - 1)
+    {
+        j = 0;
+        while (j < len - i - 1)
+        {
+            if (ft_strcmp(env[j], env[j + 1]) > 0)
+            {
+                temp = env[j];
+                env[j] = env[j + 1];
+                env[j + 1] = temp;
+            }
+            j++;
+        }
+        i++;
+    }
+}
+
+static void display_sorted_env(char **env)
+{
+    int     i;
+    int     len;
+    char    **env_copy;
+	
+    len = 0;
+    while (env[len])
+        len++;
+    env_copy = malloc(sizeof(char *) * (len + 1));
+    if (!env_copy)
+        return error();
+    i = -1;
+    while (env[++i])
+    {
+        env_copy[i] = strdup(env[i]);
+        if (!env_copy[i])
+        {
+            // ft_free_array(env_copy);
+        	return (error());
+        }
+    }
+    env_copy[i] = NULL;
+    sort_env(env_copy);
+    i = -1;
+    while (env_copy[++i])
+        printf("declare -x %s\n", env_copy[i]);
+    // ft_free_array(env_copy);
+}
 
 void    ft_export(char *args, char **env)
 {
-	int	i;
-	int len;
-    char **new_env;
-	char **new_var;
-	len = -1;
-	i = -1;
-	while(env[++len]);
-	new_env = malloc(sizeof(char *) * (len + 2));
-	if(!new_env)
-		error();
-	i = -1;
-	while(env[++i])
+    int     i;
+    int     env_size;
+    char    **new_env;
+    char    **new_vars;
+    char    *var_name;
+    int     var_pos;
+    if (!args)
+    {
+        display_sorted_env(env);
+        return;
+    }
+    env_size = 0;
+    while (env[env_size])
+        env_size++;
+    new_vars = ft_split(args, ' ');
+    if (!new_vars)
+        return (error());
+    i = 0;
+    while (new_vars[i])
+        i++;
+    new_env = malloc(sizeof(char *) * (env_size + i + 1));
+    if (!new_env)
+    {
+        // ft_free_array(new_vars);
+        return (error());
+    }
+    i = -1;
+    while (env[++i])
+    {
+        new_env[i] = strdup(env[i]);
+        if (!new_env[i])
+        {
+            // ft_free_array(new_vars);
+            // ft_free_array(new_env);
+            return (error());
+        }
+    }
+    i = -1;
+    while (new_vars[++i])
+    {
+        if (!is_valid_identifier(new_vars[i]))
+            continue;
+    	var_name = get_var_name(new_vars[i]);
+        var_pos = var_exists(new_env, var_name);
+        if (var_pos != -1)
+        {
+
+ 			free(new_env[var_pos]);
+			new_env[var_pos] = strdup(new_vars[i]);
+        }
+        else
+        {
+			new_env[env_size] = strdup(new_vars[i]);
+			new_env[env_size + 1] = NULL;
+			env_size++;
+        }
+        free(var_name);
+    }
+    i = -1;
+    display_sorted_env(new_env);
+    while (env[++i])
 	{
-		new_env[i] = strdup(env[i]);
-		if(!new_env[i])
-			error();
-	}
-	new_env[i] = NULL;
-	i = -1;
-	while(env[++i])
-		free(env[i]);
-	i = -1;
-	if(!args)
-	{
-		while(new_env[++i])
-			printf("declare -x %s\n", new_env[i]);
-	}
-	else
-	{
-		i = -1;
-		new_var = ft_split(args, ' ');
-		while(new_var[++i])
-		{
-			
-		}
-		i = -1;
-		while(new_env[++i])
-			printf("declare -x %s\n", new_env[i]);
+        free(env[i]);
+    // ft_free_array(new_vars);
 	}
 }
