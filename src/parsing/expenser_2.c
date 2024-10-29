@@ -48,10 +48,10 @@ char	*expand_env_variables(const char *input)
 	char	*result;
 	size_t	i;
 	size_t	j;
-	char	*var_value;
 
 	j = 0;
 	i = 0;
+	result_size = 0;
 	result = (char *)malloc(result_size);
 	result_size = 1024;
 	if (!result)
