@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 10:21:05 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 15:56:22 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 17:07:50 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,10 @@ char **ft_unset(char *arg, char **env)
     char    *env_name;
 
     if (!arg || !env || !is_valid_identifier(arg))
-        return env;
+	{
+		printf("Fin de fonction unset\n");
+        return (env);
+	}
     i = 0;
     while (env[i])
         i++;
@@ -83,7 +86,7 @@ char **ft_unset(char *arg, char **env)
         i++;
     }
     new_env[j] = NULL;
-
-    ft_free_array(env);
-	return(new_env);
+    // ft_free_array(env);
+	env = new_env;
+	return(env);
 }

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 14:51:30 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 17:05:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,33 +49,32 @@ static int execute_command(t_node *cmd, char **env)
     return (0);
 }
 
-static int execute_simple_command(t_node *cmd, char **env)
+void exec_simple_command(char *cmd, char **env)
 {
-    pid_t   pid;
-    int     status;
-	char	**args;
-
-    if (cmd->builtin)
-	{
-		args = ft_split(cmd->value, ' ');
-		if(!args)
-			error();
-		int i = -1;
-		while(args[++i])
-		printf("execute_scommand: %s\n", args[i]);
-		execute_builtin(cmd, env);
-	}
-    pid = fork();
-    if (pid < 0)
-		error();
-    if (pid == 0)
+    char **args = ft_split(cmd, ' ');
+    if (is_builtin(args[0]))
     {
-        execute_command(cmd, env);
-        exit(EXIT_FAILURE);
+        env = nforked_commands(cmd, env);
     }
     else
-        waitpid(pid, &status, 0);
-    return (WEXITSTATUS(status));
+    {
+        pid_t pid = fork();
+        if (pid == -1)
+            error();
+        if (pid == 0)
+        {
+            if (execvp(args[0], args) == -1)
+                error();
+        }
+        else if (pid > 0)
+        {
+            int status;
+            waitpid(pid, &status, 0);
+            if (WIFEXITED(status))
+                exit(WEXITSTATUS(status));
+        }
+    }
+    ft_free_array(args);
 }
 
 int exec(t_node *cmd, char **env)
@@ -89,9 +88,9 @@ int exec(t_node *cmd, char **env)
     cmd->builtin = is_builtin(args[0]);
     free(args);
     if (cmd->next == NULL)
-        return (execute_simple_command(cmd, env));
+        exec_simple_command(cmd->value, env);
     else
-        return (execute_pipes(cmd, env));
+        execute_pipes(cmd, env);
 }
 
 //==================================================================================//
@@ -170,7 +169,7 @@ void test_execution(char **env)
     free_command_list(cmd);
 
     printf("\n=== Test 2: Builtin (unset) ===\n");
-    cmd = create_test_node("unset", true);
+    cmd = create_test_node("unset TEST", true);
     exec(cmd, env);
     free_command_list(cmd);
 

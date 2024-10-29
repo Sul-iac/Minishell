@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:17:25 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 15:49:55 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/29 16:23:07 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,7 +106,7 @@ static void display_sorted_env(char **env)
         env_copy[i] = strdup(env[i]);
         if (!env_copy[i])
         {
-            // ft_free_array(env_copy);
+            ft_free_array(env_copy);
         	error();
         }
     }
@@ -115,7 +115,7 @@ static void display_sorted_env(char **env)
     i = -1;
     while (env_copy[++i])
         printf("declare -x %s\n", env_copy[i]);
-    // ft_free_array(env_copy);
+    ft_free_array(env_copy);
 }
 
 // Dans export.c
@@ -138,18 +138,15 @@ char **ft_export(char *args, char **env)
     new_vars = ft_split(args, ' ');
     if (!new_vars)
         error();
-
     i = 0;
     while (new_vars[i])
         i++;
-
     new_env = malloc(sizeof(char *) * (env_size + i + 1));
     if (!new_env)
     {
         ft_free_array(new_vars);
         error();
     }
-
     i = -1;
     while (env[++i])
     {
@@ -161,7 +158,6 @@ char **ft_export(char *args, char **env)
             error();
         }
     }
-
     i = -1;
     while (new_vars[++i])
     {
@@ -182,7 +178,7 @@ char **ft_export(char *args, char **env)
         }
         free(var_name);
     }
-
     ft_free_array(new_vars);
-    return env;
+	display_sorted_env(env);
+    return(env);
 }
