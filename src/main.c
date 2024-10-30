@@ -55,15 +55,16 @@ char **copy_env(char **original_env)
 
 void init_shell(char *line, char **envp)
 {
+	t_token *tokens;
+	t_node *head;
 	char **env;
+
 	env = copy_env(envp);
 	ft_readline(&line);
-	execute_lexer(line);
+    tokens = lexer(line);
+    head = parser(tokens);
+    ft_expenser(head);
 	execute_exec(env);
-	//ft_lexer
-	//ft_parser
-	//ft_expanser
-	//ft_exec
 }
 
 int main(int argc, char **argv, char **envp)

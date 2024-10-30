@@ -124,9 +124,9 @@ void	append_redirection(t_redirection **head, t_redirection *new_redir);
 t_node	*parser(t_token *tokens);
 
 
-//testeur_parsing.c
-void print_token(t_token *token);
-void print_redirection(t_redirection *redir);
-void print_node(t_node *node);
+// //testeur_parsing.c
+// void print_token(t_token *token);
+// void print_redirection(t_redirection *redir);
+// void print_node(t_node *node);
 
 #endif

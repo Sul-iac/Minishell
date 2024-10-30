@@ -46,25 +46,11 @@ int main()
     char *input = " echo Makefile | $USER > output.tkt grep pr | >> output.txt head -n 5 | hello (NA) # check status code";
 
     t_token *tokens = lexer(input);
-    if (!tokens) {
-        fprintf(stderr, "Erreur de lexing.\n");
-        return 1;
-    }
-    
-    printf("Tokens:\n");
-    print_token(tokens);
 
     t_node *head = parser(tokens);
-    if (!head) {
-        fprintf(stderr, "Erreur de parsing.\n");
-        free_tokens(tokens);
-        return 1;
-    }
 
     ft_expenser(head);
 
-    printf("\nNodes:\n\n");
-    print_node(head);
 
     free_tokens(tokens);
     free_nodes(head);
