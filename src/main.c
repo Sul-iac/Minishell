@@ -64,7 +64,7 @@ void init_shell(char *line, char **envp)
     tokens = lexer(line);
     head = parser(tokens);
     ft_expenser(head);
-	execute_exec(env);
+	exec(head, env);
 }
 
 int main(int argc, char **argv, char **envp)

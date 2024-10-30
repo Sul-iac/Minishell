@@ -179,4 +179,11 @@ void error(void);
 
 void    ft_free_array(char **array);
 
+
+//main
+void ft_readline(char **line);
+char **copy_env(char **original_env);
+void init_shell(char *line, char **envp);
+
+
 #endif
