@@ -84,6 +84,19 @@ void	expand_node_values(t_node *head)
 	}
 }
 
+char	*resize_result_if_needed(char *result,
+	size_t *result_size, size_t required_size)
+{
+	if (required_size >= *result_size)
+	{
+		*result_size *= 2;
+		result = (char *)realloc(result, *result_size);
+		if (!result)
+			return (NULL);
+	}
+	return (result);
+}
+
 void	ft_expenser(t_node *head)
 {
 	mark_builtins(head);

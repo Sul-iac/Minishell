@@ -10,13 +10,75 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <stdbool.h>
+#include <ctype.h>
+#include <stddef.h>
+
+typedef enum e_token_type {
+	CMD,
+	PIPE,
+	REDIR_IN,
+	REDIR_HEREDOC,
+	REDIR_OUT,
+	REDIR_APPEND
+} t_token_type;
+
+typedef struct s_token {
+	char            *value;
+	t_token_type    type;
+	struct s_token  *next;
+} t_token;
+
+typedef enum e_node_type {
+	CMD_2,
+	PIPE_2,
+	EMPTY_CMD // a voir pour si y'a juste une redir donc pas de value de node
+} t_node_type;
+
+typedef struct redirection {
+	char                *filename; //penser a enlever les < > << >> dans le lexer pour mettre juste le nom
+	bool                is_double; //0 <> 1 <<>>
+	struct redirection  *next;
+} t_redirection;
+
+typedef struct s_node {
+	t_node_type     type; // CMD ou PIPE par node ou EMPTY_CMD si pas de CMD entre deux pipe
+	char            *value; //token CMD prend la valeur du token //attention si pas de cmd mais jsute redir //si pas de value alors CMD_2 to EMPTY_CMD
+	struct s_node   *next; 
+	t_redirection   *inputs; //< et <<
+	t_redirection   *outputs; // > et >>
+	bool            builtin; // mettre a 0/false pour le moment //expenser faire des strcmp faire attention a tous les cas de quote possible
+	bool            is_last_cmd; // mettre a 0/false pour le moment //expenser juste a mettre sur la derniere commande
+} t_node;
+
+// expenser les variable d'environnement
+
+typedef struct s_redirections
+{
+	char *filename;
+	int type;
+	struct s_redirection *next;
+} t_redirections;
+
 
 t_token *create_token(char *value, t_token_type type)
 {
     t_token *new_token = (t_token *)malloc(sizeof(t_token));
-    if (!new_token) return NULL;
+    if (!new_token) {
+        free(new_token);
+        free(new_token->value);
+        return NULL;
+    }
     new_token->value = strdup(value);
+    if (!new_token->value) {
+        free(new_token);
+        free(new_token->value);
+        return NULL;
+    }
     new_token->type = type;
     new_token->next = NULL;
     return new_token;
@@ -311,12 +373,12 @@ t_token *group_cmd_tokens(t_token *head)
 t_token *lexer(char *input)
 {
     char **str = split_string(input);
-    
+    t_token *tokens;
     t_token *final_tokens = NULL;
     
     for (int j = 0; str[j]; j++)
     {
-        t_token *tokens = tokenize_string(str[j]);
+        tokens = tokenize_string(str[j]);
         if (tokens)
         {
             tokens = reorganize_tokens(tokens);
@@ -625,6 +687,7 @@ void free_nodes(t_node *head)
         free(temp);
     }
 }
+
 void ft_expenser(t_node *head)
 {
     mark_builtins(head);
@@ -659,7 +722,7 @@ void print_node(t_node *node) {
 }
 
 int main() {
-    char *input = "echohello $USER | grep h";
+    char *input = " echo Makefile | $USER > output.tkt grep pr | >> output.txt head -n 5 | hello (NA) # check status code";
 
     t_token *tokens = lexer(input);
     if (!tokens) {
