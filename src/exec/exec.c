@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 19:04:41 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/30 23:43:37 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,51 +17,68 @@ int execute_builtin(t_node *cmd, char ***env)
 	char **args;
 
 	args = ft_split(cmd->value, ' ');
-	if(!args)
+	if (!args)
 		error();
 	if (!strcmp(args[0], "export") || !strcmp(args[0], "unset") || !strcmp(args[0], "cd"))
-		 nforked_commands(cmd->value, env);
-	else if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
-		!strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
-			forked_commands(args[0], env);
+		nforked_commands(cmd->value, env);
+	else if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") ||
+			 !strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
+		forked_commands(args[0], env);
 	free(args);
 	return (1);
 }
 
 int execute_command(t_node *cmd, char ***env)
 {
-	int     len;
-	char    **args;
-	char    *path;
-	char    *full_command;
+	int len;
+	char **args;
+	char *path;
+	char *full_command;
 
 	args = ft_split(cmd->value, ' ');
+	int i = -1;
+	while(args[++i])
+		printf("%s\n", args[i]);
 	if (!args)
+	{
+		perror("execute_command: args not found:");		
 		error();
+	}
 	path = get_path(args[0], env);
+	printf("execute_command path: %s\n", path);
 	if (!path)
-		error();
-	len = strlen(path) + strlen(args[0]);
+	{
+		perror("Path not found: ");
+		return (-1);
+	}
+	len = strlen(path) + strlen(args[0]); //+ strlen(args[0]) + 1;
 	full_command = malloc(sizeof(char) * (len + 1));
 	if (!full_command)
-		error();
+	{
+		perror("execute_command: full_command not malloced: ");
+		return (-1);
+	}
 	strcpy(full_command, path);
-	full_command[len] = '\0';
+	printf("Full_command: %s\n", full_command);
 	if (execve(full_command, args, *env) == -1)
-		error();
+	{
+		perror("Execute_command: execve not executed: \n");
+		return (-1);
+	}
+	free(full_command);
 	return (0);
 }
 
 int execute_simple_command(t_node *cmd, char ***env)
 {
-	pid_t   pid;
-	int     status;
-	char	**args;
+	pid_t pid;
+	int status;
+	char **args;
 
 	if (cmd->builtin)
 	{
 		args = ft_split(cmd->value, ' ');
-		if(!args)
+		if (!args)
 			error();
 		execute_builtin(cmd, env);
 	}
@@ -84,16 +101,13 @@ int exec(t_node *cmd, char ***env)
 
 	args = ft_split(cmd->value, ' ');
 	if (!args)
-		return (1);
-	if(cmd->next != NULL)
+		error();
+	if (is_builtin(args[0]))
+		execute_builtin(cmd, env);
+	else if (cmd->next != NULL)
 		execute_pipes(cmd, env);
 	else
-	{
-		if (is_builtin(args[0]))
-			execute_builtin(cmd, env);
-		else
-			execute_simple_command(cmd, env);
-	}
+		execute_simple_command(cmd, env);
 	free(args);
 	return (0);
 }
@@ -128,7 +142,7 @@ t_node *create_test_node(char *value, bool is_last)
 	if (!node)
 		return NULL;
 
-	node->type = CMD;  
+	node->type = CMD;
 	node->value = strdup(value);
 	node->inputs = NULL;
 	node->outputs = NULL;
