@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -g -I includes -lreadline 
+CFLAGS = -g -I includes -lreadline
 SRC_DIR = src/
 
 BUILTINS_DIR =	$(SRC_DIR)builtin/cd.c \

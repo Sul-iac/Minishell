@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 19:25:48 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/30 15:44:03 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,12 +185,6 @@ void test_execution(char **env)
 	// printf("\n=== Test 2.5: Builtin (ls -l) ===\n");
     // cmd = create_test_node("ls -l", true);
     // exec(cmd, env);
-	// printf("done\n");
-    // free_command_list(cmd);
-
-    // printf("\n=== Test 3: Pipeline (ls | grep a) ===\n");
-    // cmd = create_test_node("ls", false);
-    // cmd->next = create_test_node("grep a", true);
     // exec(cmd, env);
 	// printf("done\n");
     // free_command_list(cmd);

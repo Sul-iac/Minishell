@@ -96,6 +96,7 @@ void						ft_exit(char *line);
 // error.c
 void						error(void);
 void						ft_free_array(char **array);
+
 //======================//
 // 		Exec			//
 //======================//
@@ -103,10 +104,17 @@ void						ft_free_array(char **array);
 int							exec(t_node *cmd, char **env);
 int							execute_pipes(t_node *cmd, char **env);
 int							execute_simple_command(t_node *cmd, char **env);
+int							apply_redirections(t_redirection *redirs);
+int							redirect_input(t_redirection *redir);
+int							redirect_output(t_redirection *redir);
+
+
 
 char						*get_path(char *cmd, char **env);
 char						*get_first_word(const char *str);
 char						**nforked_commands(char *cmd, char **env);
+
+
 
 void						handle_redirection(t_redirection *redirections, bool is_input);
 
