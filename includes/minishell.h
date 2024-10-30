@@ -8,6 +8,12 @@
 # include <stdbool.h>
 # include <ctype.h>
 # include <stddef.h>
+# include <fcntl.h>
+# include <errno.h>
+# include <sys/wait.h>
+# include <sys/types.h>
+# include <readline/history.h>
+# include <readline/readline.h>
 # include "../src/libft/libft.h"
 
 typedef enum e_token_type {
