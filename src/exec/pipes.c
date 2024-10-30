@@ -6,13 +6,13 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 18:42:48 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/30 19:05:10 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	child_process(t_node *cmd, char **env, int in_fd, int *fd)
+void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
 {
 	if (in_fd != 0)
 	{
@@ -46,7 +46,7 @@ void	parent_process(t_node *cmd, pid_t pid, int *in_fd, int *fd)
 		close(fd[0]);
 }
 
-int	execute_pipes(t_node *cmd, char **env)
+int	execute_pipes(t_node *cmd, char ***env)
 {
 	pid_t	pid;
 	int		fd[2];
@@ -71,7 +71,7 @@ int	execute_pipes(t_node *cmd, char **env)
 	return (0);
 }
 
-char *get_path(char *cmd, char **env)
+char *get_path(char *cmd, char ***env)
 {
 	int			i;
 	char		*path;
@@ -79,8 +79,8 @@ char *get_path(char *cmd, char **env)
 	char		*part_path;
 
 	i = -1;
-	while(env[++i] && ft_strnstr(env[i], "PATH=", 5) == 0); // rajouter i++ si ca marche plus
-	paths = ft_split(env[i] + 5, ':');
+	while((*env)[++i] && ft_strnstr((*env)[i], "PATH=", 5) == 0); // rajouter i++ si ca marche plus
+	paths = ft_split((*env)[i] + 5, ':');
 	if(!paths)
 		error();
 	i = -1;

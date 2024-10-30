@@ -6,26 +6,29 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 19:25:48 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/30 19:04:41 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int execute_builtin(t_node *cmd, char **env)
+int execute_builtin(t_node *cmd, char ***env)
 {
 	char **args;
 
 	args = ft_split(cmd->value, ' ');
-	if (!strcmp(args[0], "export") || !strcmp(args[0], "unset"))
+	if(!args)
+		error();
+	if (!strcmp(args[0], "export") || !strcmp(args[0], "unset") || !strcmp(args[0], "cd"))
 		 nforked_commands(cmd->value, env);
-	if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
+	else if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") || 
 		!strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
 			forked_commands(args[0], env);
+	free(args);
 	return (1);
 }
 
-int execute_command(t_node *cmd, char **env)
+int execute_command(t_node *cmd, char ***env)
 {
 	int     len;
 	char    **args;
@@ -44,12 +47,12 @@ int execute_command(t_node *cmd, char **env)
 		error();
 	strcpy(full_command, path);
 	full_command[len] = '\0';
-	if (execve(full_command, args, env) == -1)
+	if (execve(full_command, args, *env) == -1)
 		error();
 	return (0);
 }
 
-int execute_simple_command(t_node *cmd, char **env)
+int execute_simple_command(t_node *cmd, char ***env)
 {
 	pid_t   pid;
 	int     status;
@@ -60,8 +63,6 @@ int execute_simple_command(t_node *cmd, char **env)
 		args = ft_split(cmd->value, ' ');
 		if(!args)
 			error();
-		// while(args[++i])
-		// 	printf("execute_scommand: %s\n", args[i]);
 		execute_builtin(cmd, env);
 	}
 	pid = fork();
@@ -77,7 +78,7 @@ int execute_simple_command(t_node *cmd, char **env)
 	return (WEXITSTATUS(status));
 }
 
-int exec(t_node *cmd, char **env)
+int exec(t_node *cmd, char ***env)
 {
 	char **args;
 
@@ -89,7 +90,7 @@ int exec(t_node *cmd, char **env)
 	else
 	{
 		if (is_builtin(args[0]))
-			env = nforked_commands(cmd->value, env);
+			execute_builtin(cmd, env);
 		else
 			execute_simple_command(cmd, env);
 	}

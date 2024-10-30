@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 17:24:04 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/30 19:06:02 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ bool	is_builtin(const char *cmd)
             !strcmp(cmd, "pwd"));
 }
 
-void	forked_commands(char *cmd, char **env)
+void	forked_commands(char *cmd, char ***env)
 {
 	pid_t pid;
 	pid = fork();
@@ -47,11 +47,11 @@ void	forked_commands(char *cmd, char **env)
 	{
 		if(strcmp(cmd, "echo") == 0)
 			ft_echo(cmd);
-		if(strcmp(cmd, "env") == 0)
-			ft_env(env);
-		if(strcmp(cmd, "exit") == 0)
+		else if(strcmp(cmd, "env") == 0)
+			ft_env(env);				//remettre a jour l'env si appel export/unset
+		else if(strcmp(cmd, "exit") == 0)
 			ft_exit(cmd);
-		if(strcmp(cmd, "pwd") == 0)
+		else if(strcmp(cmd, "pwd") == 0)
 			ft_pwd();
 	}
 	else if(pid > 0)
@@ -61,18 +61,18 @@ void	forked_commands(char *cmd, char **env)
 	}
 }
 
-char **nforked_commands(char *cmd, char **env)
+char **nforked_commands(char *cmd, char ***env)
 {
 	char **args;
 
 	args = ft_split(cmd, ' ');
 	if(strcmp(args[0], "cd") == 0)
 		ft_cd(args[1]);
-	if(strcmp(args[0], "export") == 0)
-		env = ft_export(args[1], env);	
-	if(strcmp(args[0], "unset") == 0)
-		env = ft_unset(args[1], env);
-	return(env);
+	else if(strcmp(args[0], "export") == 0)
+		*env = ft_export(args[1], env);	
+	else if(strcmp(args[0], "unset") == 0)
+		*env = ft_unset(args[1], env);
+	return(*env);
 }
 
 void error(void)

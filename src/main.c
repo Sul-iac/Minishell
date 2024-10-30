@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/27 16:42:35 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/10/30 19:06:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,30 @@ char **copy_env(char **original_env)
 	return(dup_env);
 }
 
-void init_shell(char *line, char **envp)
+void init_shell(char *line, char ***envp)
 {
 	t_token *tokens;
 	t_node *head;
-	char **env;
 
-	env = copy_env(envp);
 	ft_readline(&line);
     tokens = lexer(line);
     head = parser(tokens);
     ft_expenser(head);
-	exec(head, env);
+	exec(head, envp);
 }
 
 int main(int argc, char **argv, char **envp)
 {
 	char *line = NULL;
+	char **env;
 	
     if (argc > 2 && !*argv)
 		return (0);
+	env = copy_env(envp);
     while (1)
     {
-		init_shell(line, envp);
+		init_shell(line, &env);
     }
+	//free
     return 0;
 }
