@@ -123,10 +123,54 @@ t_redirection	*create_redirection(char *filename, bool is_double);
 void	append_redirection(t_redirection **head, t_redirection *new_redir);
 t_node	*parser(t_token *tokens);
 
-
 // //testeur_parsing.c
 // void print_token(t_token *token);
 // void print_redirection(t_redirection *redir);
 // void print_node(t_node *node);
+
+int	ft_cd(char *path);
+
+bool check_n_flag(const char *str, int *i);
+void	print_char(char c, char next_c);
+void	pre_print(const char *str, int *i);
+int ft_echo(char *str);
+
+void    ft_env(char **envp);
+
+void    ft_exit(char *line);
+
+int is_valid_identifier(const char *var);
+char *get_var_name(const char *var);
+int var_exists(char **env, char *var_name);
+void sort_env(char **env);
+void display_sorted_env(char **env);
+char **ft_export(char *args, char **env);
+
+void    ft_pwd(void);
+
+int is_valid_identifier(const char *var);
+char *get_var_name(const char *var);
+char **ft_unset(char *arg, char **env);
+
+// exec
+int execute_builtin(t_node *cmd, char **env);
+int execute_command(t_node *cmd, char **env);
+int execute_simple_command(t_node *cmd, char **env);
+int exec(t_node *cmd, char **env);
+
+void	child_process(t_node *cmd, char **env, int in_fd, int *fd);
+void	parent_process(t_node *cmd, pid_t pid, int *in_fd, int *fd);
+int	execute_pipes(t_node *cmd, char **env);
+char *get_path(char *cmd, char **env);
+
+void handle_redirections(t_node *cmd);
+
+char	*get_first_word(const char *str);
+bool	is_builtin(const char *cmd);
+void	forked_commands(char *cmd, char **env);
+char **nforked_commands(char *cmd, char **env);
+void error(void);
+
+void    ft_free_array(char **array);
 
 #endif

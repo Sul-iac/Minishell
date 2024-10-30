@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static int is_valid_identifier(char *var)
+int is_valid_identifier(char *var)
 {
     int i;
 
@@ -28,7 +28,7 @@ static int is_valid_identifier(char *var)
     return (1);
 }
 
-static char *get_var_name(char *var)
+char *get_var_name(char *var)
 {
     int i;
     char *name;
@@ -40,7 +40,7 @@ static char *get_var_name(char *var)
     return (name);
 }
 
-static int var_exists(char **env, char *var_name)
+int var_exists(char **env, char *var_name)
 {
     int i;
     char *name;
@@ -60,7 +60,7 @@ static int var_exists(char **env, char *var_name)
     return (-1);
 }
 
-static void sort_env(char **env)
+void sort_env(char **env)
 {
     int     i;
     int     j;
@@ -88,7 +88,7 @@ static void sort_env(char **env)
     }
 }
 
-static void display_sorted_env(char **env)
+void display_sorted_env(char **env)
 {
     int     i;
     int     len;

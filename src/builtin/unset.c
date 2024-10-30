@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static int is_valid_identifier(const char *var)
+int is_valid_identifier(const char *var)
 {
     int i;
 
@@ -28,7 +28,7 @@ static int is_valid_identifier(const char *var)
     return (1);
 }
 
-static char *get_var_name(const char *var)
+char *get_var_name(const char *var)
 {
     int     i;
     char    *name;

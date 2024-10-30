@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-static int execute_builtin(t_node *cmd, char **env)
+int execute_builtin(t_node *cmd, char **env)
 {
     char **args;
 
@@ -25,7 +25,7 @@ static int execute_builtin(t_node *cmd, char **env)
     return (1);
 }
 
-static int execute_command(t_node *cmd, char **env)
+int execute_command(t_node *cmd, char **env)
 {
     int     len;
     char    **args;
@@ -99,7 +99,7 @@ int exec(t_node *cmd, char **env)
     return (0);
 }
 
-
+/*
 //==================================================================================//
 
 t_node	*create_node(int type, char *value, bool builtin)
@@ -218,4 +218,4 @@ int execute_main(char **env)
     test_execution(env);
     printf("\n=== Fin des tests ===\n");
     return 0;
-}
+}*/
