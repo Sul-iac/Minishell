@@ -149,7 +149,6 @@ char **ft_export(char *args, char **env);
 
 void    ft_pwd(void);
 
-int is_valid_identifier(const char *var);
 char *get_var_name(const char *var);
 char **ft_unset(char *arg, char **env);
 

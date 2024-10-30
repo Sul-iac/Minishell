@@ -60,7 +60,6 @@ int execute_simple_command(t_node *cmd, char **env)
 		args = ft_split(cmd->value, ' ');
 		if(!args)
 			error();
-		int i = -1;
 		// while(args[++i])
 		// 	printf("execute_scommand: %s\n", args[i]);
 		execute_builtin(cmd, env);
@@ -81,7 +80,6 @@ int execute_simple_command(t_node *cmd, char **env)
 int exec(t_node *cmd, char **env)
 {
     char **args;
-    int i;
 
     args = ft_split(cmd->value, ' ');
     if (!args)

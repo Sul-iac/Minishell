@@ -12,40 +12,12 @@
 
 #include "../../includes/minishell.h"
 
-int is_valid_identifier(const char *var)
-{
-    int i;
-
-    if (!var || (!ft_isalpha(var[0]) && var[0] != '_'))
-        return (0);
-    i = 0;
-    while (var[i])
-    {
-        if (!ft_isalnum(var[i]) && var[i] != '_')
-            return (0);
-        i++;
-    }
-    return (1);
-}
-
-char *get_var_name(const char *var)
-{
-    int     i;
-    char    *name;
-
-    i = 0;
-    while (var[i] && var[i] != '=')
-        i++;
-    name = ft_substr(var, 0, i);
-    return (name);
-}
 // Dans unset.c
 char **ft_unset(char *arg, char **env)
 {
     int     i;
     int     j;
     char    **new_env;
-    char    *var_name;
     char    *env_name;
 
     if (!arg || !env || !is_valid_identifier(arg))
