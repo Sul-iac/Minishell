@@ -8,6 +8,7 @@
 # include <stdbool.h>
 # include <ctype.h>
 # include <stddef.h>
+# include "../src/libft/libft.h"
 
 typedef enum e_token_type {
 	CMD,
