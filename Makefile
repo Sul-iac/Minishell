@@ -1,49 +1,39 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -g -I includes -lreadline
-SRC_DIR = src/
+CFLAGS = -Wall -Wextra -Werror -g -I includes -I src/libft -lreadline -g
 
-BUILTINS_DIR =	$(SRC_DIR)builtin/cd.c \
-				$(SRC_DIR)builtin/echo.c \
-				$(SRC_DIR)builtin/env.c \
-				$(SRC_DIR)builtin/exit.c \
-				$(SRC_DIR)builtin/export.c \
-				$(SRC_DIR)builtin/pwd.c \
-				$(SRC_DIR)builtin/unset.c
+SRCS = 	src/parsing/expenser.c src/parsing/expenser_2.c src/parsing/free_parsing.c \
+		src/parsing/lexer.c src/parsing/lexer_2.c src/parsing/lexer_3.c src/parsing/lexer_4.c src/parsing/lexer_5.c \
+		src/parsing/parser.c src/parsing/parser_2.c src/parsing/parser_3.c \
+		src/builtin/cd.c src/builtin/echo.c src/builtin/env.c src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c \
+		src/exec/exec.c src/exec/pipes.c src/exec/redirs.c src/exec/utils.c src/exec/utils2.c src/main.c
 
-EXEC_DIR = 		$(SRC_DIR)exec/exec.c \
-				$(SRC_DIR)exec/pipes.c \
-				$(SRC_DIR)exec/utils.c \
-				$(SRC_DIR)exec/utils2.c \
-				$(SRC_DIR)exec/redirs.c \
-				$(SRC_DIR)main.c
+LIBFT_DIR = src/libft
+LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)
+LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
 
-LIB_DIR = $(SRC_DIR)libft
+OBJS = $(SRCS:.c=.o) $(LIBFT_OBJS)
 
-SRCS = $(BUILTINS_DIR) $(EXEC_DIR)
-
-INCLUDE = -I includes
-OBJS = $(SRCS:.c=.o)
 RM = rm -f
 
-all: $(LIB_DIR)/libft.a $(NAME)
+all: $(LIBFT_DIR)/libft.a $(NAME)
+
+$(LIBFT_DIR)/libft.a:
+	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) $(OBJS) -L$(LIB_DIR) -lft -o $(NAME)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(LIB_DIR)/libft.a:
-	$(MAKE) -C $(LIB_DIR)
-
 clean:
 	$(RM) $(OBJS)
-	$(MAKE) -C $(LIB_DIR) clean
+	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
 	$(RM) $(NAME)
-	$(MAKE) -C $(LIB_DIR) fclean
+	$(MAKE) -C $(LIBFT_DIR) fclean
 
 re: fclean all
 

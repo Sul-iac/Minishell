@@ -6,14 +6,14 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 22:09:46 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 15:36:52 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/02 15:55:35 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
 // check si il y a -n
-static bool check_n_flag(const char *str, int *i)
+bool check_n_flag(const char *str, int *i)
 {
     if (str[*i] != '-')
         return (false);
@@ -29,7 +29,7 @@ static bool check_n_flag(const char *str, int *i)
 }
 
 // print
-static void	print_char(char c, char next_c)
+void	print_char(char c, char next_c)
 {
     if (c == '\\' && next_c)
     {
@@ -50,7 +50,7 @@ static void	print_char(char c, char next_c)
 }
 
 // juste une fonction utils
-static void	pre_print(const char *str, int *i)
+void	pre_print(const char *str, int *i)
 {
 	while (str[*i])
     {
@@ -73,27 +73,31 @@ static void	pre_print(const char *str, int *i)
 int ft_echo(char *str)
 {
     int     i;
-    bool    n_flag;
-
+	//int n_flag;
     if (!str)
     {
         write(1, "\n", 1);
         return (0);
     }
     i = 0;
-    n_flag = false;
     while (str[i] == ' ')
         i++;
     if (strncmp(str + i, "echo", 4) == 0)
         i += 4;
     while (str[i] == ' ')
         i++;
+    
+    // You might need to modify check_n_flag to return whether to print a newline
     while (str[i] && check_n_flag(str, &i))
     {
-        n_flag = true;
         while (str[i] == ' ')
             i++;
     }
-	pre_print(str, &i);
+
+    pre_print(str, &i);
+    
+    // Print a newline at the end
+    write(1, "\n", 1);
+
     return (0);
 }
