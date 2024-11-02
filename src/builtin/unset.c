@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 10:21:05 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 19:08:00 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/02 15:58:49 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,8 +54,5 @@ char **ft_unset(char *arg, char ***env)
     }
     new_env[j] = NULL;
 	*env = new_env;
-	// i = -1;
-	// while(env[++i])
-	// 	printf("%s\n", env[i]);
 	return(*env);
 }

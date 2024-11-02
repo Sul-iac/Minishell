@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 22:09:46 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 16:02:52 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/02 15:55:35 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ void	pre_print(const char *str, int *i)
 int ft_echo(char *str)
 {
     int     i;
-
+	//int n_flag;
     if (!str)
     {
         write(1, "\n", 1);

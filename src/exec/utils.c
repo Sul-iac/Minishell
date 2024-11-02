@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 19:06:02 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/02 16:07:52 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ char	*get_first_word(const char *str)
     int     i;
     char    *word;
     
+	if(!*str || !str)
+		return(NULL);
     while (*str && (*str == ' ' || *str == '\t'))
         str++;
     i = 0;
@@ -42,29 +44,32 @@ void	forked_commands(char *cmd, char ***env)
 	pid_t pid;
 	pid = fork();
 	if(pid == -1)
-		error();
+		free_and_error(NULL, NULL, "Forked_commands: error creating new process", 1);
 	if(pid == 0)
 	{
 		if(strcmp(cmd, "echo") == 0)
 			ft_echo(cmd);
 		else if(strcmp(cmd, "env") == 0)
-			ft_env(env);				//remettre a jour l'env si appel export/unset
+			ft_env(env);
 		else if(strcmp(cmd, "exit") == 0)
 			ft_exit(cmd);
 		else if(strcmp(cmd, "pwd") == 0)
 			ft_pwd();
+		exit(EXIT_SUCCESS);
 	}
 	else if(pid > 0)
-	{
 		waitpid(pid, NULL, 0);
-		exit(0);
-	}
 }
 
 char **nforked_commands(char *cmd, char ***env)
 {
 	char **args;
 
+	if(!cmd)
+	{
+		perror("nforked_command: cmd not found");
+		return(NULL);
+	}
 	args = ft_split(cmd, ' ');
 	if(strcmp(args[0], "cd") == 0)
 		ft_cd(args[1]);
@@ -75,8 +80,3 @@ char **nforked_commands(char *cmd, char ***env)
 	return(*env);
 }
 
-void error(void)
-{
-	perror("Error");
-	exit(EXIT_FAILURE);
-}

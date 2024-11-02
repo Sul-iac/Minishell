@@ -165,8 +165,8 @@ int execute_simple_command(t_node *cmd, char ***env);
 int exec(t_node *cmd, char ***env);
 
 void	child_process(t_node *cmd, char ***env, int in_fd, int *fd);
-void	parent_process(t_node *cmd, pid_t pid, int *in_fd, int *fd);
-int	execute_pipes(t_node *cmd, char ***env);
+void	parent_process(int *in_fd, int *fd, pid_t pid);
+void	execute_pipes(t_node *cmd, char ***env);
 char *get_path(char *cmd, char ***env);
 
 void handle_redirections(t_node *cmd);
@@ -174,11 +174,10 @@ void handle_redirections(t_node *cmd);
 char	*get_first_word(const char *str);
 bool	is_builtin(const char *cmd);
 void	forked_commands(char *cmd, char ***env);
-char **nforked_commands(char *cmd, char ***env);
-void error(void);
+char	**nforked_commands(char *cmd, char ***env);
+void	free_and_error(char *ptr, char **ptr2, char *msg, bool error);
 
 void    ft_free_array(char **array);
-
 
 //main
 void ft_readline(char **line);

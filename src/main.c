@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 19:06:57 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/02 16:09:45 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,12 +41,12 @@ char **copy_env(char **original_env)
 		len++;
 	dup_env = malloc(sizeof(char *) * len + 1);
 	if(!dup_env)
-		error();
+		free_and_error(NULL, NULL, "Copy_env: dup_env malloc error", 1);
 	while(original_env[i])
 	{
 		dup_env[i] = strdup(original_env[i]);
 		if(!dup_env[i])
-			error();
+			free_and_error(NULL, NULL, "Copy_env: dup_env dup error", 1);
 		i++;
 	}
 	dup_env[i] = NULL;

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:17:25 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 19:03:31 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/02 16:01:04 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,16 +98,13 @@ void display_sorted_env(char **env)
         len++;
     env_copy = malloc(sizeof(char *) * (len + 1));
     if (!env_copy)
-        return (error());
+        return(free_and_error(NULL, env_copy, "Display_sorted_env: env_copy malloc error", 1));
     i = -1;
     while (env[++i])
     {
         env_copy[i] = strdup(env[i]);
         if (!env_copy[i])
-        {
-            ft_free_array(env_copy);
-        	error();
-        }
+			free_and_error(NULL, env_copy, "Display_sorted_env: env_copy error", 1);
     }
     env_copy[i] = NULL;
     sort_env(&env_copy);
@@ -136,7 +133,7 @@ char **ft_export(char *args, char ***env)
         env_size++;
     new_vars = ft_split(args, ' ');
     if (!new_vars)
-        error();
+        free_and_error(NULL, new_vars, "export: error splitting arguments", 1);
     i = 0;
     while (new_vars[i])
         i++;
