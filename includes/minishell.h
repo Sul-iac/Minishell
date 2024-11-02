@@ -55,13 +55,6 @@ typedef struct s_node {
 
 // expenser les variable d'environnement
 
-typedef struct s_redirections
-{
-	char *filename;
-	int type;
-	struct s_redirection *next;
-} t_redirections;
-
 //=========================
 
 // expenser.c
