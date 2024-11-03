@@ -65,6 +65,15 @@ void init_shell(char *line, char ***envp)
 	exec(head, envp);
 }
 
+
+void	signal_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		ft_putstr_fd("\n\033[32mminishell\033[0m$ ", 1);
+	}
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	char *line = NULL;
@@ -73,6 +82,7 @@ int main(int argc, char **argv, char **envp)
     if (argc > 2 && !*argv)
 		return (0);
 	env = copy_env(envp);
+	signal(SIGINT, signal_handler);
     while (1)
     {
 		init_shell(line, &env);
