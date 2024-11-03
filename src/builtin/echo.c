@@ -95,9 +95,6 @@ int ft_echo(char *str)
     }
 
     pre_print(str, &i);
-    
-    // Print a newline at the end
-    write(1, "\n", 1);
 
     return (0);
 }

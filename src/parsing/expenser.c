@@ -74,23 +74,9 @@ void	ft_is_last_cmd(t_node *head)
 	}
 }
 
-char	*get_env_variable_value(const char *input, size_t *i)
+void	ft_expenser(t_node *head)
 {
-	size_t	var_len;
-	char	*var_name;
-	char	*var_value;
-
-	var_len = 0;
-	while (input[*i + var_len] && input[*i + var_len] != ' '
-		&& input[*i + var_len] != '\t' && input[*i + var_len] != '$')
-	{
-		var_len++;
-	}
-	var_name = strndup(&input[*i], var_len);
-	if (!var_name)
-		return (NULL);
-	var_value = getenv(var_name);
-	free(var_name);
-	*i += var_len;
-	return (var_value);
+	mark_builtins(head);
+	ft_is_last_cmd(head);
+	expand_node_values(head);
 }

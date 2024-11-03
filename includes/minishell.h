@@ -53,6 +53,17 @@ typedef struct s_node {
 	bool            is_last_cmd; // mettre a 0/false pour le moment //expenser juste a mettre sur la derniere commande
 } t_node;
 
+typedef struct s_token_list {
+    t_token *head;
+    t_token *tail;
+} t_token_list;
+
+typedef struct {
+    size_t i;
+    size_t j;
+    size_t k;
+} ProcessData;
+
 // expenser les variable d'environnement
 
 //=========================
@@ -61,14 +72,15 @@ typedef struct s_node {
 bool	ft_is_builtin(char *command);
 void	mark_builtins(t_node *head);
 void	ft_is_last_cmd(t_node *head);
-char	*get_env_variable_value(const char *input, size_t *i);
+void	ft_expenser(t_node *head);
 
 // expenser_2.c
-char	*process_input(const char *input, size_t *i, size_t *j, char *result, size_t *result_size);
+char	*get_env_variable_value(const char *input, size_t *i);
+char	*process_input(const char *p, ProcessData *data, char *result);
 char	*expand_env_variables(const char *input);
 void	expand_node_values(t_node *head);
-void	ft_expenser(t_node *head);
 char	*resize_result_if_needed(char *result, size_t *result_size, size_t required_size);
+
 
 // free_nodes.c
 void	free_nodes(t_node *head);
@@ -92,15 +104,20 @@ t_token	*process_redirection_target(char **ptr, t_token **head, char operator[3]
 //lexer_4.c
 t_token	*process_command_token(char **ptr, t_token **head);
 t_token	*add_token_to_list(t_token **head, t_token **tail, t_token *token);
-void	separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail);
+void	separate_tokens(t_token *current,t_token_list *cmd_list, t_token_list *other_list);
 t_token	*reorganize_tokens(t_token *head);
 
 //lexer_5.c
 int	count_pipes(const char *input);
 char	*allocate_and_copy(const char *start, size_t length);
-char	**split_into_array(const char *input, int num_pipes);
 char	**split_string(const char *input);
 t_token	*concat_tokens(t_token *head1, t_token *head2);
+
+//lexer_6.c
+char	**copy_segment(char **str_array, const char *input, size_t *start);
+char	**initialize_array(int num_pipes);
+char	**copy_to_array(char **str_array, const char *input, int num_pipes);
+char	**split_into_array(const char *input, int num_pipes);
 
 //lexer.c
 char	*group_consecutive_cmd_tokens(t_token **temp, size_t *grouped_len);

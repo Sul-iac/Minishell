@@ -65,7 +65,6 @@ void init_shell(char *line, char ***envp)
 	exec(head, envp);
 }
 
-
 void	signal_handler(int signo)
 {
 	if (signo == SIGINT)

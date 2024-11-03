@@ -12,56 +12,76 @@
 
 #include "../../includes/minishell.h"
 
-char	*process_input(const char *inp, size_t *i,
-	size_t *j, char *result, size_t *k)
+char	*get_env_variable_value(const char *input, size_t *i)
 {
+	size_t	var_len;
+	char	*var_name;
 	char	*var_value;
-	size_t	value_len;
 
-	while (inp[*i] != '\0')
+	var_len = 0;
+	while (input[*i + var_len] && input[*i + var_len] != ' '
+		&& input[*i + var_len] != '\t' && input[*i + var_len] != '$')
 	{
-		if (inp[*i] == '$' && inp[*i + 1] && inp[*i + 1] != ' ' && inp[*i + 1] != '\t')
-		{
-			(*i)++;
-			var_value = get_env_variable_value(inp, i);
-			if (var_value)
-			{
-				value_len = strlen(var_value);
-				result = resize_result_if_needed(result, k, *j + value_len);
-				if (!result)
-				{
-					return (NULL);
-				}
-				strcpy(&result[*j], var_value);
-				*j += value_len;
-			}
-		}
-		else
-			result[(*j)++] = inp[(*i)++];
+		var_len++;
 	}
-	return (result);
+	var_name = strndup(&input[*i], var_len);
+	if (!var_name)
+		return (NULL);
+	var_value = getenv(var_name);
+	free(var_name);
+	*i += var_len;
+	return (var_value);
 }
 
-char	*expand_env_variables(const char *input)
+char *process_input(const char *p, ProcessData *data, char *result)
 {
-	size_t	result_size;
-	char	*result;
-	size_t	i;
-	size_t	j;
+    char *var_value;
+    size_t value_len;
 
-	j = 0;
-	i = 0;
-	result_size = 0;
-	result = (char *)malloc(result_size);
-	result_size = 1024;
-	if (!result)
-		return (NULL);
-	result = process_input(input, &i, &j, result, &result_size);
-	if (!result)
-		return (NULL);
-	result[j] = '\0';
-	return (result);
+    while (p[data->i] != '\0')
+    {
+        if (p[data->i] == '$' && p[data->i + 1] && p[data->i + 1] != ' ' && p[data->i + 1] != '\t')
+        {
+            data->i++;
+            var_value = get_env_variable_value(p, &data->i);
+            if (var_value)
+            {
+                value_len = strlen(var_value);
+                result = resize_result_if_needed(result, &data->k, data->j + value_len);
+                if (!result)
+                    return (NULL);
+                strcpy(&result[data->j], var_value);
+                data->j += value_len;
+            }
+        }
+        else
+            result[data->j++] = p[data->i++];
+    }
+    return (result);
 }
+
+
+char *expand_env_variables(const char *input)
+{
+    size_t result_size = 1024;
+    char *result;
+    ProcessData data;
+
+    data.j = 0;
+    data.i = 0;
+    data.k = result_size;
+    result = (char *)malloc(result_size);
+    if (!result)
+        return (NULL);
+    
+    result = process_input(input, &data, result);
+    if (!result)
+        return (NULL);
+    
+    result[data.j] = '\0';
+    return (result);
+}
+
 
 void	expand_node_values(t_node *head)
 {
@@ -95,11 +115,4 @@ char	*resize_result_if_needed(char *result,
 			return (NULL);
 	}
 	return (result);
-}
-
-void	ft_expenser(t_node *head)
-{
-	mark_builtins(head);
-	ft_is_last_cmd(head);
-	expand_node_values(head);
 }
