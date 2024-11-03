@@ -1,6 +1,6 @@
 NAME = minishell
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -I includes -I src/libft -lreadline -g
+CFLAGS = -Wall -Wextra -Werror -g -I includes -I src/libft
 
 SRCS = 	src/parsing/expenser.c src/parsing/expenser_2.c src/parsing/free_parsing.c \
 		src/parsing/lexer.c src/parsing/lexer_2.c src/parsing/lexer_3.c src/parsing/lexer_4.c src/parsing/lexer_5.c \
@@ -22,7 +22,7 @@ $(LIBFT_DIR)/libft.a:
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lreadline
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
