@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/02 17:11:36 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 13:29:32 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,15 +60,7 @@ int execute_simple_command(t_node *cmd, char ***env)
 {
 	pid_t pid;
 	int status;
-	char **args;
 
-	if (cmd->builtin)
-	{
-		args = ft_split(cmd->value, ' ');
-		if (!args)
-			free_and_error(NULL, args, "Execute_simple_command: error splitting arguments", 1);
-		execute_builtin(cmd, env);
-	}
 	pid = fork();
 	if (pid < 0)
 		free_and_error(NULL, NULL, "Execute_simple_command: error creating new process", 1);
@@ -84,13 +76,17 @@ int execute_simple_command(t_node *cmd, char ***env)
 
 int exec(t_node *cmd, char ***env)
 {
+	t_node *current = cmd;
+	while(current && current->next)
+	{
+		if(current->next->type == PIPE_2)
+		{
+			execute_pipes(cmd, env);
+			return(0);
+		}
+	}
 	if(is_builtin(cmd->value))
 		execute_builtin(cmd, env);
-	if(cmd->next != NULL)
-	{
-		if(cmd->next->type == PIPE_2)
-			execute_pipes(cmd, env);
-	}
 	else
 		execute_simple_command(cmd, env);
 	return(0);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/03 22:22:04 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/04 13:22:58 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include "../src/libft/libft.h"
+# include <signal.h>
 # include <ctype.h>
 # include <errno.h>
 # include <fcntl.h>

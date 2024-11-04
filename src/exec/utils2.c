@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 19:29:53 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/02 16:08:27 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 13:18:18 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ void	free_and_error(char *ptr, char **ptr2, char *msg, bool error)
 		ft_free_array(ptr2);
 	if(error)
 	{
-		printf("%s", msg);
+		printf("%s\n", msg);
 		exit(EXIT_FAILURE);
 	}
 	exit(EXIT_SUCCESS);
