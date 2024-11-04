@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 18:52:42 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/30 15:17:32 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 13:43:20 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,8 +96,10 @@ int apply_redirections(t_redirection *redirs)
 		else									// ">>" ou "<<"
 		{
             if (strchr(current->filename, '>') != NULL)
+			{
                 if (redirect_output(current) < 0)
-                    return -1;
+                    return -1;	
+			}
 			else
                 if (redirect_input(current) < 0)
                     return -1;
