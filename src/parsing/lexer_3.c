@@ -47,9 +47,12 @@ t_token	*process_quoted_token(char **ptr, t_token **head)
 
 t_token	*process_operator_token(char **ptr, t_token **head)
 {
-	char	operator[3] = {0};
+	char	operator[3];
 	size_t	len;
 
+	operator[0] = 0;
+	operator[1] = 0;
+	operator[2] = 0;
 	len = 1;
 	if ((*ptr)[0] == '>' && (*ptr)[1] == '>')
 		len = 2;
