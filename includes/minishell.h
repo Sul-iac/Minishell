@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
+/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/04 13:22:58 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 15:58:06 by theo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,8 +127,7 @@ t_token					*process_redirection_target(char **ptr, t_token **head,
 t_token					*process_command_token(char **ptr, t_token **head);
 t_token					*add_token_to_list(t_token **head, t_token **tail,
 							t_token *token);
-void					separate_tokens(t_token *current,
-							t_token_list *cmd_list, t_token_list *other_list);
+void	separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail);
 t_token					*reorganize_tokens(t_token *head);
 
 // lexer_5.c
@@ -136,14 +135,6 @@ int						count_pipes(const char *input);
 char					*allocate_and_copy(const char *start, size_t length);
 char					**split_string(const char *input);
 t_token					*concat_tokens(t_token *head1, t_token *head2);
-
-// lexer_6.c
-char					**copy_segment(char **str_array, const char *input,
-							size_t *start);
-char					**initialize_array(int num_pipes);
-char					**copy_to_array(char **str_array, const char *input,
-							int num_pipes);
-char					**split_into_array(const char *input, int num_pipes);
 
 // lexer.c
 char					*group_consecutive_cmd_tokens(t_token **temp,

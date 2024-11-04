@@ -27,17 +27,56 @@ int	count_pipes(const char *input)
 	return (num_pipes);
 }
 
-char	*allocate_and_copy(const char *src, size_t length)
+char	*allocate_and_copy(const char *start, size_t length)
 {
-	char	*dest;
+	char	*new_str;
 
-	dest = malloc(length + 1);
-	if (dest)
+	new_str = malloc((length + 1) * sizeof(char));
+	if (new_str == NULL)
+		return (NULL);
+	strncpy(new_str, start, length);
+	new_str[length] = '\0';
+	return (new_str);
+}
+
+char	**split_into_array(const char *input, int num_pipes)
+{
+	char		**str_array;
+	size_t		start;
+	int			index;
+	const char	*pipe_pos;
+	size_t		length;
+	int			j;
+
+	index = 0;
+	start = 0;
+	str_array = malloc((num_pipes + 2) * sizeof(char *));
+	if (str_array == NULL)
+		return (NULL);
+	while (index <= num_pipes)
 	{
-		strncpy(dest, src, length);
-		dest[length] = '\0';
+		pipe_pos = strchr(input + start, '|');
+		if (pipe_pos != NULL)
+			length = (size_t)(pipe_pos - (input + start));
+		else
+			length = strlen(input + start);
+		str_array[index] = allocate_and_copy(input + start, length);
+		if (str_array[index] == NULL)
+		{
+			j = 0;
+			while (j < index)
+			{
+				free(str_array[j]);
+				j++;
+			}
+			free(str_array);
+			return (NULL);
+		}
+		start += length + 1;
+		index++;
 	}
-	return (dest);
+	str_array[index] = NULL;
+	return (str_array);
 }
 
 char	**split_string(const char *input)
