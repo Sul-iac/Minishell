@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   expenser.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 15:47:17 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/28 16:36:42 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/04 16:11:26 by theo             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,8 @@
 
 bool	ft_is_builtin(char *command)
 {
-	const char		*builtins[] = {"echo ", "cd ", "pwd ", "export ",
-		"unset ", "env ", "exit "};
+	const char		*builtins[] = {"echo", "cd", "pwd", "export",
+		"unset", "env", "exit"};
 	unsigned long	i;
 
 	i = 0;
