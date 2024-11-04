@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/02 16:07:52 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 14:19:01 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,3 @@ char **nforked_commands(char *cmd, char ***env)
 		*env = ft_unset(args[1], env);
 	return(*env);
 }
-

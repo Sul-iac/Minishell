@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/04 13:29:32 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 15:47:45 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@ int execute_builtin(t_node *cmd, char ***env)
 {
 	char **args;
 
+	printf("builtin: %s\n", cmd->value);
 	if(!cmd->value)
 		free_and_error(NULL, NULL, "execute_builtin error: cmd not found", 1);
 	args = ft_split(cmd->value, ' ');
@@ -43,6 +44,7 @@ int execute_command(t_node *cmd, char ***env)
 	if (!args)
 		free_and_error(NULL, args, "Exec_command: args malloc error", 1);
 	path = get_path(args[0], env);
+	printf("path: %s\n", path);
 	if (!path)
 		free_and_error(path, NULL, "exec_command: get_path error", 1);
 	len = strlen(path) + strlen(args[0]);
@@ -50,6 +52,7 @@ int execute_command(t_node *cmd, char ***env)
 	if (!full_command)
 		free_and_error(full_command, NULL, "exec_command: malloc error", 1);
 	strcpy(full_command, path);
+	printf("full_commande: %s\n", full_command);
 	if (execve(full_command, args, *env) == -1)
 		free_and_error(NULL, NULL, "Exec_command: excve error", 1);
 	free(full_command);
@@ -76,14 +79,16 @@ int execute_simple_command(t_node *cmd, char ***env)
 
 int exec(t_node *cmd, char ***env)
 {
-	t_node *current = cmd;
-	while(current && current->next)
+	printf("%s\n", cmd->value);
+	printf("%d\n", cmd->type);
+    if(cmd->next != NULL)
 	{
-		if(current->next->type == PIPE_2)
+        if (cmd->next->type == PIPE_2)
 		{
-			execute_pipes(cmd, env);
-			return(0);
-		}
+			printf("Pipes\n");
+            execute_pipes(cmd, env);
+        }
+        cmd = cmd->next;
 	}
 	if(is_builtin(cmd->value))
 		execute_builtin(cmd, env);

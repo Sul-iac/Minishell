@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/04 13:38:05 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 15:28:07 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,9 +64,10 @@ void	execute_pipes(t_node *cmd, char ***env)
 	pid_t	pid;
 	int		fd[2];
 	int		in_fd;
-
-	printf("Exec_pipe\n");
+	
 	in_fd = 0;
+	printf("Exec_pipes\n");
+	printf("cmd->value: %s\n", cmd->value);
 	while (cmd)
 	{
 		if(cmd->type == PIPE_2)
@@ -74,15 +75,12 @@ void	execute_pipes(t_node *cmd, char ***env)
 			cmd = cmd->next;
 			continue;
 		}
-		if(cmd->next && cmd->next->type == PIPE_2)
-		{
-			if(pipe(fd) == -1)
-				free_and_error(NULL, NULL, "Execute_pipes: error creating pipe", 1);
-		}
+		if(cmd->next != NULL && pipe(fd) == -1)
+			free_and_error(NULL, NULL, "Execute_pipes: error creating pipe", 1);
 		pid = fork();
 		if(pid == -1)
 			free_and_error(NULL, NULL, "Execute_pipes: error creating new processus", 1);
-		if(pid == 0)
+		else if(pid == 0)
 			child_process(cmd, env, in_fd, fd);
 		else
 			parent_process(&in_fd, fd, pid);
@@ -120,3 +118,4 @@ char *get_path(char *cmd, char ***env)
 	free(paths);
 	return(NULL);
 }
+
