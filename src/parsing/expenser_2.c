@@ -33,7 +33,7 @@ char	*get_env_variable_value(const char *input, size_t *i)
 	return (var_value);
 }
 
-char *process_input(const char *p, ProcessData *data, char *result)
+char *process_input(const char *p, t_process_data *data, char *result)
 {
     char *var_value;
     size_t value_len;
@@ -65,7 +65,7 @@ char *expand_env_variables(const char *input)
 {
     size_t result_size = 1024;
     char *result;
-    ProcessData data;
+    t_process_data data;
 
     data.j = 0;
     data.i = 0;
