@@ -3,39 +3,36 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
+/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/02 16:09:45 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/04 16:36:29 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
+void	signal_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		ft_putstr_fd("\n\033[32mminishell\033[0m$ ", 1);
+	}
+}
+
 void ft_readline(char **line)
 {
-	char *user = getenv("USER");
-	char *name = getenv("NAME");
-	if (user == NULL)
-		user = "user";
-	if (name == NULL)
-		name = "pc";
-	char cwd[1024];
-	if (getcwd(cwd, sizeof(cwd)) == NULL)
-	{
-		perror("getcwd");
-		exit(EXIT_FAILURE);
-	}
-	char prompt[2048];
-	snprintf(prompt, sizeof(prompt), "\033[32m%s@%s:\033[0m\033[34m%s\033[0m $ ", user, name, cwd);
-	*line = readline(prompt);
-	if (*line == NULL)
-	{
-		perror("readline");
-		exit(EXIT_FAILURE);
-	}
-	if (**line != '\0')
-		add_history(*line);
+    *line = readline("\033[32mminishell\033[0m$ ");
+
+    if (*line == NULL)
+    {
+        perror("readline");
+        exit(EXIT_FAILURE);
+    }
+    if (**line != '\0')
+    {
+        add_history(*line);
+    }
 }
 
 // malloc l'environnement 
@@ -70,18 +67,10 @@ void init_shell(char *line, char ***envp)
 	t_node *head;
 
 	ft_readline(&line);
-	tokens = lexer(line);
-	head = parser(tokens);
-	ft_expenser(head);
+    tokens = lexer(line);
+    head = parser(tokens);
+    ft_expenser(head);
 	exec(head, envp);
-}
-
-void	signal_handler(int signo)
-{
-	if (signo == SIGINT)
-	{
-		ft_putstr_fd("\n\033[32mminishell\033[0m$ ", 1);
-	}
 }
 
 int main(int argc, char **argv, char **envp)
@@ -89,14 +78,14 @@ int main(int argc, char **argv, char **envp)
 	char *line = NULL;
 	char **env;
 	
-	if (argc > 2 && !*argv)
+    if (argc > 2 && !*argv)
 		return (0);
 	env = copy_env(envp);
 	signal(SIGINT, signal_handler);
-	while (1)
-	{
+    while (1)
+    {
 		init_shell(line, &env);
-	}
+    }
 	//free
-	return 0;
+    return 0;
 }
