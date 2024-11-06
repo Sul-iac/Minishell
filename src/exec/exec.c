@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/06 14:48:12 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/06 17:30:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,20 +38,20 @@ int execute_command(t_node *cmd, char ***env)
 	char *full_command;
 	
 	if(!cmd->value)
-		free_and_error(NULL, NULL, "Exec_command: cmd is empty", 1);
+		free_and_error(NULL, NULL, "minishell: cmd is empty", 1);
 	args = ft_split(cmd->value, ' ');
 	if (!args)
-		free_and_error(NULL, args, "Exec_command: args malloc error", 1);
+		free_and_error(NULL, args, "minishell: args malloc error", 1);
 	path = get_path(args[0], env);
 	if (!path)
-		free_and_error(path, NULL, "exec_command: get_path error", 1);
+		free_and_error(path, NULL, "minishell: command not found", 1);
 	len = strlen(path) + strlen(args[0]);
 	full_command = malloc(sizeof(char) * (len + 1));
 	if (!full_command)
-		free_and_error(full_command, NULL, "exec_command: malloc error", 1);
+		free_and_error(full_command, NULL, "minishell: malloc error", 1);
 	strcpy(full_command, path);
 	if (execve(full_command, args, *env) == -1)
-		free_and_error(NULL, NULL, "Exec_command: excve error", 1);
+		free_and_error(NULL, NULL, "minishell: excve error", 1);
 	free(full_command);
 	exit(EXIT_SUCCESS);
 }
@@ -74,22 +74,23 @@ int execute_simple_command(t_node *cmd, char ***env)
 	return (WEXITSTATUS(status));
 }
 
-int exec(t_node *cmd, char ***env)
+void exec(t_node *cmd, char ***env)
 {
-	t_node *current = cmd;
+	t_node *current;
 	
-	handle_redirections(cmd);
+	current = cmd;
+	if(cmd->inputs || cmd->outputs)
+		handle_redirections(cmd);
 	while(current && current->next)
 	{
 		if(current->next->type == PIPE_2)
 		{
 			execute_pipes(cmd, env);
-			return(0);
+			return;
 		}
 	}
 	if(is_builtin(cmd->value))
 		execute_builtin(cmd, env);
 	else
 		execute_simple_command(cmd, env);
-	return(0);
 }

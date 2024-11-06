@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/06 14:01:38 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/06 17:28:18 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,10 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+# include <sys/stat.h>
+
+
+extern int g_global_sig;
 
 typedef enum e_token_type
 {
@@ -188,7 +192,7 @@ char					**ft_unset(char *arg, char ***env);
 int						execute_builtin(t_node *cmd, char ***env);
 int						execute_command(t_node *cmd, char ***env);
 int						execute_simple_command(t_node *cmd, char ***env);
-int						exec(t_node *cmd, char ***env);
+void						exec(t_node *cmd, char ***env);
 
 void					child_process(t_node *cmd, char ***env, int in_fd,
 							int *fd);
@@ -196,7 +200,14 @@ void					parent_process(int *in_fd, int *fd, pid_t pid);
 void					execute_pipes(t_node *cmd, char ***env);
 char					*get_path(char *cmd, char ***env);
 
+int 					handle_heredoc(char *delimiter);
+int 					handle_input_redirection(const char *file);
+int 					handle_output_redirection(const char *file, int flags);
+void					reset_signal(void);
 void					handle_redirections(t_node *cmd);
+void					handle_redirections(t_node *cmd);
+void					handle_sigint_heredoc(int signum);
+void 					handle_heredoc_input(int pipefd[2], char *delimiter);
 
 char					*get_first_word(const char *str);
 bool					is_builtin(const char *cmd);
@@ -205,15 +216,11 @@ char					**nforked_commands(char *cmd, char ***env);
 void					free_and_error(char *ptr, char **ptr2, char *msg,
 							bool error);
 
-void handle_redirections(t_node *cmd);
-int create_heredoc(const char *delimiter);
-
-
 void					ft_free_array(char **array);
 
 // main
-void					ft_readline(char **line);
+char					*ft_readline(void);
 char					**copy_env(char **original_env);
-void					init_shell(char *line, char ***envp);
+void					init_shell(char ***envp);
 
 #endif

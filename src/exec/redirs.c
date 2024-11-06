@@ -5,104 +5,155 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/06 13:33:48 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/06 14:54:08 by qbarron          ###   ########.fr       */
+/*   Created: 2024/11/06 16:24:34 by qbarron           #+#    #+#             */
+/*   Updated: 2024/11/06 17:44:51 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int create_heredoc(const char *delimiter)
-{
-    char *line = NULL;
-    size_t len = 0;
-    ssize_t read;
-    int temp_fd;
+int g_global_sig = 0;
 
-    temp_fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (temp_fd == -1)
-	{
-        perror("create_heredoc: error creating temporary file");
-        exit(EXIT_FAILURE);
+int handle_input_redirection(const char *file)
+{
+    int fd = open(file, O_RDONLY);
+    if (fd == -1)
+    {
+        perror("Erreur d'ouverture du fichier d'entrée");
+        return -1;
     }
-    while (1)
-	{
-        printf("> ");
-        read = getline(&line, &len, stdin);
-        if (read == -1)
-		{
-            perror("create_heredoc: error reading line");
-            free(line);
-            close(temp_fd);
-            exit(EXIT_FAILURE);
-        }
-        line[strcspn(line, "\n")] = 0;
-        if (strcmp(line, delimiter) == 0)
-            break;
-        dprintf(temp_fd, "%s\n", line);
+    if (dup2(fd, STDIN_FILENO) == -1)
+    {
+        close(fd);
+        perror("Erreur lors de la redirection de l'entrée standard");
+        return -1;
     }
-    free(line);
-    close(temp_fd);
-    temp_fd = open("/tmp/minishell_heredoc", O_RDONLY);
-    if (temp_fd == -1)
-	{
-        perror("create_heredoc: error reopening temporary file");
-        exit(EXIT_FAILURE);
-    }
-    return temp_fd;
+    close(fd);
+    return 0;
 }
 
-void handle_redirections(t_node *cmd) 
+int handle_output_redirection(const char *file, int flags)
 {
-    int fd;
-    int here_doc = -1;
-    t_redirection *redir = cmd->inputs;
+    int fd = open(file, O_WRONLY | O_CREAT | flags, 0644);
+    if (fd == -1)
+    {
+        perror("Erreur d'ouverture du fichier de sortie");
+        return -1;
+    }
+    if (dup2(fd, STDOUT_FILENO) == -1)
+    {
+        close(fd);
+        perror("Erreur lors de la redirection de la sortie standard");
+        return -1;
+    }
+    close(fd);
+    return 0;
+}
 
-    while (redir) 
+void handle_heredoc_input(int pipefd[2], char *delimiter)
+{
+    char *line;
+
+    signal(SIGINT, handle_sigint_heredoc);
+    while (1)
     {
-        if (redir->is_double)  // <<
+        line = readline("> ");
+        if (!line)
         {
-            here_doc = create_heredoc(redir->filename);
-            fd = here_doc;
+            if (g_global_sig == 130)
+                break;
+            write(1, "\n", 1);
         }
-        else  // <
+        else if (ft_strcmp(line, delimiter) == 0)
         {
-            fd = open(redir->filename, O_RDONLY);
-            if (fd == -1) {
-                perror("open input redirection");
-                exit(EXIT_FAILURE);
+            free(line);
+            break;
+        }
+        else if (*line != '\0')
+        {
+            write(pipefd[1], line, strlen(line));
+            write(pipefd[1], "\n", 1);
+        }
+        free(line);
+    }
+    close(pipefd[1]);
+	reset_signal();
+}
+
+int handle_heredoc(char *delimiter)
+{
+    int pipefd[2];
+
+    if (pipe(pipefd) == -1)
+    {
+        perror("pipe");
+        return -1;
+    }
+    handle_heredoc_input(pipefd, delimiter);
+    close(pipefd[1]);
+    return pipefd[0];
+}
+
+void handle_redirections(t_node *cmd)
+{
+    int				fd;
+    t_redirection	*current;
+
+    current = cmd->inputs;
+    while (current)
+    {
+        if (current->is_double) // (<<)
+        {
+			fd = handle_heredoc(current->filename);
+            if (fd == -1)
+            {
+                close(fd);
+                return;
             }
+            dup2(fd, STDIN_FILENO);
+            close(fd); 
         }
-        if (dup2(fd, STDIN_FILENO) == -1)
-		{
-            perror("dup2 input redirection failed");
-            close(fd);
-            exit(EXIT_FAILURE);
+        else // (<)
+        {
+            if (handle_input_redirection(current->filename) == -1)
+                return;
         }
-        close(fd);
-        redir = redir->next;
+        current = current->next;
     }
-    redir = cmd->outputs;
-    while (redir)
+    current = cmd->outputs;
+    while (current)
     {
-        if (redir->is_double)  // >>
-            fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-        else  // >
-            fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-        if (fd == -1)
-		{
-            perror("open output redirection");
-            exit(EXIT_FAILURE);
+        if (current->is_double) // (>>)
+        {
+            if (handle_output_redirection(current->filename, O_APPEND) == -1)
+                return;
         }
-        if (dup2(fd, STDOUT_FILENO) == -1)
-		{
-            perror("dup2 output redirection failed");
-            close(fd);
-            exit(EXIT_FAILURE);
+        else					// (>)
+        {
+            if (handle_output_redirection(current->filename, O_TRUNC) == -1)
+                return;
         }
-        close(fd);
-        redir = redir->next;
+        current = current->next;
     }
-    if (here_doc != -1)
-        unlink("/tmp/minishell_heredoc");
+}
+
+void handle_sigint_heredoc(int signum)
+{
+    if (signum == SIGINT)
+    {
+        write(STDOUT_FILENO, "\n", 1);
+        close(STDIN_FILENO);
+        g_global_sig = 130;
+    }
+    else if (signum == SIGQUIT)
+    {
+        write(STDOUT_FILENO, "Quit (core dumped)\n", 18);
+        exit(131);
+    }
+}
+
+void reset_signal(void)
+{
+    signal(SIGINT, SIG_DFL);
+    signal(SIGQUIT, SIG_DFL);
 }
