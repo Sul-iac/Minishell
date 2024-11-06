@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/06 13:33:48 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/06 14:02:31 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/06 14:54:08 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,13 @@ int create_heredoc(const char *delimiter)
     int temp_fd;
 
     temp_fd = open("/tmp/minishell_heredoc", O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    if (temp_fd == -1) {
+    if (temp_fd == -1)
+	{
         perror("create_heredoc: error creating temporary file");
         exit(EXIT_FAILURE);
     }
-    while (1) {
+    while (1)
+	{
         printf("> ");
         read = getline(&line, &len, stdin);
         if (read == -1)
@@ -53,47 +55,54 @@ int create_heredoc(const char *delimiter)
 void handle_redirections(t_node *cmd) 
 {
     int fd;
-	int here_doc;
-    t_redirection *redir;
+    int here_doc = -1;
+    t_redirection *redir = cmd->inputs;
 
-	here_doc = -1;
-    redir = cmd->inputs;
     while (redir) 
-	{
-        if (redir->is_double)
-		{
+    {
+        if (redir->is_double)  // <<
+        {
             here_doc = create_heredoc(redir->filename);
-			fd = here_doc;
-		}
-		else
-		{
+            fd = here_doc;
+        }
+        else  // <
+        {
             fd = open(redir->filename, O_RDONLY);
-            if (fd == -1)
-			{
+            if (fd == -1) {
                 perror("open input redirection");
                 exit(EXIT_FAILURE);
             }
         }
-        dup2(fd, STDIN_FILENO);
+        if (dup2(fd, STDIN_FILENO) == -1)
+		{
+            perror("dup2 input redirection failed");
+            close(fd);
+            exit(EXIT_FAILURE);
+        }
         close(fd);
         redir = redir->next;
     }
     redir = cmd->outputs;
     while (redir)
-	{
-        if (redir->is_double)
+    {
+        if (redir->is_double)  // >>
             fd = open(redir->filename, O_WRONLY | O_CREAT | O_APPEND, 0644);
-		else
-			fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+        else  // >
+            fd = open(redir->filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
         if (fd == -1)
 		{
             perror("open output redirection");
             exit(EXIT_FAILURE);
         }
-        dup2(fd, STDOUT_FILENO);
+        if (dup2(fd, STDOUT_FILENO) == -1)
+		{
+            perror("dup2 output redirection failed");
+            close(fd);
+            exit(EXIT_FAILURE);
+        }
         close(fd);
         redir = redir->next;
     }
-	if(here_doc != -1)
-		unlink("/tmp/minishell_heredoc");
+    if (here_doc != -1)
+        unlink("/tmp/minishell_heredoc");
 }

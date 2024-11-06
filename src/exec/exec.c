@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/04 13:29:32 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/06 14:48:12 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,8 @@ int execute_simple_command(t_node *cmd, char ***env)
 int exec(t_node *cmd, char ***env)
 {
 	t_node *current = cmd;
+	
+	handle_redirections(cmd);
 	while(current && current->next)
 	{
 		if(current->next->type == PIPE_2)
