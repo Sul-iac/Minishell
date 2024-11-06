@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/04 13:38:05 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/06 13:52:30 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
 		dup2(fd[1], 1);
 		close(fd[1]);
 	}
+	handle_redirections(cmd);
 	if(cmd->type == CMD_2)
 	{
 		if(is_builtin(cmd->value))
@@ -65,7 +66,6 @@ void	execute_pipes(t_node *cmd, char ***env)
 	int		fd[2];
 	int		in_fd;
 
-	printf("Exec_pipe\n");
 	in_fd = 0;
 	while (cmd)
 	{

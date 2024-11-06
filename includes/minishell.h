@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: theo <theo@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/04 15:58:06 by theo             ###   ########.fr       */
+/*   Updated: 2024/11/06 14:01:38 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -204,6 +204,10 @@ void					forked_commands(char *cmd, char ***env);
 char					**nforked_commands(char *cmd, char ***env);
 void					free_and_error(char *ptr, char **ptr2, char *msg,
 							bool error);
+
+void handle_redirections(t_node *cmd);
+int create_heredoc(const char *delimiter);
+
 
 void					ft_free_array(char **array);
 
