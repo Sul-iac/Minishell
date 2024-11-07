@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
+/*   By: fbelotti <fbelotti@student.42perpignan.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/06 17:30:22 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/07 20:49:36 by fbelotti         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,8 @@ void exec(t_node *cmd, char ***env)
 	t_node *current;
 	
 	current = cmd;
+	int fd_in = dup(STDIN_FILENO);
+	int fd_out = dup(STDOUT_FILENO);
 	if(cmd->inputs || cmd->outputs)
 		handle_redirections(cmd);
 	while(current && current->next)
@@ -93,4 +95,8 @@ void exec(t_node *cmd, char ***env)
 		execute_builtin(cmd, env);
 	else
 		execute_simple_command(cmd, env);
+	dup2(fd_in, STDIN_FILENO);
+	dup2(fd_out, STDOUT_FILENO);
+	close(fd_in);
+	close(fd_out);
 }
