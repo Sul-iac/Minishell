@@ -32,17 +32,19 @@ t_token	*tokenize_string(char *input)
 	return (head);
 }
 
-t_token	*process_quoted_token(char **ptr, t_token **head)
-{
-	char	*quoted_token;
+t_token *process_quoted_token(char **ptr, t_token **head) {
+    char *quoted_token;
 
-	quoted_token = extract_quoted_string(ptr);
-	if (quoted_token)
+    quoted_token = extract_quoted_string(ptr);
+    if (quoted_token)
 	{
-		append_token(head, create_token(quoted_token, CMD));
-		free(quoted_token);
-	}
-	return (*head);
+        if (quoted_token[0] == '\'') {
+            SingleQuote = 1;
+        }
+        append_token(head, create_token(quoted_token, CMD));
+        free(quoted_token);
+    }
+    return *head;
 }
 
 t_token	*process_operator_token(char **ptr, t_token **head)

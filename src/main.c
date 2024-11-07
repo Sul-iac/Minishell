@@ -40,7 +40,7 @@ char *ft_readline(void)
 {
     char *line;
 
-    line = readline("\033[1;32mMinishell\033[0m$ ");
+    line = readline("Minishell$ ");
     if (line && *line)
         add_history(line);
     return line;

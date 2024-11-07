@@ -67,31 +67,44 @@ void	skip_spaces(char **input)
 	}
 }
 
-char	*extract_quoted_string(char **input)
-{
-	char	*start;
-	char	quote_type;
-	char	*end;
-	size_t	len;
-	char	*quoted_string;
+char *extract_quoted_string(char **input) {
+    char *start;
+    char quote_type;
+    char *end;
+    size_t len;
+    char *quoted_string;
 
-	start = *input;
-	quote_type = *start;
-	end = start + 1;
-	while (*end && *end != quote_type)
-	{
-		if (*end == '\\' && *(end + 1) == quote_type)
-			end++;
-		end++;
-	}
-	if (*end == quote_type)
-	{
-		len = end - start + 1;
-		quoted_string = (char *)malloc(len + 1);
-		strncpy(quoted_string, start, len);
-		quoted_string[len] = '\0';
-		*input = end + 1;
-		return (quoted_string);
-	}
-	return (NULL);
+    start = *input;
+    quote_type = *start;
+    end = start + 1;
+
+    while (*end) {
+        if (*end == '\\' && *(end + 1) == quote_type) {
+            // Gérer les guillemets échappés (ex : \" ou \')
+            end++;
+        } else if (quote_type == '\'' && *end == '\'') {
+            // Si c'est une quote simple, on arrête la lecture à la fermeture de la quote simple
+            break;
+        } else if (quote_type == '"' && *end == '"') {
+            // Si c'est une quote double, on arrête à la fermeture de la quote double
+            break;
+        }
+        end++;
+    }
+
+    if (*end == quote_type) {
+        // La longueur de la chaîne exclut les guillemets
+        len = end - start - 1;
+        quoted_string = (char *)malloc(len + 1);
+
+        // Copie du contenu sans les guillemets
+        strncpy(quoted_string, start + 1, len);
+        quoted_string[len] = '\0';
+
+        *input = end + 1;
+        return quoted_string;
+    }
+
+    return NULL;
 }
+
