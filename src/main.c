@@ -38,22 +38,12 @@ char **copy_env(char **original_env)
 
 char *ft_readline(void)
 {
-    char *user = getenv("USER");
-    char *name = getenv("NAME");
-    char cwd[1024];
-    char prompt[2048];
+    char *line;
 
-    if (user == NULL)
-        user = "user";
-    if (name == NULL)
-        name = "pc";
-    if (getcwd(cwd, sizeof(cwd)) == NULL)
-    {
-        perror("getcwd");
-        exit(EXIT_FAILURE);
-    }
-    snprintf(prompt, sizeof(prompt), "\033[32m%s@%s:\033[0m\033[34m%s\033[0m $ ", user, name, cwd);
-    return readline(prompt);
+    line = readline("\033[1;32mMinishell\033[0m$ ");
+    if (line && *line)
+        add_history(line);
+    return line;
 }
 
 void signal_handler(int signo)
