@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 23:08:52 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/09/24 23:08:52 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:34:32 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ t_token	*lexer(char *input)
 	j = 0;
 	while (str[j])
 	{
-		SingleQuote = 0;
+		// SingleQuote = 0;
 		tokens = tokenize_string(str[j]);
 		if (tokens)
 		{

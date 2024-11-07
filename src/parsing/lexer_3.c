@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_3.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:23:34 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/29 14:23:34 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:34:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ t_token *process_quoted_token(char **ptr, t_token **head) {
     if (quoted_token)
 	{
         if (quoted_token[0] == '\'') {
-            SingleQuote = 1;
+            // SingleQuote = 1;
         }
         append_token(head, create_token(quoted_token, CMD));
         free(quoted_token);
