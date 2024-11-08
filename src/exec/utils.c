@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/09 00:05:41 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/09 00:27:12 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,6 @@ char	**nforked_commands(char *cmd, char ***env)
 		*env = ft_export(args[1], env);
 	else if(strcmp(args[0], "unset") == 0)
 		*env = ft_unset(args[1], env);
-	free_and_error(NULL, args, NULL, 0);
 	return(*env);
 }
 char	*get_path(char *cmd, char ***env)
