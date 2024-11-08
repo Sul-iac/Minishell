@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/08 18:00:09 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 22:48:56 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,13 @@ typedef struct s_data
 	size_t				k;
 }						t_process_data;
 
+typedef struct s_main
+{
+    int		is_running;
+	
+}				t_main;
+
+
 // expenser les variable d'environnement
 
 //=========================
@@ -167,14 +174,11 @@ t_node					*parser(t_token *tokens);
 
 int						ft_cd(char *path);
 
-bool					check_n_flag(const char *str, int *i);
-void					print_char(char c, char next_c);
-void					pre_print(const char *str, int *i);
 void					ft_echo(char **args);
 
 void					ft_env(char ***envp);
 
-int						ft_exit(char *args, int *is_running);
+int						ft_exit(char **arg);
 
 int						is_valid_identifier(const char *var);
 char					*get_var_name(const char *var);
@@ -198,6 +202,8 @@ void					child_process(t_node *cmd, char ***env, int in_fd,
 							int *fd);
 void					parent_process(int *in_fd, int *fd, pid_t pid);
 void					execute_pipes(t_node *cmd, char ***env);
+void					parent_and_child(t_node *cmd, char ***env, int in_fd, int *fd);
+
 char					*get_path(char *cmd, char ***env);
 
 int 					handle_heredoc(char *delimiter);
@@ -210,19 +216,21 @@ void					handle_sigint_heredoc(int signum);
 void 					handle_heredoc_input(int pipefd[2], char *delimiter);
 
 char					*get_first_word(const char *str);
-bool					is_builtin(const char *cmd);
 void					forked_commands(char *cmd, char ***env);
 char					**nforked_commands(char *cmd, char ***env);
+
+
 void					free_and_error(char *ptr, char **ptr2, char *msg,
 							bool error);
 void					free_triple_pointer(char ***array);
-
-
 void					ft_free_array(char **array);
 
 // main
 char					*ft_readline(void);
 char					**copy_env(char **original_env);
-void					init_shell(char ***envp);
+void					init_shell(char ***envp, t_main *main);
+void					init_parser_exec(char *line, t_main *main, char ***envp);
+void					execute_relative_absolute(char *cmd, char **args, char ***envp);
+
 
 #endif

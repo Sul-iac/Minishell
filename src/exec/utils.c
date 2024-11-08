@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 17:21:22 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 22:10:58 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ void	forked_commands(char *cmd, char ***env)
 		else if(strcmp(args[0], "pwd") == 0)
 			ft_pwd();
 		free_and_error(NULL, args, NULL, 0);
-		exit(EXIT_SUCCESS);
+		// exit(EXIT_SUCCESS);
 	}
 	else if(pid > 0)
 		waitpid(pid, NULL, 0);

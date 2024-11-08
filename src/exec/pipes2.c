@@ -1,32 +1,27 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   cd.c                                               :+:      :+:    :+:   */
+/*   pipes2.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/27 11:47:56 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 22:02:09 by qbarron          ###   ########.fr       */
+/*   Created: 2024/11/08 22:40:14 by qbarron           #+#    #+#             */
+/*   Updated: 2024/11/08 22:49:03 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	ft_cd(char *path)
+void	parent_and_child(t_node *cmd, char ***env, int in_fd, int *fd)
 {
-	if (!path)
-	{
-		char *home;
-		
-		home = getenv("HOME");
-		if (!home)
-			free_and_error(NULL, NULL, "Home not set", 1);
-		if (chdir(home) == -1)
-			free_and_error(NULL, NULL, "cd: Home nout found", 1);
-		return (0);
-	}
-	if (chdir(path) == -1)
-		free_and_error(NULL, NULL, "cd: error finding path", 1);
-	return (0);
-}
+	pid_t pid;
 
+	pid = fork();
+	if(pid == -1)
+		free_and_error(NULL, NULL, "Execute_pipes: error creating new processus", 1);
+	if(pid == 0)
+		child_process(cmd, env, in_fd, fd);
+	else
+		parent_process(&in_fd, fd, pid);
+	cmd = cmd->next;
+}

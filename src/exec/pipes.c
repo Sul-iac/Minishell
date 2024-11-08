@@ -6,17 +6,38 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 15:49:11 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 22:49:18 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
+void	execute_builtin_nbuiltin(t_node *cmd, char ***env)
 {
 	char *path;
 	char **args;
+	
+	if(cmd->builtin)
+		execute_builtin(cmd, env);
+	else
+	{
+		args = ft_split(cmd->value, ' ');
+		if(!args || !args[0])
+			free_and_error(NULL, args, "child_process: malloc error", 1);
+		path = get_path(args[0], env);
+		if(path)
+		{
+			if(execve(path, args, *env) == -1)
+				free_and_error(path, args, "child_process: execve error", 1);
+		}
+		else
+			free_and_error(NULL, NULL, "child_process: command not found", 1);
+	}
+	free_and_error(path, args, NULL, 0);
+}
 
+void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
+{
 	if(in_fd != 0)
 	{
 		dup2(in_fd, 0);
@@ -32,24 +53,7 @@ void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if(cmd->type == CMD_2)
-	{
-		if(cmd->builtin)
-			execute_builtin(cmd, env);
-		else
-		{
-			args = ft_split(cmd->value, ' ');
-			if(!args || !args[0])
-				free_and_error(NULL, args, "child_process: malloc error", 1);
-			path = get_path(args[0], env);
-			if(path)
-			{
-				if(execve(path, args, *env) == -1)
-					free_and_error(NULL, NULL, "child_process: execve error", 1);
-			}
-			else
-				free_and_error(NULL, NULL, "child_process: command not found", 1);
-		}
-	}
+		execute_builtin_nbuiltin(cmd, env);
 	exit(EXIT_SUCCESS);
 }
 
@@ -64,7 +68,6 @@ void	parent_process(int *in_fd, int *fd, pid_t pid)
 
 void	execute_pipes(t_node *cmd, char ***env)
 {
-	pid_t	pid;
 	int		fd[2];
 	int		in_fd;
 
@@ -81,14 +84,7 @@ void	execute_pipes(t_node *cmd, char ***env)
 			if(pipe(fd) == -1)
 				free_and_error(NULL, NULL, "Execute_pipes: error creating pipe", 1);
 		}
-		pid = fork();
-		if(pid == -1)
-			free_and_error(NULL, NULL, "Execute_pipes: error creating new processus", 1);
-		if(pid == 0)
-			child_process(cmd, env, in_fd, fd);
-		else
-			parent_process(&in_fd, fd, pid);
-		cmd = cmd->next;
+		parent_and_child(cmd, env, in_fd, fd);
 	}
 	if(in_fd != 0)
 		close(in_fd);

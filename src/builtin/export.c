@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:17:25 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 12:08:05 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 20:35:21 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,7 @@ void display_sorted_env(char **env)
         len++;
     env_copy = malloc(sizeof(char *) * (len + 1));
     if (!env_copy)
-        return(free_and_error(NULL, env_copy, "Display_sorted_env: env_copy malloc error", 1));
+       free_and_error(NULL, env_copy, "Display_sorted_env: env_copy malloc error", 1);
     i = -1;
     while (env[++i])
     {

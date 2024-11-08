@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 18:03:21 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 20:43:51 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,52 +56,59 @@ void signal_handler(int signo)
         rl_redisplay();
     }
 }
-void init_shell(char ***envp)
+
+void init_parser_exec(char *line, t_main *main, char ***envp)
 {
-    char	*line;
+	char	**args;
     t_node	*head;
     t_token	*tokens;
-    int		is_running;
-	int		exit_code;
-
-	is_running = 1;
-    signal(SIGINT, signal_handler);
-    signal(SIGQUIT, SIG_IGN);
-    while (is_running)
-    {
-        line = ft_readline();
-        if (!line) {
-            is_running = 0;
-            break;
-        }
-        if (*line)
-        {
-            tokens = lexer(line);
-            head = parser(tokens);
-            ft_expenser(head);
-            if (ft_strcmp(head->value, "exit") == 0)
-			{
-				exit_code = ft_exit(head->value, &is_running);
-				if(!is_running)
-					exit(exit_code);
-			}
-			else
-				exec(head, envp);
-            free(line);
-        }
-    }
+	
+	tokens = lexer(line);
+    head = parser(tokens);
+    ft_expenser(head);
+	args = ft_split(head->value, ' ');
+	if(!args)
+		free_and_error(NULL, args, "init_parser_exec: error splitting arguments", 1);
+    if (ft_strcmp(args[0], "exit") == 0)
+	{
+        main->is_running = ft_exit(args);	
+	}
+	else
+		exec(head, envp);
+    free(line);
 }
 
+void	init_shell(char ***envp, t_main *main)
+{
+    char	*line;
+
+	main->is_running = 1;
+    signal(SIGINT, signal_handler);
+    signal(SIGQUIT, SIG_IGN);
+    while (main->is_running)
+    {
+        line = ft_readline();
+        if (!line) 
+		{
+            main->is_running = 0;
+			break;
+        }
+        if (*line)
+			init_parser_exec(line, main, envp);
+    }
+}
 
 int main(int argc, char **argv, char **envp)
 {
     char **env;
-
+	t_main main;
+	
     if (argc > 2 && !*argv)
         return (0);
     using_history();
     env = copy_env(envp);
-    init_shell(&env);
+    init_shell(&env, &main);
+	// free_everything(env, main);
     clear_history();
     return 0;
 }

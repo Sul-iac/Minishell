@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils2.c                                           :+:      :+:    :+:   */
+/*   free_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/25 19:29:53 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 16:36:49 by qbarron          ###   ########.fr       */
+/*   Created: 2024/11/08 22:38:08 by qbarron           #+#    #+#             */
+/*   Updated: 2024/11/08 22:39:33 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void    ft_free_array(char **array)
 {
-    size_t  i;
+	size_t	i;
 
     if (!array)
         return;
@@ -54,7 +54,7 @@ void	free_triple_pointer(char ***array)
 
 	i = -1;
 	j = -1;
-    if (array == NULL) 
+    if (array == NULL)
 		return;
     while(array[++i])
 	{
