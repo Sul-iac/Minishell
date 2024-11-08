@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: fbelotti <fbelotti@student.42perpignan.    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/07 20:49:36 by fbelotti         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:53:23 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 int execute_builtin(t_node *cmd, char ***env)
 {
-	char **args;
+	char	**args;
 
 	if(!cmd->value)
 		free_and_error(NULL, NULL, "execute_builtin error: cmd not found", 1);
@@ -25,18 +25,18 @@ int execute_builtin(t_node *cmd, char ***env)
 		nforked_commands(cmd->value, env);
 	else if (!strcmp(args[0], "echo") || !strcmp(args[0], "env") ||
 			 !strcmp(args[0], "exit") || !strcmp(args[0], "pwd"))
-		forked_commands(args[0], env);
+		forked_commands(cmd->value, env);
 	free(args);
 	return (1);
 }
 
 int execute_command(t_node *cmd, char ***env)
 {
-	int len;
-	char **args;
-	char *path;
-	char *full_command;
-	
+	int		len;
+	char	**args;
+	char	*path;
+	char	*full_command;
+
 	if(!cmd->value)
 		free_and_error(NULL, NULL, "minishell: cmd is empty", 1);
 	args = ft_split(cmd->value, ' ');
@@ -44,7 +44,10 @@ int execute_command(t_node *cmd, char ***env)
 		free_and_error(NULL, args, "minishell: args malloc error", 1);
 	path = get_path(args[0], env);
 	if (!path)
-		free_and_error(path, NULL, "minishell: command not found", 1);
+	{
+		printf("minishell: %s: command not found\n", args[0]);
+		exit(EXIT_FAILURE);
+	}
 	len = strlen(path) + strlen(args[0]);
 	full_command = malloc(sizeof(char) * (len + 1));
 	if (!full_command)
@@ -58,8 +61,8 @@ int execute_command(t_node *cmd, char ***env)
 
 int execute_simple_command(t_node *cmd, char ***env)
 {
-	pid_t pid;
-	int status;
+	pid_t	pid;
+	int		status;
 
 	pid = fork();
 	if (pid < 0)
@@ -74,15 +77,16 @@ int execute_simple_command(t_node *cmd, char ***env)
 	return (WEXITSTATUS(status));
 }
 
-void exec(t_node *cmd, char ***env)
+void	exec(t_node *cmd, char ***env)
 {
-	t_node *current;
-	
+	int		fd_in;
+	int		fd_out;
+	t_node	*current;
+
 	current = cmd;
-	int fd_in = dup(STDIN_FILENO);
-	int fd_out = dup(STDOUT_FILENO);
-	if(cmd->inputs || cmd->outputs)
-		handle_redirections(cmd);
+	fd_in = dup(STDIN_FILENO);
+	fd_out = dup(STDOUT_FILENO);
+	handle_redirections(cmd);
 	while(current && current->next)
 	{
 		if(current->next->type == PIPE_2)
@@ -91,7 +95,7 @@ void exec(t_node *cmd, char ***env)
 			return;
 		}
 	}
-	if(is_builtin(cmd->value))
+	if(cmd->builtin)
 		execute_builtin(cmd, env);
 	else
 		execute_simple_command(cmd, env);

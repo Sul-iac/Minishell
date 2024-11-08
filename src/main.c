@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/06 17:47:02 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 18:03:21 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,34 +56,42 @@ void signal_handler(int signo)
         rl_redisplay();
     }
 }
-
 void init_shell(char ***envp)
 {
-    char *line;
-    t_token *tokens;
-    t_node *head;
+    char	*line;
+    t_node	*head;
+    t_token	*tokens;
+    int		is_running;
+	int		exit_code;
 
+	is_running = 1;
     signal(SIGINT, signal_handler);
     signal(SIGQUIT, SIG_IGN);
-    while (1)
+    while (is_running)
     {
-        signal(SIGINT, signal_handler);
-        signal(SIGQUIT, SIG_IGN);
         line = ft_readline();
-        if (!line)
-            exit(0);
+        if (!line) {
+            is_running = 0;
+            break;
+        }
         if (*line)
         {
             tokens = lexer(line);
             head = parser(tokens);
             ft_expenser(head);
-            signal(SIGINT, SIG_DFL);
-            signal(SIGQUIT, SIG_DFL);
-            exec(head, envp);
+            if (ft_strcmp(head->value, "exit") == 0)
+			{
+				exit_code = ft_exit(head->value, &is_running);
+				if(!is_running)
+					exit(exit_code);
+			}
+			else
+				exec(head, envp);
             free(line);
         }
     }
 }
+
 
 int main(int argc, char **argv, char **envp)
 {

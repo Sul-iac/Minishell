@@ -6,95 +6,32 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/25 22:09:46 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/02 15:55:35 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 15:39:30 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-// check si il y a -n
-bool check_n_flag(const char *str, int *i)
+void	ft_echo(char **args)
 {
-    if (str[*i] != '-')
-        return (false);
-    (*i)++;
-    if (str[*i] != 'n')
-        return (false);
-    while (str[*i] == 'n')
-        (*i)++;
-    if (str[*i] == ' ' || str[*i] == '\0')
-        return (true);
-    *i -= 1;
-    return (false);
+	int	i;
+	int	newline;
+
+	newline = 1;
+	i = 1;
+    if (args[1] && strcmp(args[1], "-n") == 0)
+	{
+        newline = 0;
+        i = 2;
+    }
+    while(args[i]) 
+	{
+        printf("%s", args[i]);
+        if (args[i + 1])
+            printf(" ");
+		i++;
+    }
+    if (newline) 
+        printf("\n");
 }
 
-// print
-void	print_char(char c, char next_c)
-{
-    if (c == '\\' && next_c)
-    {
-        if (next_c == 'n')
-            write(1, "\n", 1);
-        else if (next_c == 't')
-            write(1, "\t", 1);
-        else if (next_c == '\\')
-            write(1, "\\", 1);
-        else
-        {
-            write(1, &c, 1);
-            write(1, &next_c, 1);
-        }
-    }
-    else if (c != '\\' || !next_c)
-        write(1, &c, 1);
-}
-
-// juste une fonction utils
-void	pre_print(const char *str, int *i)
-{
-	while (str[*i])
-    {
-        if (str[*i] == '\\')
-        {
-            print_char(str[*i], str[*i + 1]);
-            if (str[*i + 1])
-                *i += 2;
-            else
-                (*i)++;
-        }
-        else
-        {
-            print_char(str[*i], '\0');
-            (*i)++;
-        }
-    }
-}
-
-int ft_echo(char *str)
-{
-    int     i;
-	//int n_flag;
-    if (!str)
-    {
-        write(1, "\n", 1);
-        return (0);
-    }
-    i = 0;
-    while (str[i] == ' ')
-        i++;
-    if (strncmp(str + i, "echo", 4) == 0)
-        i += 4;
-    while (str[i] == ' ')
-        i++;
-    
-    // You might need to modify check_n_flag to return whether to print a newline
-    while (str[i] && check_n_flag(str, &i))
-    {
-        while (str[i] == ' ')
-            i++;
-    }
-
-    pre_print(str, &i);
-
-    return (0);
-}

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/07 17:34:27 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 18:00:09 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -170,11 +170,11 @@ int						ft_cd(char *path);
 bool					check_n_flag(const char *str, int *i);
 void					print_char(char c, char next_c);
 void					pre_print(const char *str, int *i);
-int						ft_echo(char *str);
+void					ft_echo(char **args);
 
 void					ft_env(char ***envp);
 
-void					ft_exit(char *line);
+int						ft_exit(char *args, int *is_running);
 
 int						is_valid_identifier(const char *var);
 char					*get_var_name(const char *var);
@@ -215,6 +215,8 @@ void					forked_commands(char *cmd, char ***env);
 char					**nforked_commands(char *cmd, char ***env);
 void					free_and_error(char *ptr, char **ptr2, char *msg,
 							bool error);
+void					free_triple_pointer(char ***array);
+
 
 void					ft_free_array(char **array);
 

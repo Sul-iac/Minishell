@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 09:17:25 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/02 16:01:04 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/08 12:08:05 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,11 +69,11 @@ void sort_env(char ***env)
     len = 0;
     while ((*env)[len])
         len++;
-    i = 0;
-    while (i < len - 1)
+    i = -1;
+    while (++i < len - 1)
     {
-        j = 0;
-        while (j < len - i - 1)
+        j = -1;
+        while (++j < len - i - 1)
         {
             if (ft_strcmp((*env)[j], (*env)[j + 1]) > 0)
             {
@@ -81,9 +81,7 @@ void sort_env(char ***env)
                 (*env)[j] = (*env)[j + 1];
                 (*env)[j + 1] = temp;
             }
-            j++;
         }
-        i++;
     }
 }
 
@@ -158,6 +156,5 @@ char **ft_export(char *args, char ***env)
         free(var_name);
     }
     ft_free_array(new_vars);
-	display_sorted_env(*env);
     return(*env);
 }
