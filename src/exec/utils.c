@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 12:07:09 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 22:10:58 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/09 00:05:41 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void	forked_commands(char *cmd, char ***env)
 		waitpid(pid, NULL, 0);
 }
 
-char **nforked_commands(char *cmd, char ***env)
+char	**nforked_commands(char *cmd, char ***env)
 {
 	char **args;
 
@@ -76,4 +76,55 @@ char **nforked_commands(char *cmd, char ***env)
 	free_and_error(NULL, args, NULL, 0);
 	return(*env);
 }
+char	*get_path(char *cmd, char ***env)
+{
+	int			i;
+	char		*path;
+	char		**paths;
+	char		*part_path;
 
+	i = -1;
+	while((*env)[++i] && ft_strnstr((*env)[i], "PATH=", 5) == 0);
+	paths = ft_split((*env)[i] + 5, ':');
+	if(!paths)
+		free_and_error(NULL, paths, "Error while getting PATH to command", 1);
+	i = -1;
+	while(paths[++i])
+	{
+		part_path = ft_strjoin(paths[i], "/");
+		path = ft_strjoin(part_path, cmd);
+		free(part_path);
+		if(access(path, X_OK) == 0)
+			return(path);
+		free(path);
+	}
+	i = -1;
+	while(paths[++i])
+		free(paths[i]);
+	free(paths);
+	return(NULL);
+}
+
+char	**copy_env(char **original_env)
+{
+    int     len;
+    int     i;
+    char    **dup_env;
+
+    i = 0;
+    len = 0;
+    while (original_env[len])
+        len++;
+    dup_env = malloc(sizeof(char *) * (len + 1));
+    if(!dup_env)
+        free_and_error(NULL, NULL, "Copy_env: dup_env malloc error", 1);
+    while (original_env[i])
+    {
+        dup_env[i] = strdup(original_env[i]);
+        if(!dup_env[i])
+            free_and_error(NULL, NULL, "Copy_env: dup_env dup error", 1);
+        i++;
+    }
+    dup_env[i] = NULL;
+    return (dup_env);
+}

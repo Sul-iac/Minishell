@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/08 22:48:56 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/09 00:02:16 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,18 +202,22 @@ void					child_process(t_node *cmd, char ***env, int in_fd,
 							int *fd);
 void					parent_process(int *in_fd, int *fd, pid_t pid);
 void					execute_pipes(t_node *cmd, char ***env);
-void					parent_and_child(t_node *cmd, char ***env, int in_fd, int *fd);
+void					handle_pipe_creation(t_node *cmd, int fd[2]);
 
 char					*get_path(char *cmd, char ***env);
 
 int 					handle_heredoc(char *delimiter);
 int 					handle_input_redirection(const char *file);
+int						process_input_redirections(t_redirection *current);
+int						handle_heredoc_redirection(char *filename, int *fd);
+int						process_output_redirections(t_redirection *current);
 int 					handle_output_redirection(const char *file, int flags);
-void					reset_signal(void);
-void					handle_redirections(t_node *cmd);
+
 void					handle_redirections(t_node *cmd);
 void					handle_sigint_heredoc(int signum);
 void 					handle_heredoc_input(int pipefd[2], char *delimiter);
+
+void					reset_signal(void);
 
 char					*get_first_word(const char *str);
 void					forked_commands(char *cmd, char ***env);
@@ -224,6 +228,7 @@ void					free_and_error(char *ptr, char **ptr2, char *msg,
 							bool error);
 void					free_triple_pointer(char ***array);
 void					ft_free_array(char **array);
+void					cleanup_cmd(t_node *cmd);
 
 // main
 char					*ft_readline(void);

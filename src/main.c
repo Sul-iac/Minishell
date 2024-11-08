@@ -6,37 +6,15 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 20:43:51 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/09 00:05:13 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/minishell.h"
 
-char **copy_env(char **original_env)
-{
-    int     len;
-    int     i;
-    char    **dup_env;
+int g_global_sig = 0;
 
-    i = 0;
-    len = 0;
-    while (original_env[len])
-        len++;
-    dup_env = malloc(sizeof(char *) * (len + 1));
-    if(!dup_env)
-        free_and_error(NULL, NULL, "Copy_env: dup_env malloc error", 1);
-    while (original_env[i])
-    {
-        dup_env[i] = strdup(original_env[i]);
-        if(!dup_env[i])
-            free_and_error(NULL, NULL, "Copy_env: dup_env dup error", 1);
-        i++;
-    }
-    dup_env[i] = NULL;
-    return (dup_env);
-}
-
-char *ft_readline(void)
+char	*ft_readline(void)
 {
     char *line;
 
@@ -46,7 +24,7 @@ char *ft_readline(void)
     return line;
 }
 
-void signal_handler(int signo)
+void	signal_handler(int signo)
 {
     if (signo == SIGINT)
     {
@@ -57,7 +35,7 @@ void signal_handler(int signo)
     }
 }
 
-void init_parser_exec(char *line, t_main *main, char ***envp)
+void	init_parser_exec(char *line, t_main *main, char ***envp)
 {
 	char	**args;
     t_node	*head;
@@ -98,7 +76,7 @@ void	init_shell(char ***envp, t_main *main)
     }
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
     char **env;
 	t_main main;
