@@ -41,7 +41,6 @@ void	init_parser_exec(char *line, t_main *main, char ***envp)
 	t_node	*head;
 	t_token	*tokens;
 
-	first_parse(line);
 	tokens = lexer(line);
 	head = parser(tokens);
 	ft_expenser(head);
