@@ -67,7 +67,6 @@ t_token	*lexer(char *input)
 	j = 0;
 	while (str[j])
 	{
-		// SingleQuote = 0;
 		tokens = tokenize_string(str[j]);
 		if (tokens)
 		{

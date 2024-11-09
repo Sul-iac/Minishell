@@ -1,4 +1,0 @@
-.vscode
-doc
-includes
-src

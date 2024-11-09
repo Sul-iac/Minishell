@@ -22,29 +22,12 @@ t_token	*tokenize_string(char *input)
 	while (*ptr)
 	{
 		skip_spaces(&ptr);
-		if (*ptr == '\'' || *ptr == '"')
-			process_quoted_token(&ptr, &head);
-		else if (*ptr == '|' || *ptr == '<' || *ptr == '>')
+		if (*ptr == '|' || *ptr == '<' || *ptr == '>')
 			process_operator_token(&ptr, &head);
 		else if (*ptr != '\0')
 			process_command_token(&ptr, &head);
 	}
 	return (head);
-}
-
-t_token *process_quoted_token(char **ptr, t_token **head) {
-    char *quoted_token;
-
-    quoted_token = extract_quoted_string(ptr);
-    if (quoted_token)
-	{
-        if (quoted_token[0] == '\'') {
-            // SingleQuote = 1;
-        }
-        append_token(head, create_token(quoted_token, CMD));
-        free(quoted_token);
-    }
-    return *head;
 }
 
 t_token	*process_operator_token(char **ptr, t_token **head)

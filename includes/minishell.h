@@ -125,11 +125,9 @@ t_token					*create_token(char *value, t_token_type type);
 void					append_token(t_token **head, t_token *new_token);
 t_token_type			determine_type(char *token);
 void					skip_spaces(char **input);
-char					*extract_quoted_string(char **input);
 
 // lexer_3.c
 t_token					*tokenize_string(char *input);
-t_token					*process_quoted_token(char **ptr, t_token **head);
 t_token					*process_operator_token(char **ptr, t_token **head);
 t_token					*process_redirection_target(char **ptr, t_token **head,
 							char operator[3]);
