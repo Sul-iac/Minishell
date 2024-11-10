@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/27 11:47:56 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 22:02:09 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 23:24:48 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,10 +14,10 @@
 
 int	ft_cd(char *path)
 {
+	char	*home;
+
 	if (!path)
 	{
-		char *home;
-		
 		home = getenv("HOME");
 		if (!home)
 			free_and_error(NULL, NULL, "Home not set", 1);
@@ -29,4 +29,3 @@ int	ft_cd(char *path)
 		free_and_error(NULL, NULL, "cd: error finding path", 1);
 	return (0);
 }
-

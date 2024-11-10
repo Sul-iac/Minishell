@@ -1,20 +1,22 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   pwd.c                                              :+:      :+:    :+:   */
+/*   ft_strcpy.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 23:08:59 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/10 23:24:21 by qbarron          ###   ########.fr       */
+/*   Created: 2024/11/10 20:24:26 by qbarron           #+#    #+#             */
+/*   Updated: 2024/11/10 20:26:13 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/minishell.h"
+#include "../includes/libft.h"
 
-void	ft_pwd(void)
+char	*ft_strcpy(char *s1, char *s2)
 {
-	char	wd[1000];
-
-	printf("%s\n", getcwd(wd, sizeof(wd)));
+	int i = -1;
+	while(s2[++i])
+		s1[i] = s2[i];
+	s1[i] = '\0';
+	return(s1);
 }

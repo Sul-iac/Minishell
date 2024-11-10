@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/10 19:26:45 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 23:34:04 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -101,6 +101,14 @@ typedef struct s_main
     int		is_running;
 }				t_main;
 
+typedef struct s_pipe_data
+{
+    int		in_fd;
+    int		cmd_index;
+    pid_t	*pids;
+    char	***env;
+}				t_pipe_data;
+
 
 // expenser les variable d'environnement
 
@@ -177,46 +185,47 @@ void					append_redirection(t_redirection **head,
 							t_redirection *new_redir);
 t_node					*parser(t_token *tokens);
 
-int						ft_cd(char *path);
 
-void					ft_echo(char **args);
-
-void					ft_env(char ***envp);
-
-int						ft_exit(char **arg);
-
-int						is_valid_identifier(const char *var);
-char					*get_var_name(const char *var);
-int						var_exists(char ***env, char *var_name);
-void					sort_env(char ***env);
-void					display_sorted_env(char **env);
-char					**ft_export(char *args, char ***env);
-
+// solo builtins
 void					ft_pwd(void);
-
-char					*get_var_name(const char *var);
+int						ft_cd(char *path);
+int						ft_exit(char **arg);
+void					ft_echo(char **args);
+void					ft_env(char ***envp);
 char					**ft_unset(char *arg, char ***env);
 
+// export
+void					sort_env(char ***env);
+char					*get_var_name(const char *var);
+void					display_sorted_env(char **env);
+int						is_valid_identifier(const char *var);
+char					**ft_export(char *args, char ***env);
+int						var_exists(char ***env, char *var_name);
+void					export_utils(char **new_vars, char ***env, int env_size, int *i);
+
+
 // exec
+void					exec(t_node *cmd, char ***env);
 int						execute_builtin(t_node *cmd, char ***env);
 int						execute_command(t_node *cmd, char ***env);
 int						execute_simple_command(t_node *cmd, char ***env);
-void						exec(t_node *cmd, char ***env);
 
-void					child_process(t_node *cmd, char ***env, int in_fd,
-							int *fd);
+// pipes
+void					handle_fork_error(pid_t *pids);
 void					parent_process(int *in_fd, int *fd);
 void					execute_pipes(t_node *cmd, char ***env);
 void					handle_pipe_creation(t_node *cmd, int fd[2]);
-pid_t					*init_pipe_execution(t_node *cmd, int *cmd_count);
-void					handle_fork_error(pid_t *pids);
-void					wait_all_processes(pid_t *pids, int cmd_count, int in_fd);
-void					process_command(t_node *cmd, char ***env, int *in_fd, 
-                        					int *i, pid_t *pids);
+void					child_process(t_node *cmd, char ***env, int in_fd,
+														int *fd);
+void					process_command(t_node *cmd, t_pipe_data *data);
+void					wait_all_processes(t_pipe_data *data, int cmd_count);
 
+t_pipe_data				*init_pipe_data(char ***env);
+pid_t					*init_pipe_execution(t_node *cmd, int *cmd_count);
 
 char					*get_path(char *cmd, char ***env);
 
+// redirs, heredoc
 int 					handle_heredoc(char *delimiter);
 int 					handle_input_redirection(const char *file);
 int						process_input_redirections(t_redirection *current);
@@ -224,17 +233,19 @@ int						handle_heredoc_redirection(char *filename, int *fd);
 int						process_output_redirections(t_redirection *current);
 int 					handle_output_redirection(const char *file, int flags);
 
+void					reset_signal(void);
 void					handle_redirections(t_node *cmd);
 void					handle_sigint_heredoc(int signum);
 void 					handle_heredoc_input(int pipefd[2], char *delimiter);
 
-void					reset_signal(void);
 
+// pipes
 char					*get_first_word(const char *str);
 void					forked_commands(char *cmd, char ***env);
 char					**nforked_commands(char *cmd, char ***env);
 
 
+// errors/free exec
 void					free_and_error(char *ptr, char **ptr2, char *msg,
 							bool error);
 void					free_triple_pointer(char ***array);
@@ -251,8 +262,20 @@ void					init_parser_exec(char *line, t_main *main, char ***envp);
 void					execute_relative_absolute(char *cmd, char **args, char ***envp);
 void					exit_program(t_node *head, char *line, t_main *main, char ***envp);
 
+// prompt
 char					*ft_get_dirname(void);
 t_node					*init_parser(char *line);
+void					ft_fill_prompt(char *prompt, char *user, char *dir);
+char					*ft_strjoin_free(char *s1, const char *s2);
+char					*ft_get_status_color(void);
+char					*ft_get_username(void);
+
+// cleaning
+
+void					clean_node(t_node *node);
+void					clean_nodes(t_node *head);
+void					clean_token(t_token *token);
+void					clean_tokens(t_token *tokens);
 
 
 #endif

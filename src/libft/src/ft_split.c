@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 07:19:44 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 18:27:58 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 20:43:47 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,30 +42,38 @@ int	ft_word_len(const char *str, char c, int j)
 		i++;
 	return (i);
 }
+void	free_split(char **spl, int j)
+{
+	while (j >= 0)
+	{
+		free(spl[j]);
+		j--;
+	}
+	free(spl);
+}
 
 char	**ft_split(const char *s, char c)
 {
+	char	**spl;
 	int		i;
 	int		j;
-	int		wcnt;
 	int		wlen;
-	char	**spl;
 
 	i = 0;
-	j = -1;
-	wcnt = ft_word_count(s, c);
-	spl = (char **)malloc(sizeof(char *) * (wcnt + 1));
-	if (spl == NULL)
+	j = 0;
+	spl = malloc(sizeof(char *) * (ft_word_count(s, c) + 1));
+	if (!spl)
 		return (NULL);
-	while (++j < wcnt)
+	while (j < ft_word_count(s, c))
 	{
 		while (s[i] == c)
 			i++;
 		wlen = ft_word_len(s, c, i);
 		spl[j] = ft_substr(s, i, wlen);
-		if (spl[j] == NULL)
-			return (NULL);
+		if (!spl[j])
+			return (free_split(spl, j - 1), NULL);
 		i += wlen;
+		j++;
 	}
 	spl[j] = NULL;
 	return (spl);

@@ -33,7 +33,7 @@ SRC_FILES   = ft_atoi.c ft_isalnum.c ft_isalpha.c \
               ft_putnbr_fd.c ft_putendl_fd.c ft_itoa.c \
               ft_strtrim.c ft_split.c ft_strjoin.c ft_substr.c \
               ft_striteri.c ft_strmapi.c ft_isspace.c ft_strndup.c \
-              ft_strcmp.c
+              ft_strcmp.c ft_strcpy.c ft_strncpy.c
 
 BONUS_FILES = ft_lstnew.c ft_lstadd_front.c \
               ft_lstsize.c ft_lstlast.c ft_lstadd_back.c ft_lstdelone.c \

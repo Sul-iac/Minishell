@@ -27,11 +27,11 @@ PARSE_SRC =	expenser.c expenser_2.c free_parsing.c \
 			lexer.c lexer_2.c lexer_3.c lexer_4.c lexer_5.c \
 			parser.c parser_2.c parser_3.c
 
-BUILTIN_SRC = cd.c echo.c env.c exit.c export.c pwd.c unset.c
+BUILTIN_SRC = cd.c echo.c env.c exit.c export.c pwd.c unset.c export_utils.c
 
 EXEC_SRC =	exec.c pipes.c redirs.c utils.c free_utils.c \
 			free_pipes.c heredoc.c redirs2.c signal_heredoc_handler.c \
-			pipes2.c main_prompt1.c main_prompt2.c  
+			pipes2.c main_prompt1.c main_prompt2.c clean_all_1.c get_path.c
 
 MAIN_SRC = main.c
 
