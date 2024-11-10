@@ -61,7 +61,7 @@ logo:
 	@echo "██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗"
 	@echo "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝"
 	@printf "$(RESET)"
-	@printf "\n$(BOLD)$(GREE)By: $(AUTHORS)$(RESET)\n"
+	@printf "\n$(BOLD)$(GREEN)By: $(AUTHORS)$(RESET)\n"
 
 $(LIBFT):
 	@printf "$(YELLOW)Building libft...$(RESET)\n"
