@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/08 23:41:52 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 12:51:53 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,12 @@ void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
 	exit(EXIT_SUCCESS);
 }
 
-void	parent_process(int *in_fd, int *fd, pid_t pid)
+void parent_process(int *in_fd, int *fd)
 {
-	close(fd[1]);
-	if(*in_fd != 0)
-		close(*in_fd);
-	*in_fd = fd[0];
-	waitpid(pid, NULL, 0);
+    close(fd[1]);
+    if (*in_fd != 0)
+        close(*in_fd);
+    *in_fd = fd[0];
 }
 
 void	handle_pipe_creation(t_node *cmd, int fd[2])
@@ -90,28 +89,23 @@ void	handle_pipe_creation(t_node *cmd, int fd[2])
 
 void    execute_pipes(t_node *cmd, char ***env)
 {
-    pid_t   pid;
-    int     fd[2];
-    int     in_fd;
+    pid_t	*pids;
+    int		in_fd;
+    int		cmd_count;
+    int		i;
 
-    in_fd = 0;
-    while (cmd)
-    {
-        if (cmd->type == PIPE_2)
-        {
-            cmd = cmd->next;
-            continue;
-        }
-        handle_pipe_creation(cmd, fd);
-        pid = fork();
-        if (pid == -1)
-            free_and_error(NULL, NULL, "Execute_pipes: error creating new processus", 1);
-        if (pid == 0)
-            child_process(cmd, env, in_fd, fd);
-        else
-            parent_process(&in_fd, fd, pid);
-        cmd = cmd->next;
-    }
-    if (in_fd != 0)
-		close(in_fd);
+	pids = init_pipe_execution(cmd, &cmd_count);
+	in_fd = 0;
+	i = 0;
+	while (cmd)
+	{
+		if (cmd->type == PIPE_2)
+		{
+		    cmd = cmd->next;
+		    continue;
+		}
+		process_command(cmd, env, &in_fd, &i, pids);
+		cmd = cmd->next;
+	}
+	wait_all_processes(pids, cmd_count, in_fd);
 }

@@ -6,14 +6,14 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/10 11:16:22 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 13:08:07 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
 
-# include "../src/libft/libft.h"
+# include "../src/libft/includes/libft.h"
 # include <signal.h>
 # include <ctype.h>
 # include <errno.h>
@@ -198,9 +198,15 @@ void						exec(t_node *cmd, char ***env);
 
 void					child_process(t_node *cmd, char ***env, int in_fd,
 							int *fd);
-void					parent_process(int *in_fd, int *fd, pid_t pid);
+void					parent_process(int *in_fd, int *fd);
 void					execute_pipes(t_node *cmd, char ***env);
 void					handle_pipe_creation(t_node *cmd, int fd[2]);
+pid_t					*init_pipe_execution(t_node *cmd, int *cmd_count);
+void					handle_fork_error(pid_t *pids);
+void					wait_all_processes(pid_t *pids, int cmd_count, int in_fd);
+void					process_command(t_node *cmd, char ***env, int *in_fd, 
+                        					int *i, pid_t *pids);
+
 
 char					*get_path(char *cmd, char ***env);
 

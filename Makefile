@@ -28,7 +28,8 @@ PARSE_SRC	= expenser.c expenser_2.c free_parsing.c \
 BUILTIN_SRC	= cd.c echo.c env.c exit.c export.c pwd.c unset.c
 
 EXEC_SRC	= exec.c pipes.c redirs.c utils.c free_utils.c \
-			  free_pipes.c heredoc.c redirs2.c signal_heredoc_handler.c
+			  free_pipes.c heredoc.c redirs2.c signal_heredoc_handler.c \
+			  pipes2.c
 
 MAIN_SRC	= main.c
 
@@ -96,12 +97,12 @@ debug: CFLAGS += -fsanitize=address
 debug: re
 
 help:
-	@echo "$(BOLD)Available commands:$(RESET)"
-	@echo "$(CYAN)make$(RESET)        - Build minishell"
-	@echo "$(CYAN)make clean$(RESET)  - Remove object files"
-	@echo "$(CYAN)make fclean$(RESET) - Remove object files and executable"
-	@echo "$(CYAN)make re$(RESET)     - Rebuild from scratch"
-	@echo "$(CYAN)make debug$(RESET)  - Build with address sanitizer"
-	@echo "$(CYAN)make help$(RESET)   - Show this help message"
+	@printf "$(BOLD)Available commands:$(RESET)\n"
+	@printf "$(CYAN)make$(RESET)        - Build minishell\n"
+	@printf "$(CYAN)make clean$(RESET)  - Remove object files\n"
+	@printf "$(CYAN)make fclean$(RESET) - Remove object files and executable\n"
+	@printf "$(CYAN)make re$(RESET)     - Rebuild from scratch\n"
+	@printf "$(CYAN)make debug$(RESET)  - Build with address sanitizer\n"
+	@printf "$(CYAN)make help$(RESET)   - Show this help message\n"
 
 .PHONY: all clean fclean re logo help debug
