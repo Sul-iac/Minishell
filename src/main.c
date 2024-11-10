@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/09 00:25:51 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 11:14:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,36 +24,58 @@ char	*ft_readline(void)
 	return line;
 }
 
-void	signal_handler(int signo)
+t_node *init_parser(char *line)
 {
-	if (signo == SIGINT)
-	{
-		write(1, "\n", 1);
-		rl_on_new_line();
-		rl_replace_line("", 0);
-		rl_redisplay();
-	}
+    t_token *tokens;
+    t_node  *head;
+
+    if (!line || !*line)
+        return (NULL);
+    tokens = lexer(line);
+    if (!tokens)
+        return (NULL);
+    head = parser(tokens);
+    if (!head)
+        return (NULL);
+    ft_expenser(head);
+    return (head);
 }
 
-void	init_parser_exec(char *line, t_main *main, char ***envp)
+void    exit_program(t_node *head, char *line, t_main *main, char ***envp)
 {
-	char	**args;
-	t_node	*head;
-	t_token	*tokens;
+    char    **args;
 
-	tokens = lexer(line);
-	head = parser(tokens);
-	ft_expenser(head);
-	args = ft_split(head->value, ' ');
-	if(!args)
-		free_and_error(NULL, args, "init_parser_exec: error splitting arguments", 1);
-	if (ft_strcmp(args[0], "exit") == 0)
-	{
-		main->is_running = ft_exit(args);	
+    if (!head || !head->value)
+    {
+        free(line);
+        return ;
+    }
+    args = ft_split(head->value, ' ');
+    if (!args || !args[0])
+    {
+        free(line);
+        if (args)
+            free(args);
+        return ;
 	}
-	else
-		exec(head, envp);
-	free(line);
+    if (ft_strcmp(args[0], "exit") == 0)
+        main->is_running = ft_exit(args);    
+    else
+        exec(head, envp);
+    free(line);
+}
+
+void    init_parser_exec(char *line, t_main *main, char ***envp)
+{
+    t_node  *head;
+
+    head = init_parser(line);
+    if (!head)
+    {
+        free(line);
+        return ;
+    }
+    exit_program(head, line, main, envp);
 }
 
 void	init_shell(char ***envp, t_main *main)
@@ -69,7 +91,7 @@ void	init_shell(char ***envp, t_main *main)
 		if (!line) 
 		{
 			main->is_running = 0;
-			break;
+			break ;
 		}
 		if (*line)
 			init_parser_exec(line, main, envp);

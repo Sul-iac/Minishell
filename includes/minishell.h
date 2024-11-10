@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/09 00:02:16 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 11:16:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,10 +230,13 @@ void					cleanup_cmd(t_node *cmd);
 
 // main
 char					*ft_readline(void);
+void					signal_handler(int signo);
 char					**copy_env(char **original_env);
 void					init_shell(char ***envp, t_main *main);
 void					init_parser_exec(char *line, t_main *main, char ***envp);
 void					execute_relative_absolute(char *cmd, char **args, char ***envp);
+void					exit_program(t_node *head, char *line, t_main *main, char ***envp);
+t_node					*init_parser(char *line);
 
 
 #endif

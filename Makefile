@@ -1,41 +1,107 @@
-NAME = minishell
-CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g -I includes -I src/libft
+# **************************************************************************** #
+#                              COLORS                                           #
+# **************************************************************************** #
+BLACK		= \033[0;30m
+RED			= \033[0;31m
+GREEN		= \033[0;32m
+YELLOW		= \033[0;33m
+BLUE		= \033[0;34m
+PURPLE		= \033[0;35m
+CYAN		= \033[0;36m
+WHITE		= \033[0;37m
+RESET		= \033[0m
+BOLD		= \033[1m
+CLEAR		= \r\033[K
 
-SRCS = 	src/parsing/expenser.c src/parsing/expenser_2.c src/parsing/free_parsing.c \
-		src/parsing/lexer.c src/parsing/lexer_2.c src/parsing/lexer_3.c src/parsing/lexer_4.c src/parsing/lexer_5.c \
-		src/parsing/parser.c src/parsing/parser_2.c src/parsing/parser_3.c \
-		src/builtin/cd.c src/builtin/echo.c src/builtin/env.c src/builtin/exit.c src/builtin/export.c src/builtin/pwd.c src/builtin/unset.c \
-		src/exec/exec.c src/exec/pipes.c src/exec/redirs.c src/exec/utils.c src/exec/free_utils.c src/main.c \
-		src/exec/free_pipes.c src/exec/heredoc.c src/exec/redirs2.c src/exec/signal_heredoc_handler.c
+# **************************************************************************** #
+#                              VARIABLES                                        #
+# **************************************************************************** #
+NAME		= minishell
+CC			= gcc
+CFLAGS		= -Wall -Wextra -Werror -g -I includes -I src/libft
+AUTHORS		= qbarron and tgeradi
 
-LIBFT_DIR = src/libft
-LIBFT_SRCS = $(wildcard $(LIBFT_DIR)/*.c)
-LIBFT_OBJS = $(LIBFT_SRCS:.c=.o)
+PARSE_SRC	= expenser.c expenser_2.c free_parsing.c \
+			  lexer.c lexer_2.c lexer_3.c lexer_4.c lexer_5.c \
+			  parser.c parser_2.c parser_3.c
 
-OBJS = $(SRCS:.c=.o) $(LIBFT_OBJS)
+BUILTIN_SRC	= cd.c echo.c env.c exit.c export.c pwd.c unset.c
 
-RM = rm -f
+EXEC_SRC	= exec.c pipes.c redirs.c utils.c free_utils.c \
+			  free_pipes.c heredoc.c redirs2.c signal_heredoc_handler.c
 
-all: $(LIBFT_DIR)/libft.a $(NAME)
+MAIN_SRC	= main.c
 
-$(LIBFT_DIR)/libft.a:
-	$(MAKE) -C $(LIBFT_DIR)
+SRCS		= $(addprefix src/parsing/, $(PARSE_SRC)) \
+			  $(addprefix src/builtin/, $(BUILTIN_SRC)) \
+			  $(addprefix src/exec/, $(EXEC_SRC)) \
+			  $(addprefix src/, $(MAIN_SRC))
+
+OBJS		= $(SRCS:.c=.o)
+
+LIBFT_DIR	= src/libft
+LIBFT		= $(LIBFT_DIR)/libft.a
+
+TOTAL_FILES	= $(words $(SRCS))
+CURR_FILE	= 0
+
+# **************************************************************************** #
+#                              RULES                                            #
+# **************************************************************************** #
+
+all: logo $(LIBFT) $(NAME)
+
+logo:
+	@printf "$(CYAN)"
+	@echo "███╗   ███╗██╗███╗   ██╗██╗███████╗██╗  ██╗███████╗██╗     ██╗     "
+	@echo "████╗ ████║██║████╗  ██║██║██╔════╝██║  ██║██╔════╝██║     ██║     "
+	@echo "██╔████╔██║██║██╔██╗ ██║██║███████╗███████║█████╗  ██║     ██║     "
+	@echo "██║╚██╔╝██║██║██║╚██╗██║██║╚════██║██╔══██║██╔══╝  ██║     ██║     "
+	@echo "██║ ╚═╝ ██║██║██║ ╚████║██║███████║██║  ██║███████╗███████╗███████╗"
+	@echo "╚═╝     ╚═╝╚═╝╚═╝  ╚═══╝╚═╝╚══════╝╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝"
+	@printf "$(RESET)"
+	@printf "\n$(BOLD)$(GREE)By: $(AUTHORS)$(RESET)\n"
+
+$(LIBFT):
+	@printf "$(YELLOW)Building libft...$(RESET)\n"
+	@$(MAKE) -C $(LIBFT_DIR) --no-print-directory
+	@printf "$(GREEN)Libft ready!$(RESET)\n"
 
 $(NAME): $(OBJS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJS) -lreadline
+	@printf "\n$(YELLOW)Linking objects into executable...$(RESET)\n"
+	@$(CC) $(CFLAGS) -o $(NAME) $(OBJS) $(LIBFT) -lreadline
+	@printf "$(GREEN)$(BOLD)$(NAME) is ready!$(RESET)\n"
 
 %.o: %.c
-	$(CC) $(CFLAGS) -c $< -o $@
+	@$(eval CURR_FILE=$(shell echo $$(($(CURR_FILE)+1))))
+	@printf "$(CLEAR)$(BLUE)Compiling: $(WHITE)$(notdir $<)$(RESET) "
+	@printf "$(PURPLE)[$(CURR_FILE)/$(TOTAL_FILES)]$(RESET)"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	$(RM) $(OBJS)
-	$(MAKE) -C $(LIBFT_DIR) clean
+	@printf "$(RED)Cleaning object files...$(RESET)\n"
+	@$(RM) $(OBJS)
+	@$(MAKE) -C $(LIBFT_DIR) clean --no-print-directory
+	@printf "$(GREEN)Clean complete!$(RESET)\n"
 
 fclean: clean
-	$(RM) $(NAME)
-	$(MAKE) -C $(LIBFT_DIR) fclean
+	@printf "$(RED)Removing executable and libraries...$(RESET)\n"
+	@$(RM) $(NAME)
+	@$(MAKE) -C $(LIBFT_DIR) fclean --no-print-directory
+	@printf "$(GREEN)Full clean complete!$(RESET)\n"
 
 re: fclean all
 
-.PHONY: all clean fclean re
+debug: CFLAGS += -fsanitize=address
+debug: re
+
+help:
+	@echo "$(BOLD)Available commands:$(RESET)"
+	@echo "$(CYAN)make$(RESET)        - Build minishell"
+	@echo "$(CYAN)make clean$(RESET)  - Remove object files"
+	@echo "$(CYAN)make fclean$(RESET) - Remove object files and executable"
+	@echo "$(CYAN)make re$(RESET)     - Rebuild from scratch"
+	@echo "$(CYAN)make debug$(RESET)  - Build with address sanitizer"
+	@echo "$(CYAN)make help$(RESET)   - Show this help message"
+
+.PHONY: all clean fclean re logo help debug

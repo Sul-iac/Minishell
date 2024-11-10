@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 23:55:50 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/09 00:06:03 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 11:15:04 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,4 +31,15 @@ void	reset_signal(void)
 {
     signal(SIGINT, SIG_DFL);
     signal(SIGQUIT, SIG_DFL);
+}
+
+void	signal_handler(int signo)
+{
+	if (signo == SIGINT)
+	{
+		write(1, "\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+	}
 }
