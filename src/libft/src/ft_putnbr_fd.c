@@ -6,12 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/05 19:46:45 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:05:02 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:27:44 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
-#include <unistd.h>
 
 void	ft_putnbr_fd(int n, int fd)
 {

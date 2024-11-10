@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/10 13:08:07 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 19:26:45 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,14 @@
 # include <sys/wait.h>
 # include <unistd.h>
 # include <sys/stat.h>
+
+# define BOLD "\001\033[1m\002"
+# define RESET "\001\033[0m\002"
+# define CYAN "\001\033[36m\002"
+# define BLUE "\001\033[34m\002"
+# define GREEN "\001\033[32m\002"
+# define YELLOW "\001\033[33m\002"
+# define RED "\001\033[31m\002"
 
 
 extern int g_global_sig;
@@ -91,7 +99,6 @@ typedef struct s_data
 typedef struct s_main
 {
     int		is_running;
-	
 }				t_main;
 
 
@@ -236,12 +243,15 @@ void					cleanup_cmd(t_node *cmd);
 
 // main
 char					*ft_readline(void);
+char					*ft_create_prompt(void);
 void					signal_handler(int signo);
 char					**copy_env(char **original_env);
 void					init_shell(char ***envp, t_main *main);
 void					init_parser_exec(char *line, t_main *main, char ***envp);
 void					execute_relative_absolute(char *cmd, char **args, char ***envp);
 void					exit_program(t_node *head, char *line, t_main *main, char ***envp);
+
+char					*ft_get_dirname(void);
 t_node					*init_parser(char *line);
 
 

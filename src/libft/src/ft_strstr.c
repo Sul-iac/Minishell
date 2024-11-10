@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strstr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 15:56:44 by qbarron           #+#    #+#             */
-/*   Updated: 2023/09/22 18:51:57 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:29:12 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <string.h>
+#include "../includes/libft.h"
 
 char	*ft_strstr(const char *str, const char *to_find)
 {

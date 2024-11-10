@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_toupper.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 11:59:21 by qbarron           #+#    #+#             */
-/*   Updated: 2023/10/13 23:19:47 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:29:32 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "../includes/libft.h"
 
 int	ft_toupper(int c)
 {

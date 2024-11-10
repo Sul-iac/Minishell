@@ -6,12 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/25 12:49:25 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:01:56 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:28:08 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
-#include <stdlib.h>
 
 char	*ft_strdup(const char *str)
 {

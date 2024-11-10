@@ -6,14 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 17:08:10 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:06:44 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:28:30 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 char	*ft_strjoin(const char *s1, const char *s2)
 {

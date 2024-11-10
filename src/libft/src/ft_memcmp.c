@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/03 12:02:58 by qbarron           #+#    #+#             */
-/*   Updated: 2023/10/03 19:55:55 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:26:45 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
-#include <string.h>
+#include "../includes/libft.h"
 
 int	ft_memcmp(const void *s1, const void *s2, size_t n)
 {

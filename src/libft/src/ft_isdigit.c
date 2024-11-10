@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/22 00:28:30 by qbarron           #+#    #+#             */
-/*   Updated: 2023/09/22 00:40:33 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:24:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
-#include <stdio.h>
+#include "../includes/libft.h"
 
 int	ft_isdigit(int c)
 {

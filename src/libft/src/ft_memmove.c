@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_memmove.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 18:01:04 by qbarron           #+#    #+#             */
-/*   Updated: 2023/10/12 13:12:13 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:26:59 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stdio.h>
+#include "../includes/libft.h"
 
 void	*ft_memmove(void *dst, const void *src, size_t len)
 {

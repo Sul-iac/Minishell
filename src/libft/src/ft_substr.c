@@ -6,13 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/04 17:57:29 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:07:04 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:29:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 char	*ft_substr(char const *s, unsigned int start, size_t len)
 {

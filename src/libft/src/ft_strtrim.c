@@ -6,13 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 17:30:40 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:06:15 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:29:17 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
 
 char	*ft_trim(const char *s1, int start, int end)
 {

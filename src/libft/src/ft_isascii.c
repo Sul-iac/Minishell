@@ -3,15 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 20:47:18 by qbarron           #+#    #+#             */
-/*   Updated: 2023/09/25 12:47:53 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:24:48 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <ctype.h>
-#include <stdio.h>
+#include "../includes/libft.h"
 
 int	ft_isascii(int c)
 {

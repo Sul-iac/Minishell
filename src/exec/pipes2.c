@@ -6,12 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 12:51:22 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 12:52:17 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:31:15 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
 
 pid_t    *init_pipe_execution(t_node *cmd, int *cmd_count)
 {

@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 17:27:06 by qbarron           #+#    #+#             */
-/*   Updated: 2024/10/29 09:05:23 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:36:43 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,9 +29,8 @@ int					ft_isascii(int c);
 int					ft_atoi(const char *str);
 int					ft_strlen(const char *str);
 int					ft_strcmp(char *s1, char *s2);
-int					*ft_strstr(const char *str, const char *to_find);
 int					ft_memcmp(const void *s1, const void *s2, size_t n);
-int					ft_strncmp(const char *s1, const char *s2, size_t n);
+int					ft_strncmp(const char *s1, const char *s2, unsigned int n);
 
 
 char				*ft_itoa(int n);
@@ -45,6 +44,7 @@ char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_substr(char const *s, unsigned int start, size_t len);
 char				*ft_strmapi(char const *s, char (*f)(unsigned int, char));
 const char			*ft_strnstr(const char *str, const char *to_find, size_t n);
+char				*ft_strstr(const char *str, const char *to_find);
 
 size_t				ft_strlcat(char *dest, const char *src, size_t size);
 size_t				ft_strlcpy(char *dest, const char *src, size_t destsize);

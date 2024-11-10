@@ -3,17 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strncmp.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr    +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/20 23:07:01 by qbarron           #+#    #+#             */
-/*   Updated: 2023/09/24 00:33:04 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:28:57 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
-#include <stdio.h>
-#include <string.h>
-#include <unistd.h>
+#include "../includes/libft.h"
 
 int	ft_strncmp(const char *s1, const char *s2, unsigned int n)
 {

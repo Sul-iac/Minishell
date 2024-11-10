@@ -6,14 +6,11 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 07:19:44 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:05:19 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/10 18:27:58 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/libft.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
 
 int	ft_word_count(const char *str, char c)
 {
