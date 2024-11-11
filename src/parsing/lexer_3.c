@@ -32,7 +32,7 @@ t_token	*tokenize_string(char *input)
 
 t_token	*process_operator_token(char **ptr, t_token **head)
 {
-	char	operator[3] = {0};
+	char	operator[3];
 	size_t	len;
 
 	len = 1;
@@ -40,6 +40,7 @@ t_token	*process_operator_token(char **ptr, t_token **head)
 		len = 2;
 	else if ((*ptr)[0] == '<' && (*ptr)[1] == '<')
 		len = 2;
+	memset(operator, 0, sizeof(operator));
 	strncpy(operator, *ptr, len);
 	operator[len] = '\0';
 	*ptr += len;

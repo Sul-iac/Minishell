@@ -12,23 +12,24 @@
 
 #include "../../includes/minishell.h"
 
-int count_pipes(const char *input)
+int	count_pipes(const char *input)
 {
-	int num_pipes = 0;
-	int in_quotes = 0;
-	const char *ptr = input;
+	int			num_pipes;
+	int			in_quotes;
+	const char	*ptr;
 
+	num_pipes = 0;
+	in_quotes = 0;
+	ptr = input;
 	while (*ptr != '\0')
 	{
 		if (*ptr == '"')
 			in_quotes = !in_quotes;
-
 		if (*ptr == '|' && !in_quotes)
 			num_pipes++;
-
 		ptr++;
 	}
-	return num_pipes;
+	return (num_pipes);
 }
 
 char	*allocate_and_copy(const char *start, size_t length)
@@ -63,18 +64,22 @@ char	**split_into_array(const char *input, int num_pipes)
 		pipe_pos = input + start;
 		in_quotes = 0;
 		length = 0;
-		while (pipe_pos[length] != '\0' && (pipe_pos[length] != '|' || in_quotes))
+		while (pipe_pos[length] != '\0'
+			&& (pipe_pos[length] != '|' || in_quotes))
 		{
 			if (pipe_pos[length] == '"')
 				in_quotes = !in_quotes;
 			length++;
 		}
-
 		str_array[index] = allocate_and_copy(input + start, length);
 		if (str_array[index] == NULL)
 		{
-			for (j = 0; j < index; j++)
+			j = 0;
+			while (j < index)
+			{
 				free(str_array[j]);
+				j++;
+			}
 			free(str_array);
 			return (NULL);
 		}

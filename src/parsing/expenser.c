@@ -14,17 +14,19 @@
 
 bool	ft_is_builtin(char *command)
 {
-	const char	*builtins[] = {"echo", "cd", "pwd", "export", "unset", "env", "exit"};
+	const char		*builtins[] = {"echo", "cd", "pwd",
+		"export", "unset", "env", "exit"};
 	unsigned long	i;
+	size_t			len;
 
 	if (command == NULL)
 		return (false);
 	i = 0;
 	while (i < 7)
 	{
-		size_t len = strlen(builtins[i]);
-		if (strncmp(command, builtins[i], len) == 0 && 
-			(command[len] == ' ' || command[len] == '\0'))
+		len = strlen(builtins[i]);
+		if (strncmp(command, builtins[i], len) == 0
+			&& (command[len] == ' ' || command[len] == '\0'))
 		{
 			return (true);
 		}

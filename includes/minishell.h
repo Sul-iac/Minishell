@@ -38,8 +38,7 @@
 # define YELLOW "\001\033[33m\002"
 # define RED "\001\033[31m\002"
 
-
-extern int g_global_sig;
+extern int	g_global_sig;
 
 typedef enum e_token_type
 {
@@ -98,17 +97,16 @@ typedef struct s_data
 
 typedef struct s_main
 {
-    int		is_running;
+	int		is_running;
 }				t_main;
 
 typedef struct s_pipe_data
 {
-    int		in_fd;
-    int		cmd_index;
-    pid_t	*pids;
-    char	***env;
+	int		in_fd;
+	int		cmd_index;
+	pid_t	*pids;
+	char	***env;
 }				t_pipe_data;
-
 
 // expenser les variable d'environnement
 
@@ -151,7 +149,7 @@ t_token					*process_redirection_target(char **ptr, t_token **head,
 t_token					*process_command_token(char **ptr, t_token **head);
 t_token					*add_token_to_list(t_token **head, t_token **tail,
 							t_token *token);
-void	separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail);
+void					separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail);
 t_token					*reorganize_tokens(t_token *head);
 
 // lexer_5.c
@@ -200,8 +198,8 @@ void					display_sorted_env(char **env);
 int						is_valid_identifier(const char *var);
 char					**ft_export(char *args, char ***env);
 int						var_exists(char ***env, char *var_name);
-void					export_utils(char **new_vars, char ***env, int env_size, int *i);
-
+void					export_utils(char **new_vars, char ***env,
+							int env_size, int *i);
 
 // exec
 void					exec(t_node *cmd, char ***env);
@@ -215,7 +213,7 @@ void					parent_process(int *in_fd, int *fd);
 void					execute_pipes(t_node *cmd, char ***env);
 void					handle_pipe_creation(t_node *cmd, int fd[2]);
 void					child_process(t_node *cmd, char ***env, int in_fd,
-														int *fd);
+							int *fd);
 void					process_command(t_node *cmd, t_pipe_data *data);
 void					wait_all_processes(t_pipe_data *data, int cmd_count);
 
@@ -225,16 +223,15 @@ pid_t					*init_pipe_execution(t_node *cmd, int *cmd_count);
 char					*get_path(char *cmd, char ***env);
 
 // redirs, heredoc
-int 					handle_heredoc(char *delimiter);
-int 					handle_input_redirection(const char *file);
+int						handle_heredoc(char *delimiter);
+int						handle_input_redirection(const char *file);
 int						process_input_redirections(t_redirection *current);
 int						handle_heredoc_redirection(char *filename, int *fd);
 int						process_output_redirections(t_redirection *current);
-int 					handle_output_redirection(const char *file, int flags);
-
+int						handle_output_redirection(const char *file, int flags);
 void					handle_redirections(t_node *cmd);
 void					handle_sigint_heredoc(int signum);
-void 					handle_heredoc_input(int pipefd[2], char *delimiter);
+void					handle_heredoc_input(int pipefd[2], char *delimiter);
 
 // signaux
 void					reset_signal(void);
@@ -244,7 +241,6 @@ void					signal_handler(int signo);
 char					*get_first_word(const char *str);
 void					forked_commands(char *cmd, char ***env);
 char					**nforked_commands(char *cmd, char ***env);
-
 
 // errors/free exec
 void					free_and_error(char *ptr, char **ptr2, char *msg,
@@ -258,9 +254,12 @@ char					*ft_readline(void);
 char					*ft_create_prompt(void);
 char					**copy_env(char **original_env);
 void					init_shell(char ***envp, t_main *main);
-void					init_parser_exec(char *line, t_main *main, char ***envp);
-void					execute_relative_absolute(char *cmd, char **args, char ***envp);
-void					exit_program(t_node *head, char *line, t_main *main, char ***envp);
+void					init_parser_exec(char *line, t_main*main,
+							char ***envp);
+void					execute_relative_absolute(char *cmd,
+							char **args, char ***envp);
+void					exit_program(t_node *head, char *line,
+							t_main *main, char ***envp);
 
 // prompt
 char					*ft_get_dirname(void);
@@ -275,6 +274,5 @@ void					clean_node(t_node *node);
 void					clean_nodes(t_node *head);
 void					clean_token(t_token *token);
 void					clean_tokens(t_token *tokens);
-
 
 #endif
