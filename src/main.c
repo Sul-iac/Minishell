@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 23:56:30 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:33:20 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,21 @@
 
 int		g_global_sig = 0;
 
-char	*ft_readline(void)
+char    *ft_readline(void)
 {
 	char	*prompt;
 	char	*line;
-
+	
 	prompt = ft_create_prompt();
 	if (!prompt)
 		line = readline("minishell$ ");
 	else
 	{
+		if (g_global_sig == 130)
+		{
+			g_global_sig = 0;
+			rl_reset_terminal(NULL);
+		}
 		line = readline(prompt);
 		free(prompt);
 	}

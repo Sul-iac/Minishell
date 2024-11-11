@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/10 23:34:04 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/11 15:24:24 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -185,7 +185,6 @@ void					append_redirection(t_redirection **head,
 							t_redirection *new_redir);
 t_node					*parser(t_token *tokens);
 
-
 // solo builtins
 void					ft_pwd(void);
 int						ft_cd(char *path);
@@ -233,11 +232,13 @@ int						handle_heredoc_redirection(char *filename, int *fd);
 int						process_output_redirections(t_redirection *current);
 int 					handle_output_redirection(const char *file, int flags);
 
-void					reset_signal(void);
 void					handle_redirections(t_node *cmd);
 void					handle_sigint_heredoc(int signum);
 void 					handle_heredoc_input(int pipefd[2], char *delimiter);
 
+// signaux
+void					reset_signal(void);
+void					signal_handler(int signo);
 
 // pipes
 char					*get_first_word(const char *str);
@@ -255,7 +256,6 @@ void					cleanup_cmd(t_node *cmd);
 // main
 char					*ft_readline(void);
 char					*ft_create_prompt(void);
-void					signal_handler(int signo);
 char					**copy_env(char **original_env);
 void					init_shell(char ***envp, t_main *main);
 void					init_parser_exec(char *line, t_main *main, char ***envp);
@@ -271,7 +271,6 @@ char					*ft_get_status_color(void);
 char					*ft_get_username(void);
 
 // cleaning
-
 void					clean_node(t_node *node);
 void					clean_nodes(t_node *head);
 void					clean_token(t_token *token);
