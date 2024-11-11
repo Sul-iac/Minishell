@@ -19,8 +19,7 @@ t_token	*process_command_token(char **ptr, t_token **head)
 	char	*cmd_token;
 
 	debut = *ptr;
-	while (**ptr && **ptr != ' ' && **ptr != '\t' && **ptr != '|'
-		&& **ptr != '<' && **ptr != '>')
+	while (**ptr && **ptr != ' ' && **ptr != '\t')
 	{
 		(*ptr)++;
 	}

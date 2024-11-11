@@ -22,7 +22,7 @@ t_token	*tokenize_string(char *input)
 	while (*ptr)
 	{
 		skip_spaces(&ptr);
-		if (*ptr == '|' || *ptr == '<' || *ptr == '>')
+		if (*ptr == '<' || *ptr == '>')
 			process_operator_token(&ptr, &head);
 		else if (*ptr != '\0')
 			process_command_token(&ptr, &head);

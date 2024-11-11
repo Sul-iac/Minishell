@@ -12,19 +12,23 @@
 
 #include "../../includes/minishell.h"
 
-int	count_pipes(const char *input)
+int count_pipes(const char *input)
 {
-	int			num_pipes;
-	const char	*ptr = input;
+	int num_pipes = 0;
+	int in_quotes = 0;
+	const char *ptr = input;
 
-	num_pipes = 0;
 	while (*ptr != '\0')
 	{
-		if (*ptr == '|')
+		if (*ptr == '"')
+			in_quotes = !in_quotes;
+
+		if (*ptr == '|' && !in_quotes)
 			num_pipes++;
+
 		ptr++;
 	}
-	return (num_pipes);
+	return num_pipes;
 }
 
 char	*allocate_and_copy(const char *start, size_t length)
@@ -47,6 +51,7 @@ char	**split_into_array(const char *input, int num_pipes)
 	const char	*pipe_pos;
 	size_t		length;
 	int			j;
+	int			in_quotes;
 
 	index = 0;
 	start = 0;
@@ -55,20 +60,21 @@ char	**split_into_array(const char *input, int num_pipes)
 		return (NULL);
 	while (index <= num_pipes)
 	{
-		pipe_pos = strchr(input + start, '|');
-		if (pipe_pos != NULL)
-			length = (size_t)(pipe_pos - (input + start));
-		else
-			length = strlen(input + start);
+		pipe_pos = input + start;
+		in_quotes = 0;
+		length = 0;
+		while (pipe_pos[length] != '\0' && (pipe_pos[length] != '|' || in_quotes))
+		{
+			if (pipe_pos[length] == '"')
+				in_quotes = !in_quotes;
+			length++;
+		}
+
 		str_array[index] = allocate_and_copy(input + start, length);
 		if (str_array[index] == NULL)
 		{
-			j = 0;
-			while (j < index)
-			{
+			for (j = 0; j < index; j++)
 				free(str_array[j]);
-				j++;
-			}
 			free(str_array);
 			return (NULL);
 		}
