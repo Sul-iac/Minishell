@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 20:16:46 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/11 02:32:09 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,11 +22,11 @@ int	execute_builtin(t_node *cmd, char ***env)
 	if (!args)
 		free_and_error(NULL, NULL, "execute_builtin: error splitting arguments",
 			1);
-	if (!strcmp(args[0], "export") || !strcmp(args[0], "unset")
-		|| !strcmp(args[0], "cd"))
+	if (!ft_strcmp(args[0], "export") || !ft_strcmp(args[0], "unset")
+		|| !ft_strcmp(args[0], "cd"))
 		nforked_commands(cmd->value, env);
-	else if (!strcmp(args[0], "echo") || !strcmp(args[0], "env")
-		|| !strcmp(args[0], "pwd"))
+	else if (!ft_strcmp(args[0], "echo") || !ft_strcmp(args[0], "env")
+		|| !ft_strcmp(args[0], "pwd"))
 		forked_commands(cmd->value, env);
 	free(args);
 	return (1);
@@ -47,33 +47,6 @@ void	execute_relative_absolute(char *cmd, char **args, char ***envp)
 	}
 }
 
-int	execute_command(t_node *cmd, char ***env)
-{
-	int		len;
-	char	**args;
-	char	*path;
-	char	*full_command;
-
-	args = ft_split(cmd->value, ' ');
-	if (!args)
-		free_and_error(NULL, args, "minishell: args malloc error", 1);
-	execute_relative_absolute(cmd->value, args, env);
-	path = get_path(args[0], env);
-	if (!path)
-	{
-		printf("minishell: %s: command not found\n", args[0]);
-		exit(EXIT_FAILURE);
-	}
-	len = ft_strlen(path) + ft_strlen(args[0]);
-	full_command = malloc(sizeof(char) * (len + 1));
-	if (!full_command)
-		free_and_error(full_command, NULL, "minishell: malloc error", 1);
-	ft_strcpy(full_command, path);
-	if (execve(full_command, args, *env) == -1)
-		free_and_error(NULL, NULL, "minishell: execve error", 1);
-	free(full_command);
-	exit(EXIT_SUCCESS);
-}
 
 int	execute_simple_command(t_node *cmd, char ***env)
 {

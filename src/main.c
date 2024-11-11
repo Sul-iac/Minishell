@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/08/21 15:19:47 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 23:56:30 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/11 02:00:05 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,6 @@ t_node	*init_parser(char *line)
 void	init_parser_exec(char *line, t_main *main, char ***envp)
 {
 	t_node	*head;
-
 	head = init_parser(line);
 	if (!head)
 	{

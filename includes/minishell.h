@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/10 23:34:04 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/11 02:14:22 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -270,8 +270,9 @@ char					*ft_strjoin_free(char *s1, const char *s2);
 char					*ft_get_status_color(void);
 char					*ft_get_username(void);
 
-// cleaning
+void					execute_utils(void);
 
+// cleaning
 void					clean_node(t_node *node);
 void					clean_nodes(t_node *head);
 void					clean_token(t_token *token);
