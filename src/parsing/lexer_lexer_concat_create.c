@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lexer_lexer_concat_create.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:33:00 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 17:19:23 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 18:19:47 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

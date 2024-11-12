@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 16:49:10 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 18:14:40 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -281,6 +281,7 @@ void					execute_relative_absolute(char *cmd, char **args,
 							char ***envp);
 void					exit_program(t_node *head, char *line, t_main *main,
 							char ***envp);
+void					free_everything(char **env, t_node *head);
 
 // cleaning
 void					clean_node(t_node *node);
