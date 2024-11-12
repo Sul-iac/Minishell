@@ -34,56 +34,6 @@ char	*get_env_variable_value(const char *input, size_t *i)
 	return (var_value);
 }
 
-char	*process_input(const char *p, t_process_data *data, char *result)
-{
-	char	*var_value;
-	size_t	value_len;
-	int		in_single_quote;
-	int		in_double_quote;
-
-	in_single_quote = 0;
-	in_double_quote = 0;
-	while (p[data->i] != '\0')
-	{
-		if (p[data->i] == '\'' && !in_double_quote)
-		{
-			in_single_quote = !in_single_quote;
-			data->i++;
-			continue ;
-		}
-		else if (p[data->i] == '\"' && !in_single_quote)
-		{
-			in_double_quote = !in_double_quote;
-			data->i++;
-			continue ;
-		}
-		if (p[data->i] == '$' && p[data->i + 1] && p[data->i + 1] != ' '
-			&& p[data->i + 1] != '\t' && !in_single_quote)
-		{
-			data->i++;
-			var_value = get_env_variable_value(p, &data->i);
-			if (var_value)
-			{
-				value_len = strlen(var_value);
-				result = resize_result_if_needed(result, &data->k,
-						data->j + value_len);
-				if (!result)
-					return (NULL);
-				strcpy(&result[data->j], var_value);
-				data->j += value_len;
-			}
-		}
-		else
-		{
-			result = resize_result_if_needed(result, &data->k, data->j + 1);
-			if (!result)
-				return (NULL);
-			result[data->j++] = p[data->i++];
-		}
-	}
-	return (result);
-}
-
 char	*expand_env_variables(const char *input)
 {
 	size_t			result_size;

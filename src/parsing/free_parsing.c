@@ -54,6 +54,19 @@ void	free_tokens(t_token *head)
 	}
 }
 
+void	free_array(char **str_array, int count)
+{
+	int	i;
+
+	i = 0;
+	while (i < count)
+	{
+		free(str_array[i]);
+		i++;
+	}
+	free(str_array);
+}
+
 void	free_redirections(t_redirection *redir)
 {
 	t_redirection	*temp;

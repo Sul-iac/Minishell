@@ -108,6 +108,14 @@ typedef struct s_pipe_data
 	char	***env;
 }				t_pipe_data;
 
+typedef struct s_split_info
+{
+	char	**str_array;
+	size_t	start;
+	int		index;
+	int		num_pipes;
+}				t_split_info;
+
 // expenser les variable d'environnement
 
 //=========================
@@ -120,49 +128,59 @@ void					ft_expenser(t_node *head);
 
 // expenser_2.c
 char					*get_env_variable_value(const char *input, size_t *i);
-char					*process_input(const char *p, t_process_data *data,
-							char *result);
 char					*expand_env_variables(const char *input);
 void					expand_node_values(t_node *head);
 char					*resize_result_if_needed(char *result,
 							size_t *result_size, size_t required_size);
 
-// free_nodes.c
+// expenser_3.c
+int						handle_quotes(const char *p, t_process_data *data,
+							int *in_single_quote, int *in_double_quote);
+char					*handle_variable_replacement(const char *p,
+							t_process_data *data, char *result);
+char					*process_input(const char *p,
+							t_process_data *data, char *result);
+
+// free_parsing.c
 void					free_nodes(t_node *head);
 void					free_split_array(char **array);
 void					free_tokens(t_token *head);
 void					free_redirections(t_redirection *redir);
+void					free_array(char **str_array, int count);
 
-// lexer_2.c
-t_token					*create_token(char *value, t_token_type type);
-void					append_token(t_token **head, t_token *new_token);
-t_token_type			determine_type(char *token);
-void					skip_spaces(char **input);
-
-// lexer_3.c
-t_token					*tokenize_string(char *input);
-t_token					*process_operator_token(char **ptr, t_token **head);
-t_token					*process_redirection_target(char **ptr, t_token **head,
-							char operator[3]);
-
-// lexer_4.c
-t_token					*process_command_token(char **ptr, t_token **head);
-t_token					*add_token_to_list(t_token **head, t_token **tail,
-							t_token *token);
-void					separate_tokens(t_token *current, t_token **cmd_head, t_token **cmd_tail, t_token **other_head, t_token **other_tail);
-t_token					*reorganize_tokens(t_token *head);
-
-// lexer_5.c
-int						count_pipes(const char *input);
-char					*allocate_and_copy(const char *start, size_t length);
-char					**split_string(const char *input);
-t_token					*concat_tokens(t_token *head1, t_token *head2);
-
-// lexer.c
+// lexer_group_cmd.c
 char					*group_consecutive_cmd_tokens(t_token **temp,
 							size_t *grouped_len);
 t_token					*group_cmd_tokens(t_token *head);
+
+// lexer_lexer_concat_create.c
+void					skip_spaces(char **input);
+t_token					*create_token(char *value, t_token_type type);
+void					append_token(t_token **head, t_token *new_token);
+t_token					*concat_tokens(t_token *head1, t_token *head2);
 t_token					*lexer(char *input);
+
+// lexer_reorganize.c
+t_token					*add_token_to_list(t_token **head,
+							t_token **tail, t_token *token);
+void					separate_tokens(t_token *current,
+							t_token_list *cmd_list, t_token_list *other_list);
+t_token					*reorganize_tokens(t_token *head);
+
+//lexer_split_string.c
+int						count_pipes(const char *input);
+char					*allocate_and_copy(const char *start, size_t length);
+int						process_segment(const char *input, t_split_info *info);
+char					**split_into_array(const char *input, int num_pipes);
+char					**split_string(const char *input);
+
+// lexer_tokenize.c
+t_token					*process_operator_token(char **ptr, t_token **head);
+t_token					*process_command_token(char **ptr, t_token **head);
+t_token_type			determine_type(char *token);
+t_token					*process_redirection_target(char **ptr,
+							t_token **head, char operator[3]);
+t_token					*tokenize_string(char *input);
 
 // parser_2.c
 t_node					*create_node_from_tokens(t_token *tokens);

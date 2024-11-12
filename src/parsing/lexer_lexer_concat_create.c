@@ -1,16 +1,24 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_2.c                                          :+:      :+:    :+:   */
+/*   lexer_lexer_concat_create.c                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 14:18:43 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/29 14:18:43 by tgerardi         ###   ########.fr       */
+/*   Created: 2024/11/12 14:33:00 by tgerardi          #+#    #+#             */
+/*   Updated: 2024/11/12 14:33:00 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
+
+void	skip_spaces(char **input)
+{
+	while (**input == ' ' || **input == '\t')
+	{
+		(*input)++;
+	}
+}
 
 t_token	*create_token(char *value, t_token_type type)
 {
@@ -44,25 +52,45 @@ void	append_token(t_token **head, t_token *new_token)
 	}
 }
 
-t_token_type	determine_type(char *token)
+t_token	*concat_tokens(t_token *head1, t_token *head2)
 {
-	if (strcmp(token, "|") == 0)
-		return (PIPE);
-	if (strncmp(token, ">>", 2) == 0)
-		return (REDIR_APPEND);
-	if (strncmp(token, ">", 1) == 0)
-		return (REDIR_OUT);
-	if (strncmp(token, "<<", 2) == 0)
-		return (REDIR_HEREDOC);
-	if (strncmp(token, "<", 1) == 0)
-		return (REDIR_IN);
-	return (CMD);
+	t_token	*current;
+	t_token	*pipe_token;
+
+	if (!head1)
+		return (head2);
+	if (!head2)
+		return (head1);
+	current = head1;
+	while (current->next)
+		current = current->next;
+	pipe_token = create_token("|", PIPE);
+	current->next = pipe_token;
+	current->next->next = head2;
+	return (head1);
 }
 
-void	skip_spaces(char **input)
+t_token	*lexer(char *input)
 {
-	while (**input == ' ' || **input == '\t')
+	char	**str;
+	t_token	*tokens;
+	t_token	*final_tokens;
+	int		j;
+
+	str = split_string(input);
+	final_tokens = NULL;
+	j = 0;
+	while (str[j])
 	{
-		(*input)++;
+		tokens = tokenize_string(str[j]);
+		if (tokens)
+		{
+			tokens = reorganize_tokens(tokens);
+			tokens = group_cmd_tokens(tokens);
+			final_tokens = concat_tokens(final_tokens, tokens);
+		}
+		j++;
 	}
+	free_split_array(str);
+	return (final_tokens);
 }

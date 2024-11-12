@@ -23,8 +23,8 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g -I includes -I src/libft
 AUTHORS = qbarron and tgeradi
 
-PARSE_SRC =	expenser.c expenser_2.c free_parsing.c \
-			lexer.c lexer_2.c lexer_3.c lexer_4.c lexer_5.c \
+PARSE_SRC =	expenser.c expenser_2.c expenser_3.c free_parsing.c \
+			lexer_group_cmd.c lexer_lexer_concat_create.c lexer_reorganize.c lexer_split_string.c lexer_tokenize.c \
 			parser.c parser_2.c parser_3.c
 
 BUILTIN_SRC = cd.c echo.c env.c exit.c export.c pwd.c unset.c export_utils.c

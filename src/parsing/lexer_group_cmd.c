@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                            :+:      :+:    :+:   */
+/*   lexer_group_cmd.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
+/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/09/24 23:08:52 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/07 17:34:32 by qbarron          ###   ########.fr       */
+/*   Created: 2024/11/12 14:34:21 by tgerardi          #+#    #+#             */
+/*   Updated: 2024/11/12 14:34:21 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,29 +53,4 @@ t_token	*group_cmd_tokens(t_token *head)
 		temp = temp->next;
 	}
 	return (grouped_head);
-}
-
-t_token	*lexer(char *input)
-{
-	char	**str;
-	t_token	*tokens;
-	t_token	*final_tokens;
-	int		j;
-
-	str = split_string(input);
-	final_tokens = NULL;
-	j = 0;
-	while (str[j])
-	{
-		tokens = tokenize_string(str[j]);
-		if (tokens)
-		{
-			tokens = reorganize_tokens(tokens);
-			tokens = group_cmd_tokens(tokens);
-			final_tokens = concat_tokens(final_tokens, tokens);
-		}
-		j++;
-	}
-	free_split_array(str);
-	return (final_tokens);
 }

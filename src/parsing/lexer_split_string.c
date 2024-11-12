@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer_5.c                                          :+:      :+:    :+:   */
+/*   lexer_split_string.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/10/29 14:26:15 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/29 14:26:15 by tgerardi         ###   ########.fr       */
+/*   Created: 2024/11/12 14:34:14 by tgerardi          #+#    #+#             */
+/*   Updated: 2024/11/12 14:34:14 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,50 +44,50 @@ char	*allocate_and_copy(const char *start, size_t length)
 	return (new_str);
 }
 
+int	process_segment(const char *input, t_split_info *info)
+{
+	const char	*pipe_pos;
+	int			in_quotes;
+	size_t		length;
+
+	length = 0;
+	in_quotes = 0;
+	pipe_pos = input + info->start;
+	while (pipe_pos[length] != '\0' && (pipe_pos[length] != '|' || in_quotes))
+	{
+		if (pipe_pos[length] == '"')
+			in_quotes = !in_quotes;
+		length++;
+	}
+	info->str_array[info->index]
+		= allocate_and_copy(input + info->start, length);
+	if (info->str_array[info->index] == NULL)
+	{
+		free_array(info->str_array, info->index);
+		return (-1);
+	}
+	info->start += length + 1;
+	info->index++;
+	return (0);
+}
+
 char	**split_into_array(const char *input, int num_pipes)
 {
-	char		**str_array;
-	size_t		start;
-	int			index;
-	const char	*pipe_pos;
-	size_t		length;
-	int			j;
-	int			in_quotes;
+	t_split_info	info;
 
-	index = 0;
-	start = 0;
-	str_array = malloc((num_pipes + 2) * sizeof(char *));
-	if (str_array == NULL)
+	info.start = 0;
+	info.index = 0;
+	info.num_pipes = num_pipes;
+	info.str_array = malloc((num_pipes + 2) * sizeof(char *));
+	if (info.str_array == NULL)
 		return (NULL);
-	while (index <= num_pipes)
+	while (info.index <= num_pipes)
 	{
-		pipe_pos = input + start;
-		in_quotes = 0;
-		length = 0;
-		while (pipe_pos[length] != '\0'
-			&& (pipe_pos[length] != '|' || in_quotes))
-		{
-			if (pipe_pos[length] == '"')
-				in_quotes = !in_quotes;
-			length++;
-		}
-		str_array[index] = allocate_and_copy(input + start, length);
-		if (str_array[index] == NULL)
-		{
-			j = 0;
-			while (j < index)
-			{
-				free(str_array[j]);
-				j++;
-			}
-			free(str_array);
+		if (process_segment(input, &info) == -1)
 			return (NULL);
-		}
-		start += length + 1;
-		index++;
 	}
-	str_array[index] = NULL;
-	return (str_array);
+	info.str_array[info.index] = NULL;
+	return (info.str_array);
 }
 
 char	**split_string(const char *input)
@@ -96,22 +96,4 @@ char	**split_string(const char *input)
 
 	num_pipes = count_pipes(input);
 	return (split_into_array(input, num_pipes));
-}
-
-t_token	*concat_tokens(t_token *head1, t_token *head2)
-{
-	t_token	*current;
-	t_token	*pipe_token;
-
-	if (!head1)
-		return (head2);
-	if (!head2)
-		return (head1);
-	current = head1;
-	while (current->next)
-		current = current->next;
-	pipe_token = create_token("|", PIPE);
-	current->next = pipe_token;
-	current->next->next = head2;
-	return (head1);
 }
