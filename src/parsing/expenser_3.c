@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:32:52 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 15:32:52 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:01:13 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*handle_variable_replacement(const char *p,
 	var_value = get_env_variable_value(p, &data->i);
 	if (var_value)
 	{
-		value_len = strlen(var_value);
+		value_len = ft_strlen(var_value);
 		result = resize_result_if_needed(result, &data->k, data->j + value_len);
 		if (!result)
 			return (NULL);

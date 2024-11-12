@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 15:47:17 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/28 16:36:42 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:46:28 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,8 +24,8 @@ bool	ft_is_builtin(char *command)
 	i = 0;
 	while (i < 7)
 	{
-		len = strlen(builtins[i]);
-		if (strncmp(command, builtins[i], len) == 0
+		len = ft_strlen(builtins[i]);
+		if (ft_strncmp(command, builtins[i], len) == 0
 			&& (command[len] == ' ' || command[len] == '\0'))
 		{
 			return (true);

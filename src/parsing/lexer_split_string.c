@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:34:14 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 14:34:14 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:48:07 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ char	*allocate_and_copy(const char *start, size_t length)
 	new_str = malloc((length + 1) * sizeof(char));
 	if (new_str == NULL)
 		return (NULL);
-	strncpy(new_str, start, length);
+	ft_strncpy(new_str, start, length);
 	new_str[length] = '\0';
 	return (new_str);
 }

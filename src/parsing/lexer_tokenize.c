@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:34:10 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 14:34:10 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:49:48 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ t_token	*process_operator_token(char **ptr, t_token **head)
 	else if ((*ptr)[0] == '<' && (*ptr)[1] == '<')
 		len = 2;
 	memset(operator, 0, sizeof(operator));
-	strncpy(operator, *ptr, len);
+	ft_strncpy(operator, *ptr, len);
 	operator[len] = '\0';
 	*ptr += len;
 	skip_spaces(ptr);
@@ -43,7 +43,7 @@ t_token	*process_command_token(char **ptr, t_token **head)
 	}
 	lenlen = *ptr - debut;
 	cmd_token = (char *)malloc(lenlen + 1);
-	strncpy(cmd_token, debut, lenlen);
+	ft_strncpy(cmd_token, debut, lenlen);
 	cmd_token[lenlen] = '\0';
 	append_token(head, create_token(cmd_token, CMD));
 	free(cmd_token);
@@ -52,15 +52,15 @@ t_token	*process_command_token(char **ptr, t_token **head)
 
 t_token_type	determine_type(char *token)
 {
-	if (strcmp(token, "|") == 0)
+	if (ft_strcmp(token, "|") == 0)
 		return (PIPE);
-	if (strncmp(token, ">>", 2) == 0)
+	if (ft_strncmp(token, ">>", 2) == 0)
 		return (REDIR_APPEND);
-	if (strncmp(token, ">", 1) == 0)
+	if (ft_strncmp(token, ">", 1) == 0)
 		return (REDIR_OUT);
-	if (strncmp(token, "<<", 2) == 0)
+	if (ft_strncmp(token, "<<", 2) == 0)
 		return (REDIR_HEREDOC);
-	if (strncmp(token, "<", 1) == 0)
+	if (ft_strncmp(token, "<", 1) == 0)
 		return (REDIR_IN);
 	return (CMD);
 }
@@ -82,7 +82,7 @@ t_token	*process_redirection_target(char **ptr,
 		redirection_target = (char *)malloc(length + 1);
 		if (!redirection_target)
 			return (NULL);
-		strncpy(redirection_target, start, length);
+		ft_strncpy(redirection_target, start, length);
 		redirection_target[length] = '\0';
 		append_token(head, create_token(redirection_target,
 				determine_type(operator)));

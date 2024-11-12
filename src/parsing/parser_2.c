@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 14:28:42 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/10/29 14:28:42 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:59:58 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ char	*build_command_value(t_token *tokens)
 				cmd_value = strdup(tokens->value);
 			else
 			{
-				new_len = strlen(cmd_value) + strlen(tokens->value) + 2;
+				new_len = ft_strlen(cmd_value) + ft_strlen(tokens->value) + 2;
 				cmd_value = (char *)realloc(cmd_value, new_len);
 				strcat(cmd_value, " ");
 				strcat(cmd_value, tokens->value);
