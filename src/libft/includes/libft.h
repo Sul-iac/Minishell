@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/23 17:27:06 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/12 16:55:48 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:16:57 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char				**ft_split(const char *s, char c);
 char				*ft_strchr(const char *str, int c);
 char				*ft_strndup(const char *str, int n);
 char				*ft_strrchr(const char *str, int c);
-char				*ft_strncpy(char *s1, const char *s2, size_t n);
+char				*ft_strncpy(char *dest, const char *src, unsigned int n);
 char				*ft_strjoin(const char *s1, const char *s2);
 char				*ft_strtrim(char const *s1, char const *set);
 char				*ft_strstr(const char *str, const char *to_find);

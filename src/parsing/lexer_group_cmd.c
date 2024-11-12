@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 14:34:21 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 17:00:07 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:19:13 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,15 +16,15 @@ char	*group_consecutive_cmd_tokens(t_token **temp, size_t *grouped_len)
 {
 	char	*grouped_value;
 
-	grouped_value = strdup((*temp)->value);
+	grouped_value = ft_strdup((*temp)->value);
 	*grouped_len = ft_strlen(grouped_value);
 	while ((*temp)->next && (*temp)->next->type == CMD)
 	{
 		*temp = (*temp)->next;
 		*grouped_len += ft_strlen((*temp)->value) + 1;
 		grouped_value = (char *)realloc(grouped_value, *grouped_len + 1);
-		strcat(grouped_value, " ");
-		strcat(grouped_value, (*temp)->value);
+		ft_strcat(grouped_value, " ");
+		ft_strcat(grouped_value, (*temp)->value);
 	}
 	return (grouped_value);
 }

@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 15:47:01 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 16:59:52 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:20:49 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ t_node	*create_node(t_node_type type, char *value)
 	new_node->type = type;
 	if (value)
 	{
-		new_node->value = strdup(value);
+		new_node->value = ft_strdup(value);
 		if (!new_node->value)
 		{
 			free(new_node);
@@ -48,7 +48,7 @@ t_redirection	*create_redirection(char *filename, bool is_double)
 	new_redir = (t_redirection *)malloc(sizeof(t_redirection));
 	if (!new_redir)
 		return (NULL);
-	new_redir->filename = strdup(filename);
+	new_redir->filename = ft_strdup(filename);
 	new_redir->is_double = is_double;
 	new_redir->next = NULL;
 	return (new_redir);

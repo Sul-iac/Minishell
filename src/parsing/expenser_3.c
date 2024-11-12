@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 15:32:52 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 17:01:13 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:18:29 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ char	*handle_variable_replacement(const char *p,
 		result = resize_result_if_needed(result, &data->k, data->j + value_len);
 		if (!result)
 			return (NULL);
-		strcpy(&result[data->j], var_value);
+		ft_strcpy(&result[data->j], var_value);
 		data->j += value_len;
 	}
 	return (result);

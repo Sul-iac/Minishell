@@ -6,7 +6,7 @@
 /*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 13:13:14 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 16:58:48 by tgerardi         ###   ########.fr       */
+/*   Updated: 2024/11/12 17:18:00 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ char	*get_env_variable_value(const char *input, size_t *i)
 	{
 		var_len++;
 	}
-	var_name = strndup(&input[*i], var_len);
+	var_name = ft_strndup(&input[*i], var_len);
 	if (!var_name)
 		return (NULL);
 	var_value = getenv(var_name);
