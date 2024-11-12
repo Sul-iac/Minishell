@@ -14,15 +14,19 @@
 
 t_token	*tokenize_string(char *input)
 {
-	t_token	*head;
-	char	*ptr;
+	t_token		*head;
+	char		*ptr;
+	static int	quote_count;
 
+	quote_count = 0;
 	head = NULL;
 	ptr = input;
 	while (*ptr)
 	{
 		skip_spaces(&ptr);
-		if (*ptr == '<' || *ptr == '>')
+		if (*ptr == '\'' || *ptr == '"')
+			quote_count++;
+		if ((*ptr == '<' || *ptr == '>') && quote_count % 2 == 0)
 			process_operator_token(&ptr, &head);
 		else if (*ptr != '\0')
 			process_command_token(&ptr, &head);
