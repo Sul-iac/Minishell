@@ -36,7 +36,7 @@ int	handle_heredoc_redirection(char *filename, int *fd)
 {
 	*fd = handle_heredoc(filename);
 	if (*fd == -1)
-		return(-1);
+		return (-1);
 	if (dup2(*fd, STDIN_FILENO) == -1)
 	{
 		close(*fd);
@@ -56,10 +56,10 @@ int	handle_heredoc(char *delimiter)
 		return (-1);
 	}
 	handle_heredoc_input(pipefd, delimiter);
-	if(g_global_sig == 130)
+	if (g_global_sig == 130)
 	{
-		close(pipefd[0]);	
-		return(-1);
+		close(pipefd[0]);
+		return (-1);
 	}
 	return (pipefd[0]);
 }

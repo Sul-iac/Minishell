@@ -20,13 +20,13 @@ int	handle_input_redirection(const char *file)
 	if (fd == -1)
 	{
 		printf("minishell: %s: No such file or directory\n", file);
-		return(-1);
+		return (-1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		close(fd);
 		perror("Erreur lors de la redirection de l'entrée standard");
-		return(-1);
+		return (-1);
 	}
 	close(fd);
 	return (0);
@@ -42,7 +42,7 @@ int	process_input_redirections(t_redirection *current)
 		{
 			if (handle_heredoc_redirection(current->filename, &fd) == -1)
 			{
-				if(g_global_sig == 130)
+				if (g_global_sig == 130)
 					exit(130);
 				return (-1);
 			}

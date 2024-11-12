@@ -6,131 +6,62 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/12 12:50:26 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 14:30:27 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-int	execute_builtin(t_node *cmd, char ***env)
+static void	restore_fds(int fd_in, int fd_out)
 {
-	char	**args;
-
-	if (!cmd->value)
-		free_and_error(NULL, NULL, "execute_builtin error: cmd not found", 1);
-	args = ft_split(cmd->value, ' ');
-	if (!args)
-		free_and_error(NULL, NULL, "execute_builtin: error splitting arguments",
-			1);
-	if (!strcmp(args[0], "export") || !strcmp(args[0], "unset")
-		|| !strcmp(args[0], "cd"))
-		nforked_commands(cmd->value, env);
-	else if (!strcmp(args[0], "echo") || !strcmp(args[0], "env")
-		|| !strcmp(args[0], "pwd"))
-		forked_commands(cmd->value, env);
-	free(args);
-	return (1);
+	dup2(fd_in, STDIN_FILENO);
+	dup2(fd_out, STDOUT_FILENO);
+	close(fd_in);
+	close(fd_out);
 }
 
-void	execute_relative_absolute(char *cmd, char **args, char ***envp)
+static void	exec_pipe(t_node *cmd, char ***env, int fd_in, int fd_out)
 {
-	if (cmd[0] == '/' || (cmd[0] == '.' && (cmd[1] == '/' || cmd[1] == '.')))
-	{
-		if (access(cmd, X_OK) == 0)
-		{
-			if (execve(cmd, args, *envp) == -1)
-			{
-				free_triple_pointer(envp);
-				free_and_error(cmd, args, "error executing ./minishell", 1);
-			}
-		}
-	}
+	int	status;
+
+	status = execute_pipes(cmd, env);
+	if (status == 130)
+		g_global_sig = 130;
+	restore_fds(fd_in, fd_out);
 }
 
-int	execute_command(t_node *cmd, char ***env)
+static void	pre_exec_command(t_node *cmd, char ***env, int fd_in, int fd_out)
 {
-	int		len;
-	char	**args;
-	char	*path;
-	char	*full_command;
-
-	args = ft_split(cmd->value, ' ');
-	if (!args)
-		free_and_error(NULL, args, "minishell: args malloc error", 1);
-	execute_relative_absolute(cmd->value, args, env);
-	path = get_path(args[0], env);
-	if (!path)
-	{
-		printf("minishell: %s: command not found\n", args[0]);
-		exit(EXIT_FAILURE);
-	}
-	len = ft_strlen(path) + ft_strlen(args[0]);
-	full_command = malloc(sizeof(char) * (len + 1));
-	if (!full_command)
-		free_and_error(full_command, NULL, "minishell: malloc error", 1);
-	ft_strcpy(full_command, path);
-	if (execve(full_command, args, *env) == -1)
-		free_and_error(NULL, NULL, "minishell: execve error", 1);
-	free(full_command);
-	exit(EXIT_SUCCESS);
-}
-
-int	execute_simple_command(t_node *cmd, char ***env)
-{
-	pid_t	pid;
-	int		status;
-
-	pid = fork();
-	if (pid < 0)
-		free_and_error(NULL, NULL,
-			"Execute_simple_command: error creating new process", 1);
-	if (pid == 0)
-	{
-		execute_command(cmd, env);
-		exit(EXIT_FAILURE);
-	}
+	if (cmd->builtin)
+		execute_builtin(cmd, env);
 	else
-		waitpid(pid, &status, 0);
-	return (WEXITSTATUS(status));
+		execute_simple_command(cmd, env);
+	restore_fds(fd_in, fd_out);
 }
 
-void    exec(t_node *cmd, char ***env)
+void	exec(t_node *cmd, char ***env)
 {
-    int     fd_in;
-    int     fd_out;
-    t_node  *current;
-    int     status;
+	int		fd_in;
+	int		fd_out;
+	t_node	*current;
 
-    current = cmd;
-    fd_in = dup(STDIN_FILENO);
-    fd_out = dup(STDOUT_FILENO);
-    if (handle_redirections(cmd) == -1)
-    {
-        close(fd_in);
-        close(fd_out);
-        return ;
-    }
-    while (current && current->next)
-    {
-        if (current->next->type == PIPE_2)
-        {
-            status = execute_pipes(cmd, env);
-            if (status == 130)
-                g_global_sig = 130;
-            dup2(fd_in, STDIN_FILENO);
-            dup2(fd_out, STDOUT_FILENO);
-            close(fd_in);
-            close(fd_out);
-            return ;
-        }
-        current = current->next;
-    }
-    if (cmd->builtin)
-        execute_builtin(cmd, env);
-    else
-        execute_simple_command(cmd, env);
-    dup2(fd_in, STDIN_FILENO);
-    dup2(fd_out, STDOUT_FILENO);
-    close(fd_in);
-    close(fd_out);
+	current = cmd;
+	fd_in = dup(STDIN_FILENO);
+	fd_out = dup(STDOUT_FILENO);
+	if (handle_redirections(cmd) == -1)
+	{
+		close(fd_in);
+		close(fd_out);
+		return ;
+	}
+	while (current && current->next)
+	{
+		if (current->next->type == PIPE_2)
+		{
+			exec_pipe(cmd, env, fd_in, fd_out);
+			return ;
+		}
+		current = current->next;
+	}
+	pre_exec_command(cmd, env, fd_in, fd_out);
 }

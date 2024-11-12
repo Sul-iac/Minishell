@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/02 07:19:44 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 20:43:47 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 14:21:25 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	ft_word_len(const char *str, char c, int j)
 		i++;
 	return (i);
 }
+
 void	free_split(char **spl, int j)
 {
 	while (j >= 0)
