@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/11 15:24:24 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:51:54 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -210,7 +210,7 @@ int						execute_simple_command(t_node *cmd, char ***env);
 // pipes
 void					handle_fork_error(pid_t *pids);
 void					parent_process(int *in_fd, int *fd);
-void					execute_pipes(t_node *cmd, char ***env);
+int						execute_pipes(t_node *cmd, char ***env);
 void					handle_pipe_creation(t_node *cmd, int fd[2]);
 void					child_process(t_node *cmd, char ***env, int in_fd,
 							int *fd);
@@ -229,7 +229,7 @@ int						process_input_redirections(t_redirection *current);
 int						handle_heredoc_redirection(char *filename, int *fd);
 int						process_output_redirections(t_redirection *current);
 int						handle_output_redirection(const char *file, int flags);
-void					handle_redirections(t_node *cmd);
+int						handle_redirections(t_node *cmd);
 void					handle_sigint_heredoc(int signum);
 void					handle_heredoc_input(int pipefd[2], char *delimiter);
 
@@ -237,7 +237,7 @@ void					handle_heredoc_input(int pipefd[2], char *delimiter);
 void					reset_signal(void);
 void					signal_handler(int signo);
 
-// pipes
+// fork
 char					*get_first_word(const char *str);
 void					forked_commands(char *cmd, char ***env);
 char					**nforked_commands(char *cmd, char ***env);

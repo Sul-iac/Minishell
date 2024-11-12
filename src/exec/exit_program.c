@@ -1,35 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   main_prompt2.c                                     :+:      :+:    :+:   */
+/*   exit_program.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 19:24:21 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 23:47:17 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:01:39 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
-
-char	*ft_get_dirname(void)
-{
-	char	*cwd;
-	char	*last_slash;
-	char	*dir_name;
-
-	cwd = getcwd(NULL, 0);
-	if (!cwd)
-		return (ft_strdup("unknown"));
-	last_slash = ft_strrchr(cwd, '/');
-	if (last_slash && last_slash != cwd)
-	{
-		dir_name = ft_strdup(last_slash + 1);
-		free(cwd);
-		return (dir_name);
-	}
-	return (cwd);
-}
 
 void	exit_program(t_node *head, char *line, t_main *main, char ***envp)
 {

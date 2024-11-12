@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 12:09:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 23:54:33 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:53:29 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,8 @@ void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
 		if (dup2(in_fd, 0) == -1)
 		{
 			cleanup_cmd(cmd);
-			free_and_error(NULL, NULL, "child_process: dup2 error", 1);
+			// free_and_error(NULL, NULL, "child_process: dup2 error", 1);
+			return ;
 		}
 		close(in_fd);
 	}
@@ -58,11 +59,16 @@ void	child_process(t_node *cmd, char ***env, int in_fd, int *fd)
 		if (dup2(fd[1], 1) == -1)
 		{
 			cleanup_cmd(cmd);
-			free_and_error(NULL, NULL, "child_process: dup2 error", 1);
+			// free_and_error(NULL, NULL, "child_process: dup2 error", 1);
+			return ;
 		}
-		close(fd[1]);
 	}
-	handle_redirections(cmd);
+	if (fd[0] != -1)
+		close(fd[0]);
+	if (fd[1] != -1)
+		close(fd[1]);
+	if(handle_redirections(cmd) == -1)
+		exit(EXIT_FAILURE);
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
 	if (cmd->type == CMD_2)
@@ -80,6 +86,8 @@ void	parent_process(int *in_fd, int *fd)
 
 void	handle_pipe_creation(t_node *cmd, int fd[2])
 {
+	fd[0] = -1;
+	fd[1] = -1;
 	if (cmd->next && cmd->next->type == PIPE_2)
 	{
 		if (pipe(fd) == -1)
@@ -87,19 +95,23 @@ void	handle_pipe_creation(t_node *cmd, int fd[2])
 	}
 }
 
-void	execute_pipes(t_node *cmd, char ***env)
+int execute_pipes(t_node *cmd, char ***env)
 {
-	t_pipe_data	*data;
-	int			cmd_count;
+    t_pipe_data *data;
+    int         cmd_count;
+    int         status;
 
-	data = init_pipe_data(env);
-	data->pids = init_pipe_execution(cmd, &cmd_count);
-	while (cmd)
-	{
-		if (cmd->type == CMD_2)
-			process_command(cmd, data);
-		cmd = cmd->next;
-	}
+    data = init_pipe_data(env);
+    data->pids = init_pipe_execution(cmd, &cmd_count);
+    while (cmd)
+    {
+        if (cmd->type == CMD_2)
+            process_command(cmd, data);
+        cmd = cmd->next;
+    }
+    waitpid(data->pids[cmd_count - 1], &status, 0);
 	wait_all_processes(data, cmd_count);
-	return ;
+    if (WIFSIGNALED(status))
+        return (128 + WTERMSIG(status));
+    return (WEXITSTATUS(status));
 }

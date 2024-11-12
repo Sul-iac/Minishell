@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/30 12:51:31 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 20:16:46 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:50:26 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,30 +94,43 @@ int	execute_simple_command(t_node *cmd, char ***env)
 	return (WEXITSTATUS(status));
 }
 
-void	exec(t_node *cmd, char ***env)
+void    exec(t_node *cmd, char ***env)
 {
-	int		fd_in;
-	int		fd_out;
-	t_node	*current;
+    int     fd_in;
+    int     fd_out;
+    t_node  *current;
+    int     status;
 
-	current = cmd;
-	fd_in = dup(STDIN_FILENO);
-	fd_out = dup(STDOUT_FILENO);
-	handle_redirections(cmd);
-	while (current && current->next)
-	{
-		if (current->next->type == PIPE_2)
-		{
-			execute_pipes(cmd, env);
-			return ;
-		}
-	}
-	if (cmd->builtin)
-		execute_builtin(cmd, env);
-	else
-		execute_simple_command(cmd, env);
-	dup2(fd_in, STDIN_FILENO);
-	dup2(fd_out, STDOUT_FILENO);
-	close(fd_in);
-	close(fd_out);
+    current = cmd;
+    fd_in = dup(STDIN_FILENO);
+    fd_out = dup(STDOUT_FILENO);
+    if (handle_redirections(cmd) == -1)
+    {
+        close(fd_in);
+        close(fd_out);
+        return ;
+    }
+    while (current && current->next)
+    {
+        if (current->next->type == PIPE_2)
+        {
+            status = execute_pipes(cmd, env);
+            if (status == 130)
+                g_global_sig = 130;
+            dup2(fd_in, STDIN_FILENO);
+            dup2(fd_out, STDOUT_FILENO);
+            close(fd_in);
+            close(fd_out);
+            return ;
+        }
+        current = current->next;
+    }
+    if (cmd->builtin)
+        execute_builtin(cmd, env);
+    else
+        execute_simple_command(cmd, env);
+    dup2(fd_in, STDIN_FILENO);
+    dup2(fd_out, STDOUT_FILENO);
+    close(fd_in);
+    close(fd_out);
 }

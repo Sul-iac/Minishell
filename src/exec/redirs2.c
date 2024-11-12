@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 23:53:37 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 23:53:26 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:56:01 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,14 +19,14 @@ int	handle_input_redirection(const char *file)
 	fd = open(file, O_RDONLY);
 	if (fd == -1)
 	{
-		perror("Erreur d'ouverture du fichier d'entrée");
-		return (-1);
+		printf("minishell: %s: No such file or directory\n", file);
+		return(-1);
 	}
 	if (dup2(fd, STDIN_FILENO) == -1)
 	{
 		close(fd);
 		perror("Erreur lors de la redirection de l'entrée standard");
-		return (-1);
+		return(-1);
 	}
 	close(fd);
 	return (0);
@@ -41,7 +41,11 @@ int	process_input_redirections(t_redirection *current)
 		if (current->is_double)
 		{
 			if (handle_heredoc_redirection(current->filename, &fd) == -1)
+			{
+				if(g_global_sig == 130)
+					exit(130);
 				return (-1);
+			}
 		}
 		else
 		{

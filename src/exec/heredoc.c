@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/08 23:39:40 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 23:46:48 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 12:23:00 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,8 @@ void	handle_heredoc_input(int pipefd[2], char *delimiter)
 	{
 		line = readline("> ");
 		should_break = process_heredoc_line(line, delimiter, pipefd[1]);
+		if(g_global_sig == 130)
+			break ;
 	}
 	close(pipefd[1]);
 	reset_signal();

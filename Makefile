@@ -31,7 +31,8 @@ BUILTIN_SRC = cd.c echo.c env.c exit.c export.c pwd.c unset.c export_utils.c
 
 EXEC_SRC =	exec.c pipes.c redirs.c utils.c free_utils.c \
 			free_pipes.c heredoc.c redirs2.c signal_heredoc_handler.c \
-			pipes2.c main_prompt1.c main_prompt2.c clean_all_1.c get_path.c
+			pipes2.c clean_all_1.c get_path.c \
+			exit_program.c
 
 MAIN_SRC = main.c
 
