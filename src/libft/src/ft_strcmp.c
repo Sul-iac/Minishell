@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/29 08:58:20 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 13:07:40 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 14:20:31 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,8 +14,10 @@
 
 int	ft_strcmp(char *s1, char *s2)
 {
-	int i = 0;
-	while((s1[i] && s2[i]) && s1[i] == s2[i])
+	int	i;
+
+	i = 0;
+	while ((s1[i] && s2[i]) && s1[i] == s2[i])
 		i++;
-	return(s1[i] - s2[i]);
+	return (s1[i] - s2[i]);
 }

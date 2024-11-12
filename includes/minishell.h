@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/03 22:19:19 by tgerardi          #+#    #+#             */
-/*   Updated: 2024/11/12 12:51:54 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 16:49:10 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,21 +14,21 @@
 # define MINISHELL_H
 
 # include "../src/libft/includes/libft.h"
-# include <signal.h>
 # include <ctype.h>
 # include <errno.h>
 # include <fcntl.h>
 # include <readline/history.h>
 # include <readline/readline.h>
+# include <signal.h>
 # include <stdbool.h>
 # include <stddef.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <string.h>
+# include <sys/stat.h>
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
-# include <sys/stat.h>
 
 # define BOLD "\001\033[1m\002"
 # define RESET "\001\033[0m\002"
@@ -38,7 +38,7 @@
 # define YELLOW "\001\033[33m\002"
 # define RED "\001\033[31m\002"
 
-extern int	g_global_sig;
+extern int				g_global_sig;
 
 typedef enum e_token_type
 {
@@ -76,8 +76,8 @@ typedef struct s_node
 	t_node_type			type;
 	char				*value;
 	struct s_node		*next;
-	t_redirection		*inputs; //< et <<
-	t_redirection		*outputs; // > et >>
+	t_redirection		*inputs;
+	t_redirection		*outputs;
 	bool				builtin;
 	bool				is_last_cmd;
 }						t_node;
@@ -97,8 +97,8 @@ typedef struct s_data
 
 typedef struct s_main
 {
-	int		is_running;
-}				t_main;
+	int					is_running;
+}						t_main;
 
 typedef struct s_pipe_data
 {
@@ -216,8 +216,8 @@ void					display_sorted_env(char **env);
 int						is_valid_identifier(const char *var);
 char					**ft_export(char *args, char ***env);
 int						var_exists(char ***env, char *var_name);
-void					export_utils(char **new_vars, char ***env,
-							int env_size, int *i);
+void					export_utils(char **new_vars, char ***env, int env_size,
+							int *i);
 
 // exec
 void					exec(t_node *cmd, char ***env);
@@ -234,6 +234,9 @@ void					child_process(t_node *cmd, char ***env, int in_fd,
 							int *fd);
 void					process_command(t_node *cmd, t_pipe_data *data);
 void					wait_all_processes(t_pipe_data *data, int cmd_count);
+void					close_all_child_process(int *fd, t_node *cmd,
+							char ***env);
+void					execute_builtin_nbuiltin(t_node *cmd, char ***env);
 
 t_pipe_data				*init_pipe_data(char ***env);
 pid_t					*init_pipe_execution(t_node *cmd, int *cmd_count);
@@ -272,20 +275,12 @@ char					*ft_readline(void);
 char					*ft_create_prompt(void);
 char					**copy_env(char **original_env);
 void					init_shell(char ***envp, t_main *main);
-void					init_parser_exec(char *line, t_main*main,
+void					init_parser_exec(char *line, t_main *main,
 							char ***envp);
-void					execute_relative_absolute(char *cmd,
-							char **args, char ***envp);
-void					exit_program(t_node *head, char *line,
-							t_main *main, char ***envp);
-
-// prompt
-char					*ft_get_dirname(void);
-t_node					*init_parser(char *line);
-void					ft_fill_prompt(char *prompt, char *user, char *dir);
-char					*ft_strjoin_free(char *s1, const char *s2);
-char					*ft_get_status_color(void);
-char					*ft_get_username(void);
+void					execute_relative_absolute(char *cmd, char **args,
+							char ***envp);
+void					exit_program(t_node *head, char *line, t_main *main,
+							char ***envp);
 
 // cleaning
 void					clean_node(t_node *node);

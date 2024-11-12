@@ -6,7 +6,7 @@
 /*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/10 20:24:26 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/10 20:26:13 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 14:23:07 by qbarron          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,11 @@
 
 char	*ft_strcpy(char *s1, char *s2)
 {
-	int i = -1;
-	while(s2[++i])
+	int	i;
+
+	i = -1;
+	while (s2[++i])
 		s1[i] = s2[i];
 	s1[i] = '\0';
-	return(s1);
+	return (s1);
 }
