@@ -3,44 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   free_everything.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
+/*   By: tgerardi <tgerardi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/12 17:45:01 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/12 18:27:10 by qbarron          ###   ########.fr       */
+/*   Updated: 2024/11/12 18:30:29 by tgerardi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/minishell.h"
 
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   free_everything.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 17:45:01 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/12 17:45:29 by qbarron          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../../includes/minishell.h"
-
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   free_everything.c                                  :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: qbarron <qbarron@student.42perpignan.fr>   +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/12 17:45:01 by qbarron           #+#    #+#             */
-/*   Updated: 2024/11/12 17:45:29 by qbarron          ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#include "../../includes/minishell.h"
-
-void    free_everything(char **env, t_node *head)
+void	free_everything(char **env, t_node *head)
 {
 	clear_history();
 	rl_clear_history();
